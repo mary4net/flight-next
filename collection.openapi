@@ -1,0 +1,2910 @@
+openapi: 3.0.3
+info:
+  title: 'FlyNext: your most reliable travel companion!'
+  description: >-
+    List of APIs provided by **FlyNext (FN).**
+
+
+    The FlyNext API provides RESTful endpoints for users to search for flights,
+    book travel itineraries (including flights and hotels), and manage bookings,
+    and for hotel owners to signup and manage thir hotels bookings. It also
+    includes auxiliary APIs for retrieving booking details, listing cities,
+    airports.
+
+
+    ### **Key Features:**
+
+
+    - **User Accounts**: Sign up, log in, log out, and manage user profiles with
+    JWT-based authentication.
+        
+    - **Flight Search**: Search for one-way and round-trip flights based on
+    source, destination (city/airport), and date(s). View flight details,
+    including departure/arrival times, duration, and layovers.
+        
+    - **Hotel Management**: Hotel owners can add and manage hotels, define room
+    types, track bookings, cancel orders and view availability.
+        
+    - **Hotel Search**: Users can search hotels by date, city, star rating, and
+    price range, viewing available room details.
+        
+    - **Booking System**: Users can book flights and hotels, view booking
+    details, cancel reservations, and receive invoices.
+        
+    - **Notifications**: Users and hotel owners receive updates on booking
+    confirmations, cancellations.
+  version: 1.0.0
+  contact: {}
+servers:
+  - url: '{{base_url}}'
+paths:
+  /flights:
+    get:
+      tags:
+        - Flights
+      summary: Get flight
+      description: |-
+        input: origin, destination, date, round
+
+        return: list of flights that flys from origin to destination.
+      operationId: getFlight
+      parameters:
+        - name: origin
+          in: query
+          schema:
+            type: string
+            example: YYZ
+          description: can either be city or airport code, city must in Title case.
+        - name: destination
+          in: query
+          schema:
+            type: string
+            example: ATH
+          description: >-
+            can either be city or airport code, airport code must all in CAPITAL
+            case.
+        - name: date
+          in: query
+          schema:
+            type: string
+            example: 2025-04-10, 2025-04-20
+          description: must have 2 dates if it's round trip. Otherwise only one date.
+        - name: round
+          in: query
+          schema:
+            type: string
+            example: 'true'
+          description: optional parm. Value must be true or false, case insensitive.
+      responses:
+        '200':
+          description: Get flight / Get flight round trip
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 21:21:58 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        flights:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              airline:
+                                type: object
+                                properties:
+                                  code:
+                                    type: string
+                                    example: AC
+                                  name:
+                                    type: string
+                                    example: Air Canada
+                              arrivalTime:
+                                type: string
+                                example: '2024-11-07T23:10:00.000Z'
+                              availableSeats:
+                                type: number
+                                example: 189
+                              currency:
+                                type: string
+                                example: CAD
+                              departureTime:
+                                type: string
+                                example: '2024-11-07T15:05:00.000Z'
+                              destination:
+                                type: object
+                                properties:
+                                  city:
+                                    type: string
+                                    example: Shanghai
+                                  code:
+                                    type: string
+                                    example: PVG
+                                  country:
+                                    type: string
+                                    example: China
+                                  name:
+                                    type: string
+                                    example: Shanghai Pudong International Airport
+                              destinationId:
+                                type: string
+                                example: 42fb9788-abab-4395-be2c-0ee891a161d6
+                              duration:
+                                type: number
+                                example: 485
+                              flightNumber:
+                                type: string
+                                example: AC7148
+                              id:
+                                type: string
+                                example: 235ebdd8-66ca-4c63-8a82-aa649762b8ed
+                              origin:
+                                type: object
+                                properties:
+                                  city:
+                                    type: string
+                                    example: Toronto
+                                  code:
+                                    type: string
+                                    example: YYZ
+                                  country:
+                                    type: string
+                                    example: Canada
+                                  name:
+                                    type: string
+                                    example: Toronto Pearson International Airport
+                              originId:
+                                type: string
+                                example: 370d2633-ba94-47f5-a735-513c0e332224
+                              price:
+                                type: number
+                                example: 669
+                              status:
+                                type: string
+                                example: SCHEDULED
+                          example:
+                            - airline:
+                                code: AC
+                                name: Air Canada
+                              arrivalTime: '2024-11-07T23:10:00.000Z'
+                              availableSeats: 189
+                              currency: CAD
+                              departureTime: '2024-11-07T15:05:00.000Z'
+                              destination:
+                                city: Shanghai
+                                code: PVG
+                                country: China
+                                name: Shanghai Pudong International Airport
+                              destinationId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                              duration: 485
+                              flightNumber: AC7148
+                              id: 235ebdd8-66ca-4c63-8a82-aa649762b8ed
+                              origin:
+                                city: Toronto
+                                code: YYZ
+                                country: Canada
+                                name: Toronto Pearson International Airport
+                              originId: 370d2633-ba94-47f5-a735-513c0e332224
+                              price: 669
+                              status: SCHEDULED
+                        legs:
+                          type: number
+                          example: 1
+                    example:
+                      - flights:
+                          - airline:
+                              code: AC
+                              name: Air Canada
+                            arrivalTime: '2024-11-07T23:10:00.000Z'
+                            availableSeats: 189
+                            currency: CAD
+                            departureTime: '2024-11-07T15:05:00.000Z'
+                            destination:
+                              city: Shanghai
+                              code: PVG
+                              country: China
+                              name: Shanghai Pudong International Airport
+                            destinationId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                            duration: 485
+                            flightNumber: AC7148
+                            id: 235ebdd8-66ca-4c63-8a82-aa649762b8ed
+                            origin:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            originId: 370d2633-ba94-47f5-a735-513c0e332224
+                            price: 669
+                            status: SCHEDULED
+                        legs: 1
+                      - flights:
+                          - airline:
+                              code: AC
+                              name: Air Canada
+                            arrivalTime: '2024-11-07T17:05:00.000Z'
+                            availableSeats: 59
+                            currency: CAD
+                            departureTime: '2024-11-07T04:10:00.000Z'
+                            destination:
+                              city: Kuala Lumpur
+                              code: KUL
+                              country: Malaysia
+                              name: Kuala Lumpur International Airport
+                            destinationId: 63cea601-895c-4d63-bf1e-746b604f3ff7
+                            duration: 775
+                            flightNumber: AC1585
+                            id: 1c50618c-5474-48f6-86c5-e1973bf077f3
+                            origin:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            originId: 370d2633-ba94-47f5-a735-513c0e332224
+                            price: 1522
+                            status: SCHEDULED
+                          - airline:
+                              code: MH
+                              name: Malaysia Airlines
+                            arrivalTime: '2024-11-09T08:55:00.000Z'
+                            availableSeats: 268
+                            currency: CAD
+                            departureTime: '2024-11-08T19:30:00.000Z'
+                            destination:
+                              city: Shanghai
+                              code: PVG
+                              country: China
+                              name: Shanghai Pudong International Airport
+                            destinationId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                            duration: 805
+                            flightNumber: MH234
+                            id: 47bc5818-f1a7-4841-b2c0-0647a827c8eb
+                            origin:
+                              city: Kuala Lumpur
+                              code: KUL
+                              country: Malaysia
+                              name: Kuala Lumpur International Airport
+                            originId: 63cea601-895c-4d63-bf1e-746b604f3ff7
+                            price: 1283
+                            status: SCHEDULED
+                        legs: 2
+              examples:
+                Get flight:
+                  value:
+                    results:
+                      - flights:
+                          - airline:
+                              code: AC
+                              name: Air Canada
+                            arrivalTime: '2024-11-07T23:10:00.000Z'
+                            availableSeats: 189
+                            currency: CAD
+                            departureTime: '2024-11-07T15:05:00.000Z'
+                            destination:
+                              city: Shanghai
+                              code: PVG
+                              country: China
+                              name: Shanghai Pudong International Airport
+                            destinationId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                            duration: 485
+                            flightNumber: AC7148
+                            id: 235ebdd8-66ca-4c63-8a82-aa649762b8ed
+                            origin:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            originId: 370d2633-ba94-47f5-a735-513c0e332224
+                            price: 669
+                            status: SCHEDULED
+                        legs: 1
+                      - flights:
+                          - airline:
+                              code: AC
+                              name: Air Canada
+                            arrivalTime: '2024-11-07T17:05:00.000Z'
+                            availableSeats: 59
+                            currency: CAD
+                            departureTime: '2024-11-07T04:10:00.000Z'
+                            destination:
+                              city: Kuala Lumpur
+                              code: KUL
+                              country: Malaysia
+                              name: Kuala Lumpur International Airport
+                            destinationId: 63cea601-895c-4d63-bf1e-746b604f3ff7
+                            duration: 775
+                            flightNumber: AC1585
+                            id: 1c50618c-5474-48f6-86c5-e1973bf077f3
+                            origin:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            originId: 370d2633-ba94-47f5-a735-513c0e332224
+                            price: 1522
+                            status: SCHEDULED
+                          - airline:
+                              code: MH
+                              name: Malaysia Airlines
+                            arrivalTime: '2024-11-09T08:55:00.000Z'
+                            availableSeats: 268
+                            currency: CAD
+                            departureTime: '2024-11-08T19:30:00.000Z'
+                            destination:
+                              city: Shanghai
+                              code: PVG
+                              country: China
+                              name: Shanghai Pudong International Airport
+                            destinationId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                            duration: 805
+                            flightNumber: MH234
+                            id: 47bc5818-f1a7-4841-b2c0-0647a827c8eb
+                            origin:
+                              city: Kuala Lumpur
+                              code: KUL
+                              country: Malaysia
+                              name: Kuala Lumpur International Airport
+                            originId: 63cea601-895c-4d63-bf1e-746b604f3ff7
+                            price: 1283
+                            status: SCHEDULED
+                        legs: 2
+                Get flight round trip:
+                  value:
+                    results:
+                      - flights:
+                          - airline:
+                              code: AC
+                              name: Air Canada
+                            arrivalTime: '2025-04-10T20:55:00.000Z'
+                            availableSeats: 129
+                            currency: CAD
+                            departureTime: '2025-04-10T08:55:00.000Z'
+                            destination:
+                              city: Athens
+                              code: ATH
+                              country: Greece
+                              name: Athens International Airport
+                            destinationId: 74025741-4287-48c7-b7b3-fce954789005
+                            duration: 720
+                            flightNumber: AC4597
+                            id: d5952d75-3ed5-417b-a67e-3580d5d1ebd8
+                            origin:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            originId: 370d2633-ba94-47f5-a735-513c0e332224
+                            price: 1774
+                            status: SCHEDULED
+                        legs: 1
+                      - flights:
+                          - airline:
+                              code: AC
+                              name: Air Canada
+                            arrivalTime: '2025-04-10T22:40:00.000Z'
+                            availableSeats: 271
+                            currency: CAD
+                            departureTime: '2025-04-10T12:15:00.000Z'
+                            destination:
+                              city: Tokyo
+                              code: HND
+                              country: Japan
+                              name: Tokyo Haneda Airport
+                            destinationId: 5b167997-009a-4f1b-bbee-77f99b74ef59
+                            duration: 625
+                            flightNumber: AC6980
+                            id: 0e80851b-b393-4711-a05c-163c74a3be36
+                            origin:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            originId: 370d2633-ba94-47f5-a735-513c0e332224
+                            price: 457
+                            status: SCHEDULED
+                          - airline:
+                              code: NH
+                              name: ANA All Nippon Airways
+                            arrivalTime: '2025-04-11T14:40:00.000Z'
+                            availableSeats: 106
+                            currency: CAD
+                            departureTime: '2025-04-11T05:05:00.000Z'
+                            destination:
+                              city: Athens
+                              code: ATH
+                              country: Greece
+                              name: Athens International Airport
+                            destinationId: 74025741-4287-48c7-b7b3-fce954789005
+                            duration: 575
+                            flightNumber: NH608
+                            id: 44520d03-ce0a-4975-ab39-05742438d2f6
+                            origin:
+                              city: Tokyo
+                              code: HND
+                              country: Japan
+                              name: Tokyo Haneda Airport
+                            originId: 5b167997-009a-4f1b-bbee-77f99b74ef59
+                            price: 1688
+                            status: SCHEDULED
+                        legs: 2
+                      - flights:
+                          - airline:
+                              code: A3
+                              name: Aegean Airlines
+                            arrivalTime: '2025-04-20T12:10:00.000Z'
+                            availableSeats: 93
+                            currency: CAD
+                            departureTime: '2025-04-20T04:40:00.000Z'
+                            destination:
+                              city: London
+                              code: LHR
+                              country: United Kingdom
+                              name: Heathrow Airport
+                            destinationId: 64848eb5-ba4e-4e82-a6c0-641f378e140b
+                            duration: 450
+                            flightNumber: A35038
+                            id: 183871d7-5ddd-4da1-9aed-b43379afa0b1
+                            origin:
+                              city: Athens
+                              code: ATH
+                              country: Greece
+                              name: Athens International Airport
+                            originId: 74025741-4287-48c7-b7b3-fce954789005
+                            price: 764
+                            status: SCHEDULED
+                          - airline:
+                              code: BA
+                              name: British Airways
+                            arrivalTime: '2025-04-21T14:35:00.000Z'
+                            availableSeats: 208
+                            currency: CAD
+                            departureTime: '2025-04-21T01:10:00.000Z'
+                            destination:
+                              city: Toronto
+                              code: YYZ
+                              country: Canada
+                              name: Toronto Pearson International Airport
+                            destinationId: 370d2633-ba94-47f5-a735-513c0e332224
+                            duration: 805
+                            flightNumber: BA480
+                            id: 3fa4a12b-face-4d79-8ef7-70a1af745db6
+                            origin:
+                              city: London
+                              code: LHR
+                              country: United Kingdom
+                              name: Heathrow Airport
+                            originId: 64848eb5-ba4e-4e82-a6c0-641f378e140b
+                            price: 1312
+                            status: SCHEDULED
+                        legs: 2
+  /flights/desti:
+    get:
+      tags:
+        - Destinations
+      summary: auto-complete //need to update
+      description: >-
+        Auto-complete the ciy that the user is inputing. Also provides the
+        airports of that city.
+      operationId: autoCompleteNeedToUpdate
+      parameters:
+        - name: destination
+          in: query
+          schema:
+            type: string
+            example: Shang
+          description: case sensitive, must be in Title Case.
+      responses:
+        '200':
+          description: auto fill city
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 21:05:32 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  matchingAirports:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        city:
+                          type: string
+                          example: Shanghai
+                        code:
+                          type: string
+                          example: PVG
+                        country:
+                          type: string
+                          example: China
+                        id:
+                          type: string
+                          example: 42fb9788-abab-4395-be2c-0ee891a161d6
+                        name:
+                          type: string
+                          example: Shanghai Pudong International Airport
+                    example:
+                      - city: Shanghai
+                        code: PVG
+                        country: China
+                        id: 42fb9788-abab-4395-be2c-0ee891a161d6
+                        name: Shanghai Pudong International Airport
+                  matchingCities:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        city:
+                          type: string
+                          example: Shanghai
+                        country:
+                          type: string
+                          example: China
+                    example:
+                      - city: Shanghai
+                        country: China
+              examples:
+                auto fill city:
+                  value:
+                    matchingAirports:
+                      - city: Shanghai
+                        code: PVG
+                        country: China
+                        id: 42fb9788-abab-4395-be2c-0ee891a161d6
+                        name: Shanghai Pudong International Airport
+                    matchingCities:
+                      - city: Shanghai
+                        country: China
+  /hotels/{hotel_id}/rooms:
+    get:
+      tags:
+        - Hotels
+        - '[hotel_id]'
+        - rooms
+      summary: Filter rooms
+      description: >-
+        This API endpoint allows users to filter available rooms at a specific
+        hotel within a given date range. The request returns a list of rooms
+        with details such as availability, price, and amenities during the
+        specified time period.
+      operationId: filterRooms
+      parameters:
+        - name: dateStart
+          in: query
+          schema:
+            type: string
+            example: '2024-10-11'
+        - name: dateEnd
+          in: query
+          schema:
+            type: string
+            example: '2024-11-11'
+      responses:
+        '200':
+          description: Filter rooms as user / Filter rooms as owner
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 23:02:43 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    amenities:
+                      type: array
+                      items:
+                        type: string
+                        example: WiFi
+                      example:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                    availableRooms:
+                      type: number
+                      example: 1
+                    images:
+                      type: array
+                      items:
+                        type: string
+                        example: room1.jpg
+                      example:
+                        - room1.jpg
+                        - room2.jpg
+                    pricePerNight:
+                      type: number
+                      example: 150
+                    roomType:
+                      type: string
+                      example: '101'
+                example:
+                  - amenities:
+                      - WiFi
+                      - Air Conditioning
+                      - TV
+                      - Mini Bar
+                    availableRooms: 1
+                    images:
+                      - room1.jpg
+                      - room2.jpg
+                    pricePerNight: 150
+                    roomType: '101'
+                  - amenities:
+                      - WiFi
+                      - Air Conditioning
+                      - TV
+                      - Mini Bar
+                    availableRooms: 1
+                    images:
+                      - room1.jpg
+                      - room2.jpg
+                    pricePerNight: 1500
+                    roomType: '201'
+                  - amenities:
+                      - WiFi
+                      - Air Conditioning
+                      - TV
+                      - Mini Bar
+                    availableRooms: 1
+                    images:
+                      - room1.jpg
+                      - room2.jpg
+                    pricePerNight: 150
+                    roomType: '102'
+              examples:
+                Filter rooms as owner:
+                  value:
+                    - availableRooms: 1
+                      roomType: '101'
+                      totalRooms: 1
+                    - availableRooms: 1
+                      roomType: '102'
+                      totalRooms: 1
+                    - availableRooms: 1
+                      roomType: '201'
+                      totalRooms: 1
+                Filter rooms as user:
+                  value:
+                    - amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      availableRooms: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 150
+                      roomType: '101'
+                    - amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      availableRooms: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 1500
+                      roomType: '201'
+                    - amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      availableRooms: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 150
+                      roomType: '102'
+      security:
+        - {}
+    post:
+      tags:
+        - Hotels
+        - '[hotel_id]'
+        - rooms
+      summary: Create room
+      description: >-
+        This API endpoint is used to create a new room for a specific hotel. The
+        request allows you to specify the room type, amenities, price per night,
+        and associated images for the room.
+      operationId: createRoom
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                amenities:
+                  type: array
+                  items:
+                    type: string
+                    example: WiFi
+                  example:
+                    - WiFi
+                    - Air Conditioning
+                    - TV
+                    - Mini Bar
+                images:
+                  type: array
+                  items:
+                    type: string
+                    example: room1.jpg
+                  example:
+                    - room1.jpg
+                    - room2.jpg
+                pricePerNight:
+                  type: number
+                  example: 100
+                type:
+                  type: string
+                  example: '101'
+            examples:
+              Create room:
+                value:
+                  amenities:
+                    - WiFi
+                    - Air Conditioning
+                    - TV
+                    - Mini Bar
+                  images:
+                    - room1.jpg
+                    - room2.jpg
+                  pricePerNight: 100
+                  type: '101'
+      responses:
+        '201':
+          description: hotel1 roomtype1-01 / hotel1 roomtype2-01 / hotel2 roomtype1-01
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 22:34:17 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Room added successfully
+                  room:
+                    type: object
+                    properties:
+                      amenities:
+                        type: array
+                        items:
+                          type: string
+                          example: WiFi
+                        example:
+                          - WiFi
+                          - Air Conditioning
+                          - TV
+                          - Mini Bar
+                      createdAt:
+                        type: string
+                        example: '2025-03-08T22:29:41.297Z'
+                      hotelId:
+                        type: number
+                        example: 1
+                      id:
+                        type: number
+                        example: 1
+                      images:
+                        type: array
+                        items:
+                          type: string
+                          example: room1.jpg
+                        example:
+                          - room1.jpg
+                          - room2.jpg
+                      pricePerNight:
+                        type: number
+                        example: 150
+                      type:
+                        type: string
+                        example: '101'
+                      updatedAt:
+                        type: string
+                        example: '2025-03-08T22:29:41.297Z'
+              examples:
+                hotel1 roomtype1-01:
+                  value:
+                    message: Room added successfully
+                    room:
+                      amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      createdAt: '2025-03-08T22:29:41.297Z'
+                      hotelId: 1
+                      id: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 150
+                      type: '101'
+                      updatedAt: '2025-03-08T22:29:41.297Z'
+                hotel1 roomtype2-01:
+                  value:
+                    message: Room added successfully
+                    room:
+                      amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      createdAt: '2025-03-08T22:31:28.407Z'
+                      hotelId: 1
+                      id: 2
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 1500
+                      type: '201'
+                      updatedAt: '2025-03-08T22:31:28.407Z'
+                hotel2 roomtype1-01:
+                  value:
+                    message: Room added successfully
+                    room:
+                      amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      createdAt: '2025-03-08T22:34:17.637Z'
+                      hotelId: 2
+                      id: 4
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 100
+                      type: '101'
+                      updatedAt: '2025-03-08T22:34:17.637Z'
+      security:
+        - {}
+    parameters:
+      - name: hotel_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '2'
+  /hotels/{hotel_id}/bookings:
+    put:
+      tags:
+        - Hotels
+        - '[hotel_id]'
+        - bookings
+      summary: Cancel booking
+      description: >-
+        This method allows cancellation of booking by hotel owner.
+
+
+        Input: booking id.
+
+
+        Output: message indicating how the cancellation went.
+
+
+        This API endpoint allows users to cancel an existing booking by
+        specifying the booking ID and the hotel ID. The request will update the
+        status of the booking, marking it as cancelled.
+      operationId: cancelBooking
+      parameters:
+        - name: bookingId
+          in: query
+          schema:
+            type: string
+            example: '1'
+      responses:
+        '200':
+          description: Cancel booking
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sun, 09 Mar 2025 00:10:39 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Booking cancelled successfully.
+              examples:
+                Cancel booking:
+                  value:
+                    message: Booking cancelled successfully.
+      security:
+        - {}
+    parameters:
+      - name: hotel_id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '1'
+  /bookings/checkout:
+    get:
+      tags:
+        - Bookings
+        - Checkout
+      summary: Booking Details
+      description: >-
+        This method returns the full booking details of the pending booking
+        during checkout.
+
+
+        Input: booking id.
+
+
+        Output: booking information.
+
+          
+        The parameters include a unique booking id, based on the id we can view
+        detailed information of the booking. Meant for the user to view on
+        frontend during checkout.
+      operationId: bookingDetails
+      parameters:
+        - name: bookingId
+          in: query
+          schema:
+            type: string
+            example: '3'
+      responses:
+        '200':
+          description: Get Booking Details
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 14:40:48 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookRef:
+                    nullable: true
+                    example: null
+                  checkIn:
+                    type: string
+                    example: '2025-03-11T00:00:00.000Z'
+                  checkOut:
+                    type: string
+                    example: '2025-03-15T00:00:00.000Z'
+                  createdAt:
+                    type: string
+                    example: '2025-03-08T14:35:15.242Z'
+                  flights:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        airline:
+                          type: string
+                          example: MU, China Eastern Airlines
+                        arrivalTime:
+                          type: string
+                          example: '2024-11-08T05:55:00.000Z'
+                        departureTime:
+                          type: string
+                          example: '2024-11-07T18:25:00.000Z'
+                        destination:
+                          type: string
+                          example: >-
+                            MNL, Ninoy Aquino International Airport, Manila,
+                            Philippines
+                        flightCost:
+                          type: number
+                          example: 928
+                        flightId:
+                          type: string
+                          example: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum:
+                          type: string
+                          example: MU8547
+                        origin:
+                          type: string
+                          example: >-
+                            PVG, Shanghai Pudong International Airport,
+                            Shanghai, China
+                    example:
+                      - airline: MU, China Eastern Airlines
+                        arrivalTime: '2024-11-08T05:55:00.000Z'
+                        departureTime: '2024-11-07T18:25:00.000Z'
+                        destination: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                        flightCost: 928
+                        flightId: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum: MU8547
+                        origin: >-
+                          PVG, Shanghai Pudong International Airport, Shanghai,
+                          China
+                      - airline: PR, Philippine Airlines
+                        arrivalTime: '2024-11-09T06:10:00.000Z'
+                        departureTime: '2024-11-08T18:20:00.000Z'
+                        destination: >-
+                          YTZ, Billy Bishop Toronto City Airport, Toronto,
+                          Canada
+                        flightCost: 710
+                        flightId: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                        flightNum: PR2062
+                        origin: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                  hotelCost:
+                    type: number
+                    example: 600
+                  id:
+                    type: number
+                    example: 3
+                  itinerary:
+                    type: string
+                    example: ONEWAY_AND_HOTEL
+                  room:
+                    type: object
+                    properties:
+                      amenities:
+                        type: array
+                        items:
+                          type: string
+                          example: WiFi
+                        example:
+                          - WiFi
+                          - Air Conditioning
+                          - TV
+                          - Mini Bar
+                      createdAt:
+                        type: string
+                        example: '2025-03-08T05:21:30.117Z'
+                      hotel:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                            example: 123 Beach Road, Sunshine City
+                          city:
+                            type: string
+                            example: Toronto
+                          createdAt:
+                            type: string
+                            example: '2025-03-08T05:19:27.638Z'
+                          id:
+                            type: number
+                            example: 1
+                          images:
+                            type: array
+                            items:
+                              type: string
+                              example: https://example.com/image1.png
+                            example:
+                              - https://example.com/image1.png
+                          logo:
+                            type: string
+                            example: https://example.com/logo.png
+                          name:
+                            type: string
+                            example: cccccc Sunshine
+                          ownerId:
+                            type: number
+                            example: 1
+                          starRating:
+                            type: number
+                            example: 3
+                          updatedAt:
+                            type: string
+                            example: '2025-03-08T05:19:27.638Z'
+                      hotelId:
+                        type: number
+                        example: 1
+                      id:
+                        type: number
+                        example: 1
+                      images:
+                        type: array
+                        items:
+                          type: string
+                          example: room1.jpg
+                        example:
+                          - room1.jpg
+                          - room2.jpg
+                      pricePerNight:
+                        type: number
+                        example: 150
+                      type:
+                        type: string
+                        example: '301'
+                      updatedAt:
+                        type: string
+                        example: '2025-03-08T05:21:30.117Z'
+                  roomId:
+                    type: number
+                    example: 1
+                  status:
+                    type: string
+                    example: PENDING
+                  ticketNum:
+                    nullable: true
+                    example: null
+                  updatedAt:
+                    type: string
+                    example: '2025-03-08T14:39:15.149Z'
+                  userId:
+                    type: number
+                    example: 1
+              examples:
+                Get Booking Details:
+                  value:
+                    bookRef: null
+                    checkIn: '2025-03-11T00:00:00.000Z'
+                    checkOut: '2025-03-15T00:00:00.000Z'
+                    createdAt: '2025-03-08T14:35:15.242Z'
+                    flights:
+                      - airline: MU, China Eastern Airlines
+                        arrivalTime: '2024-11-08T05:55:00.000Z'
+                        departureTime: '2024-11-07T18:25:00.000Z'
+                        destination: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                        flightCost: 928
+                        flightId: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum: MU8547
+                        origin: >-
+                          PVG, Shanghai Pudong International Airport, Shanghai,
+                          China
+                      - airline: PR, Philippine Airlines
+                        arrivalTime: '2024-11-09T06:10:00.000Z'
+                        departureTime: '2024-11-08T18:20:00.000Z'
+                        destination: >-
+                          YTZ, Billy Bishop Toronto City Airport, Toronto,
+                          Canada
+                        flightCost: 710
+                        flightId: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                        flightNum: PR2062
+                        origin: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                    hotelCost: 600
+                    id: 3
+                    itinerary: ONEWAY_AND_HOTEL
+                    room:
+                      amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      createdAt: '2025-03-08T05:21:30.117Z'
+                      hotel:
+                        address: 123 Beach Road, Sunshine City
+                        city: Toronto
+                        createdAt: '2025-03-08T05:19:27.638Z'
+                        id: 1
+                        images:
+                          - https://example.com/image1.png
+                        logo: https://example.com/logo.png
+                        name: cccccc Sunshine
+                        ownerId: 1
+                        starRating: 3
+                        updatedAt: '2025-03-08T05:19:27.638Z'
+                      hotelId: 1
+                      id: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 150
+                      type: '301'
+                      updatedAt: '2025-03-08T05:21:30.117Z'
+                    roomId: 1
+                    status: PENDING
+                    ticketNum: null
+                    updatedAt: '2025-03-08T14:39:15.149Z'
+                    userId: 1
+  /bookings/suggestions:
+    get:
+      tags:
+        - Bookings
+        - Suggestions
+      summary: Flight/Hotel Suggestions
+      description: >-
+        Finds flight/hotel suggestions for pending booking.
+
+
+        Input: itinerary, flight destination (optional), origin (optional),
+        destination (optional), date.
+
+
+        Output: json of flights suggested or json of hotels suggested.
+
+
+        The url parameters provide information about the type of itinerary the
+        current pending booking has, which is always required. The flight
+        destination and date is provided if booking has flight and need
+        suggestion for hotels. If the booking has hotel, the hotel, origin,
+        destination, and date must be provided for search of flight suggestions.
+
+
+        The response should be information of suggested flights or information
+        of suggested hotel, depending on which itinerary was given, the user may
+        choose which suggestion they take in frontend and get redirect to filter
+        page using the response information. If itinerary shows pending booking
+        already has flight and hotel, then no suggestion would be given.
+      operationId: flightHotelSuggestions
+      parameters:
+        - name: itinerary
+          in: query
+          schema:
+            type: string
+            example: FLIGHT_ROUNDTRIP
+        - name: flightDestination
+          in: query
+          schema:
+            type: string
+            example: Toronto
+        - name: date
+          in: query
+          schema:
+            type: string
+            example: '2025-04-21'
+      responses:
+        '200':
+          description: Suggested Some Flights / Suggested Some Hotel
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 15:02:53 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  checkIn:
+                    type: string
+                    example: '2025-04-21T00:00:00.000Z'
+                  hotels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        address:
+                          type: string
+                          example: 123 Beach Road, Sunshine City
+                        city:
+                          type: string
+                          example: Toronto
+                        createdAt:
+                          type: string
+                          example: '2025-03-08T05:19:27.638Z'
+                        id:
+                          type: number
+                          example: 1
+                        images:
+                          type: array
+                          items:
+                            type: string
+                            example: https://example.com/image1.png
+                          example:
+                            - https://example.com/image1.png
+                        logo:
+                          type: string
+                          example: https://example.com/logo.png
+                        name:
+                          type: string
+                          example: cccccc Sunshine
+                        ownerId:
+                          type: number
+                          example: 1
+                        starRating:
+                          type: number
+                          example: 3
+                        updatedAt:
+                          type: string
+                          example: '2025-03-08T05:19:27.638Z'
+                    example:
+                      - address: 123 Beach Road, Sunshine City
+                        city: Toronto
+                        createdAt: '2025-03-08T05:19:27.638Z'
+                        id: 1
+                        images:
+                          - https://example.com/image1.png
+                        logo: https://example.com/logo.png
+                        name: cccccc Sunshine
+                        ownerId: 1
+                        starRating: 3
+                        updatedAt: '2025-03-08T05:19:27.638Z'
+                      - address: 123 Beach Road, Sunshine City
+                        city: Toronto
+                        createdAt: '2025-03-08T14:32:38.294Z'
+                        id: 2
+                        images:
+                          - https://example.com/image1.png
+                        logo: https://example.com/logo.png
+                        name: cccccc Sunshine
+                        ownerId: 1
+                        starRating: 3
+                        updatedAt: '2025-03-08T14:32:38.294Z'
+                  message:
+                    type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            flights:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  airline:
+                                    type: object
+                                    properties:
+                                      code:
+                                        type: string
+                                        example: MU
+                                      name:
+                                        type: string
+                                        example: China Eastern Airlines
+                                  arrivalTime:
+                                    type: string
+                                    example: '2024-11-08T05:55:00.000Z'
+                                  availableSeats:
+                                    type: number
+                                    example: 207
+                                  currency:
+                                    type: string
+                                    example: CAD
+                                  departureTime:
+                                    type: string
+                                    example: '2024-11-07T18:25:00.000Z'
+                                  destination:
+                                    type: object
+                                    properties:
+                                      city:
+                                        type: string
+                                        example: Manila
+                                      code:
+                                        type: string
+                                        example: MNL
+                                      country:
+                                        type: string
+                                        example: Philippines
+                                      name:
+                                        type: string
+                                        example: Ninoy Aquino International Airport
+                                  destinationId:
+                                    type: string
+                                    example: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                                  duration:
+                                    type: number
+                                    example: 690
+                                  flightNumber:
+                                    type: string
+                                    example: MU8547
+                                  id:
+                                    type: string
+                                    example: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                                  origin:
+                                    type: object
+                                    properties:
+                                      city:
+                                        type: string
+                                        example: Shanghai
+                                      code:
+                                        type: string
+                                        example: PVG
+                                      country:
+                                        type: string
+                                        example: China
+                                      name:
+                                        type: string
+                                        example: Shanghai Pudong International Airport
+                                  originId:
+                                    type: string
+                                    example: 42fb9788-abab-4395-be2c-0ee891a161d6
+                                  price:
+                                    type: number
+                                    example: 928
+                                  status:
+                                    type: string
+                                    example: SCHEDULED
+                              example:
+                                - airline:
+                                    code: MU
+                                    name: China Eastern Airlines
+                                  arrivalTime: '2024-11-08T05:55:00.000Z'
+                                  availableSeats: 207
+                                  currency: CAD
+                                  departureTime: '2024-11-07T18:25:00.000Z'
+                                  destination:
+                                    city: Manila
+                                    code: MNL
+                                    country: Philippines
+                                    name: Ninoy Aquino International Airport
+                                  destinationId: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                                  duration: 690
+                                  flightNumber: MU8547
+                                  id: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                                  origin:
+                                    city: Shanghai
+                                    code: PVG
+                                    country: China
+                                    name: Shanghai Pudong International Airport
+                                  originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                                  price: 928
+                                  status: SCHEDULED
+                                - airline:
+                                    code: PR
+                                    name: Philippine Airlines
+                                  arrivalTime: '2024-11-09T06:10:00.000Z'
+                                  availableSeats: 251
+                                  currency: CAD
+                                  departureTime: '2024-11-08T18:20:00.000Z'
+                                  destination:
+                                    city: Toronto
+                                    code: YTZ
+                                    country: Canada
+                                    name: Billy Bishop Toronto City Airport
+                                  destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                                  duration: 710
+                                  flightNumber: PR2062
+                                  id: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                                  origin:
+                                    city: Manila
+                                    code: MNL
+                                    country: Philippines
+                                    name: Ninoy Aquino International Airport
+                                  originId: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                                  price: 710
+                                  status: SCHEDULED
+                            legs:
+                              type: number
+                              example: 2
+                        example:
+                          - flights:
+                              - airline:
+                                  code: MU
+                                  name: China Eastern Airlines
+                                arrivalTime: '2024-11-08T05:55:00.000Z'
+                                availableSeats: 207
+                                currency: CAD
+                                departureTime: '2024-11-07T18:25:00.000Z'
+                                destination:
+                                  city: Manila
+                                  code: MNL
+                                  country: Philippines
+                                  name: Ninoy Aquino International Airport
+                                destinationId: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                                duration: 690
+                                flightNumber: MU8547
+                                id: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                                origin:
+                                  city: Shanghai
+                                  code: PVG
+                                  country: China
+                                  name: Shanghai Pudong International Airport
+                                originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                                price: 928
+                                status: SCHEDULED
+                              - airline:
+                                  code: PR
+                                  name: Philippine Airlines
+                                arrivalTime: '2024-11-09T06:10:00.000Z'
+                                availableSeats: 251
+                                currency: CAD
+                                departureTime: '2024-11-08T18:20:00.000Z'
+                                destination:
+                                  city: Toronto
+                                  code: YTZ
+                                  country: Canada
+                                  name: Billy Bishop Toronto City Airport
+                                destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                                duration: 710
+                                flightNumber: PR2062
+                                id: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                                origin:
+                                  city: Manila
+                                  code: MNL
+                                  country: Philippines
+                                  name: Ninoy Aquino International Airport
+                                originId: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                                price: 710
+                                status: SCHEDULED
+                            legs: 2
+                          - flights:
+                              - airline:
+                                  code: MU
+                                  name: China Eastern Airlines
+                                arrivalTime: '2024-11-07T16:40:00.000Z'
+                                availableSeats: 137
+                                currency: CAD
+                                departureTime: '2024-11-07T10:25:00.000Z'
+                                destination:
+                                  city: Doha
+                                  code: DOH
+                                  country: Qatar
+                                  name: Hamad International Airport
+                                destinationId: 950d78c3-b084-4ae1-929a-67678322d737
+                                duration: 375
+                                flightNumber: MU9277
+                                id: e6c01d8c-646b-4c67-be76-ec962b2d8354
+                                origin:
+                                  city: Shanghai
+                                  code: PVG
+                                  country: China
+                                  name: Shanghai Pudong International Airport
+                                originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                                price: 1492
+                                status: SCHEDULED
+                              - airline:
+                                  code: QR
+                                  name: Qatar Airways
+                                arrivalTime: '2024-11-08T13:20:00.000Z'
+                                availableSeats: 276
+                                currency: CAD
+                                departureTime: '2024-11-08T07:05:00.000Z'
+                                destination:
+                                  city: Toronto
+                                  code: YTZ
+                                  country: Canada
+                                  name: Billy Bishop Toronto City Airport
+                                destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                                duration: 375
+                                flightNumber: QR3121
+                                id: 76380954-3a35-4de2-8c32-f62ab94e7099
+                                origin:
+                                  city: Doha
+                                  code: DOH
+                                  country: Qatar
+                                  name: Hamad International Airport
+                                originId: 950d78c3-b084-4ae1-929a-67678322d737
+                                price: 1634
+                                status: SCHEDULED
+                            legs: 2
+                          - flights:
+                              - airline:
+                                  code: MU
+                                  name: China Eastern Airlines
+                                arrivalTime: '2024-11-08T10:10:00.000Z'
+                                availableSeats: 83
+                                currency: CAD
+                                departureTime: '2024-11-07T20:35:00.000Z'
+                                destination:
+                                  city: Paris
+                                  code: CDG
+                                  country: France
+                                  name: Charles de Gaulle Airport
+                                destinationId: fa35cff2-4d06-4933-9e2b-b3f329253b48
+                                duration: 815
+                                flightNumber: MU3172
+                                id: 42c470f2-5ede-4cf4-8fae-5c3b1a99b83d
+                                origin:
+                                  city: Shanghai
+                                  code: PVG
+                                  country: China
+                                  name: Shanghai Pudong International Airport
+                                originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                                price: 1544
+                                status: SCHEDULED
+                              - airline:
+                                  code: AF
+                                  name: Air France
+                                arrivalTime: '2024-11-08T16:50:00.000Z'
+                                availableSeats: 120
+                                currency: CAD
+                                departureTime: '2024-11-08T11:10:00.000Z'
+                                destination:
+                                  city: Toronto
+                                  code: YTZ
+                                  country: Canada
+                                  name: Billy Bishop Toronto City Airport
+                                destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                                duration: 340
+                                flightNumber: AF590
+                                id: ebad0b78-5ad9-4db3-ae3f-2e6a25f0d037
+                                origin:
+                                  city: Paris
+                                  code: CDG
+                                  country: France
+                                  name: Charles de Gaulle Airport
+                                originId: fa35cff2-4d06-4933-9e2b-b3f329253b48
+                                price: 895
+                                status: SCHEDULED
+                            legs: 2
+              examples:
+                Suggested Some Flights:
+                  value:
+                    message:
+                      results:
+                        - flights:
+                            - airline:
+                                code: MU
+                                name: China Eastern Airlines
+                              arrivalTime: '2024-11-08T05:55:00.000Z'
+                              availableSeats: 207
+                              currency: CAD
+                              departureTime: '2024-11-07T18:25:00.000Z'
+                              destination:
+                                city: Manila
+                                code: MNL
+                                country: Philippines
+                                name: Ninoy Aquino International Airport
+                              destinationId: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                              duration: 690
+                              flightNumber: MU8547
+                              id: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                              origin:
+                                city: Shanghai
+                                code: PVG
+                                country: China
+                                name: Shanghai Pudong International Airport
+                              originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                              price: 928
+                              status: SCHEDULED
+                            - airline:
+                                code: PR
+                                name: Philippine Airlines
+                              arrivalTime: '2024-11-09T06:10:00.000Z'
+                              availableSeats: 251
+                              currency: CAD
+                              departureTime: '2024-11-08T18:20:00.000Z'
+                              destination:
+                                city: Toronto
+                                code: YTZ
+                                country: Canada
+                                name: Billy Bishop Toronto City Airport
+                              destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                              duration: 710
+                              flightNumber: PR2062
+                              id: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                              origin:
+                                city: Manila
+                                code: MNL
+                                country: Philippines
+                                name: Ninoy Aquino International Airport
+                              originId: 061fc0c6-d34e-4de1-8e08-8297d5e9b7de
+                              price: 710
+                              status: SCHEDULED
+                          legs: 2
+                        - flights:
+                            - airline:
+                                code: MU
+                                name: China Eastern Airlines
+                              arrivalTime: '2024-11-07T16:40:00.000Z'
+                              availableSeats: 137
+                              currency: CAD
+                              departureTime: '2024-11-07T10:25:00.000Z'
+                              destination:
+                                city: Doha
+                                code: DOH
+                                country: Qatar
+                                name: Hamad International Airport
+                              destinationId: 950d78c3-b084-4ae1-929a-67678322d737
+                              duration: 375
+                              flightNumber: MU9277
+                              id: e6c01d8c-646b-4c67-be76-ec962b2d8354
+                              origin:
+                                city: Shanghai
+                                code: PVG
+                                country: China
+                                name: Shanghai Pudong International Airport
+                              originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                              price: 1492
+                              status: SCHEDULED
+                            - airline:
+                                code: QR
+                                name: Qatar Airways
+                              arrivalTime: '2024-11-08T13:20:00.000Z'
+                              availableSeats: 276
+                              currency: CAD
+                              departureTime: '2024-11-08T07:05:00.000Z'
+                              destination:
+                                city: Toronto
+                                code: YTZ
+                                country: Canada
+                                name: Billy Bishop Toronto City Airport
+                              destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                              duration: 375
+                              flightNumber: QR3121
+                              id: 76380954-3a35-4de2-8c32-f62ab94e7099
+                              origin:
+                                city: Doha
+                                code: DOH
+                                country: Qatar
+                                name: Hamad International Airport
+                              originId: 950d78c3-b084-4ae1-929a-67678322d737
+                              price: 1634
+                              status: SCHEDULED
+                          legs: 2
+                        - flights:
+                            - airline:
+                                code: MU
+                                name: China Eastern Airlines
+                              arrivalTime: '2024-11-08T10:10:00.000Z'
+                              availableSeats: 83
+                              currency: CAD
+                              departureTime: '2024-11-07T20:35:00.000Z'
+                              destination:
+                                city: Paris
+                                code: CDG
+                                country: France
+                                name: Charles de Gaulle Airport
+                              destinationId: fa35cff2-4d06-4933-9e2b-b3f329253b48
+                              duration: 815
+                              flightNumber: MU3172
+                              id: 42c470f2-5ede-4cf4-8fae-5c3b1a99b83d
+                              origin:
+                                city: Shanghai
+                                code: PVG
+                                country: China
+                                name: Shanghai Pudong International Airport
+                              originId: 42fb9788-abab-4395-be2c-0ee891a161d6
+                              price: 1544
+                              status: SCHEDULED
+                            - airline:
+                                code: AF
+                                name: Air France
+                              arrivalTime: '2024-11-08T16:50:00.000Z'
+                              availableSeats: 120
+                              currency: CAD
+                              departureTime: '2024-11-08T11:10:00.000Z'
+                              destination:
+                                city: Toronto
+                                code: YTZ
+                                country: Canada
+                                name: Billy Bishop Toronto City Airport
+                              destinationId: b4183787-d9e7-4c29-939d-1cc1cfc72b19
+                              duration: 340
+                              flightNumber: AF590
+                              id: ebad0b78-5ad9-4db3-ae3f-2e6a25f0d037
+                              origin:
+                                city: Paris
+                                code: CDG
+                                country: France
+                                name: Charles de Gaulle Airport
+                              originId: fa35cff2-4d06-4933-9e2b-b3f329253b48
+                              price: 895
+                              status: SCHEDULED
+                          legs: 2
+                Suggested Some Hotel:
+                  value:
+                    checkIn: '2025-04-21T00:00:00.000Z'
+                    hotels:
+                      - address: 123 Beach Road, Sunshine City
+                        city: Toronto
+                        createdAt: '2025-03-08T05:19:27.638Z'
+                        id: 1
+                        images:
+                          - https://example.com/image1.png
+                        logo: https://example.com/logo.png
+                        name: cccccc Sunshine
+                        ownerId: 1
+                        starRating: 3
+                        updatedAt: '2025-03-08T05:19:27.638Z'
+                      - address: 123 Beach Road, Sunshine City
+                        city: Toronto
+                        createdAt: '2025-03-08T14:32:38.294Z'
+                        id: 2
+                        images:
+                          - https://example.com/image1.png
+                        logo: https://example.com/logo.png
+                        name: cccccc Sunshine
+                        ownerId: 1
+                        starRating: 3
+                        updatedAt: '2025-03-08T14:32:38.294Z'
+  /bookings:
+    get:
+      tags:
+        - Bookings
+      summary: Get Pending Booking
+      description: >-
+        Get booking information of currently pending booking for user to view.
+
+
+        Input: booking id in url.
+
+
+        Output: booking information.
+
+
+        The parameter includes a booking id to get the corresponding booking
+        information as response. For user to view the booking they have
+        currently pending.
+      operationId: getPendingBooking
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+            example: '3'
+      responses:
+        '200':
+          description: Get Pending Booking
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 14:40:08 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookRef:
+                    nullable: true
+                    example: null
+                  checkIn:
+                    type: string
+                    example: '2025-03-11T00:00:00.000Z'
+                  checkOut:
+                    type: string
+                    example: '2025-03-15T00:00:00.000Z'
+                  createdAt:
+                    type: string
+                    example: '2025-03-08T14:35:15.242Z'
+                  flights:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        airline:
+                          type: string
+                          example: MU, China Eastern Airlines
+                        arrivalTime:
+                          type: string
+                          example: '2024-11-08T05:55:00.000Z'
+                        departureTime:
+                          type: string
+                          example: '2024-11-07T18:25:00.000Z'
+                        destination:
+                          type: string
+                          example: >-
+                            MNL, Ninoy Aquino International Airport, Manila,
+                            Philippines
+                        flightCost:
+                          type: number
+                          example: 928
+                        flightId:
+                          type: string
+                          example: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum:
+                          type: string
+                          example: MU8547
+                        origin:
+                          type: string
+                          example: >-
+                            PVG, Shanghai Pudong International Airport,
+                            Shanghai, China
+                    example:
+                      - airline: MU, China Eastern Airlines
+                        arrivalTime: '2024-11-08T05:55:00.000Z'
+                        departureTime: '2024-11-07T18:25:00.000Z'
+                        destination: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                        flightCost: 928
+                        flightId: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum: MU8547
+                        origin: >-
+                          PVG, Shanghai Pudong International Airport, Shanghai,
+                          China
+                      - airline: PR, Philippine Airlines
+                        arrivalTime: '2024-11-09T06:10:00.000Z'
+                        departureTime: '2024-11-08T18:20:00.000Z'
+                        destination: >-
+                          YTZ, Billy Bishop Toronto City Airport, Toronto,
+                          Canada
+                        flightCost: 710
+                        flightId: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                        flightNum: PR2062
+                        origin: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                  hotelCost:
+                    type: number
+                    example: 600
+                  id:
+                    type: number
+                    example: 3
+                  itinerary:
+                    type: string
+                    example: ONEWAY_AND_HOTEL
+                  room:
+                    type: object
+                    properties:
+                      amenities:
+                        type: array
+                        items:
+                          type: string
+                          example: WiFi
+                        example:
+                          - WiFi
+                          - Air Conditioning
+                          - TV
+                          - Mini Bar
+                      createdAt:
+                        type: string
+                        example: '2025-03-08T05:21:30.117Z'
+                      hotelId:
+                        type: number
+                        example: 1
+                      id:
+                        type: number
+                        example: 1
+                      images:
+                        type: array
+                        items:
+                          type: string
+                          example: room1.jpg
+                        example:
+                          - room1.jpg
+                          - room2.jpg
+                      pricePerNight:
+                        type: number
+                        example: 150
+                      type:
+                        type: string
+                        example: '301'
+                      updatedAt:
+                        type: string
+                        example: '2025-03-08T05:21:30.117Z'
+                  roomId:
+                    type: number
+                    example: 1
+                  status:
+                    type: string
+                    example: PENDING
+                  ticketNum:
+                    nullable: true
+                    example: null
+                  updatedAt:
+                    type: string
+                    example: '2025-03-08T14:39:15.149Z'
+                  userId:
+                    type: number
+                    example: 1
+              examples:
+                Get Pending Booking:
+                  value:
+                    bookRef: null
+                    checkIn: '2025-03-11T00:00:00.000Z'
+                    checkOut: '2025-03-15T00:00:00.000Z'
+                    createdAt: '2025-03-08T14:35:15.242Z'
+                    flights:
+                      - airline: MU, China Eastern Airlines
+                        arrivalTime: '2024-11-08T05:55:00.000Z'
+                        departureTime: '2024-11-07T18:25:00.000Z'
+                        destination: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                        flightCost: 928
+                        flightId: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum: MU8547
+                        origin: >-
+                          PVG, Shanghai Pudong International Airport, Shanghai,
+                          China
+                      - airline: PR, Philippine Airlines
+                        arrivalTime: '2024-11-09T06:10:00.000Z'
+                        departureTime: '2024-11-08T18:20:00.000Z'
+                        destination: >-
+                          YTZ, Billy Bishop Toronto City Airport, Toronto,
+                          Canada
+                        flightCost: 710
+                        flightId: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                        flightNum: PR2062
+                        origin: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                    hotelCost: 600
+                    id: 3
+                    itinerary: ONEWAY_AND_HOTEL
+                    room:
+                      amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      createdAt: '2025-03-08T05:21:30.117Z'
+                      hotelId: 1
+                      id: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 150
+                      type: '301'
+                      updatedAt: '2025-03-08T05:21:30.117Z'
+                    roomId: 1
+                    status: PENDING
+                    ticketNum: null
+                    updatedAt: '2025-03-08T14:39:15.149Z'
+                    userId: 1
+  /records/{id}:
+    get:
+      tags:
+        - Records
+        - '[id]'
+      summary: Booking Details by Id
+      description: >-
+        Get booking details of booking with specific id.
+
+
+        Input: booking id in url.
+
+
+        Output: detailed booking information.
+
+
+        The url with booking id indicates the booking information to retrieve as
+        response. The response would be a detailed booking information with
+        flight information and room and hotel information of the booking.
+      operationId: bookingDetailsById
+      responses:
+        '200':
+          description: Get Booking Detail of Id 3
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 15:09:56 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookRef:
+                    type: string
+                    example: AD33AE
+                  checkIn:
+                    type: string
+                    example: '2025-03-11T00:00:00.000Z'
+                  checkOut:
+                    type: string
+                    example: '2025-03-15T00:00:00.000Z'
+                  createdAt:
+                    type: string
+                    example: '2025-03-08T14:35:15.242Z'
+                  flights:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        airline:
+                          type: string
+                          example: MU, China Eastern Airlines
+                        arrivalTime:
+                          type: string
+                          example: '2024-11-08T05:55:00.000Z'
+                        departureTime:
+                          type: string
+                          example: '2024-11-07T18:25:00.000Z'
+                        destination:
+                          type: string
+                          example: >-
+                            MNL, Ninoy Aquino International Airport, Manila,
+                            Philippines
+                        flightCost:
+                          type: number
+                          example: 928
+                        flightId:
+                          type: string
+                          example: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum:
+                          type: string
+                          example: MU8547
+                        origin:
+                          type: string
+                          example: >-
+                            PVG, Shanghai Pudong International Airport,
+                            Shanghai, China
+                    example:
+                      - airline: MU, China Eastern Airlines
+                        arrivalTime: '2024-11-08T05:55:00.000Z'
+                        departureTime: '2024-11-07T18:25:00.000Z'
+                        destination: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                        flightCost: 928
+                        flightId: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum: MU8547
+                        origin: >-
+                          PVG, Shanghai Pudong International Airport, Shanghai,
+                          China
+                      - airline: PR, Philippine Airlines
+                        arrivalTime: '2024-11-09T06:10:00.000Z'
+                        departureTime: '2024-11-08T18:20:00.000Z'
+                        destination: >-
+                          YTZ, Billy Bishop Toronto City Airport, Toronto,
+                          Canada
+                        flightCost: 710
+                        flightId: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                        flightNum: PR2062
+                        origin: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                  hotelCost:
+                    type: number
+                    example: 600
+                  id:
+                    type: number
+                    example: 3
+                  itinerary:
+                    type: string
+                    example: ONEWAY_AND_HOTEL
+                  room:
+                    type: object
+                    properties:
+                      amenities:
+                        type: array
+                        items:
+                          type: string
+                          example: WiFi
+                        example:
+                          - WiFi
+                          - Air Conditioning
+                          - TV
+                          - Mini Bar
+                      createdAt:
+                        type: string
+                        example: '2025-03-08T05:21:30.117Z'
+                      hotel:
+                        type: object
+                        properties:
+                          address:
+                            type: string
+                            example: 123 Beach Road, Sunshine City
+                          city:
+                            type: string
+                            example: Toronto
+                          createdAt:
+                            type: string
+                            example: '2025-03-08T05:19:27.638Z'
+                          id:
+                            type: number
+                            example: 1
+                          images:
+                            type: array
+                            items:
+                              type: string
+                              example: https://example.com/image1.png
+                            example:
+                              - https://example.com/image1.png
+                          logo:
+                            type: string
+                            example: https://example.com/logo.png
+                          name:
+                            type: string
+                            example: cccccc Sunshine
+                          ownerId:
+                            type: number
+                            example: 1
+                          starRating:
+                            type: number
+                            example: 3
+                          updatedAt:
+                            type: string
+                            example: '2025-03-08T05:19:27.638Z'
+                      hotelId:
+                        type: number
+                        example: 1
+                      id:
+                        type: number
+                        example: 1
+                      images:
+                        type: array
+                        items:
+                          type: string
+                          example: room1.jpg
+                        example:
+                          - room1.jpg
+                          - room2.jpg
+                      pricePerNight:
+                        type: number
+                        example: 150
+                      type:
+                        type: string
+                        example: '301'
+                      updatedAt:
+                        type: string
+                        example: '2025-03-08T05:21:30.117Z'
+                  roomId:
+                    type: number
+                    example: 1
+                  status:
+                    type: string
+                    example: CONFIRMED
+                  ticketNum:
+                    type: string
+                    example: c3b24fec24
+                  updatedAt:
+                    type: string
+                    example: '2025-03-08T14:58:01.051Z'
+                  userId:
+                    type: number
+                    example: 1
+              examples:
+                Get Booking Detail of Id 3:
+                  value:
+                    bookRef: AD33AE
+                    checkIn: '2025-03-11T00:00:00.000Z'
+                    checkOut: '2025-03-15T00:00:00.000Z'
+                    createdAt: '2025-03-08T14:35:15.242Z'
+                    flights:
+                      - airline: MU, China Eastern Airlines
+                        arrivalTime: '2024-11-08T05:55:00.000Z'
+                        departureTime: '2024-11-07T18:25:00.000Z'
+                        destination: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                        flightCost: 928
+                        flightId: 41ce6d63-192d-4707-92b5-ed8655510bd3
+                        flightNum: MU8547
+                        origin: >-
+                          PVG, Shanghai Pudong International Airport, Shanghai,
+                          China
+                      - airline: PR, Philippine Airlines
+                        arrivalTime: '2024-11-09T06:10:00.000Z'
+                        departureTime: '2024-11-08T18:20:00.000Z'
+                        destination: >-
+                          YTZ, Billy Bishop Toronto City Airport, Toronto,
+                          Canada
+                        flightCost: 710
+                        flightId: a5689f60-2feb-4237-b6c3-0383472dd5bd
+                        flightNum: PR2062
+                        origin: >-
+                          MNL, Ninoy Aquino International Airport, Manila,
+                          Philippines
+                    hotelCost: 600
+                    id: 3
+                    itinerary: ONEWAY_AND_HOTEL
+                    room:
+                      amenities:
+                        - WiFi
+                        - Air Conditioning
+                        - TV
+                        - Mini Bar
+                      createdAt: '2025-03-08T05:21:30.117Z'
+                      hotel:
+                        address: 123 Beach Road, Sunshine City
+                        city: Toronto
+                        createdAt: '2025-03-08T05:19:27.638Z'
+                        id: 1
+                        images:
+                          - https://example.com/image1.png
+                        logo: https://example.com/logo.png
+                        name: cccccc Sunshine
+                        ownerId: 1
+                        starRating: 3
+                        updatedAt: '2025-03-08T05:19:27.638Z'
+                      hotelId: 1
+                      id: 1
+                      images:
+                        - room1.jpg
+                        - room2.jpg
+                      pricePerNight: 150
+                      type: '301'
+                      updatedAt: '2025-03-08T05:21:30.117Z'
+                    roomId: 1
+                    status: CONFIRMED
+                    ticketNum: c3b24fec24
+                    updatedAt: '2025-03-08T14:58:01.051Z'
+                    userId: 1
+    patch:
+      tags:
+        - Records
+        - '[id]'
+      summary: Cancel Booking by Id
+      description: >-
+        Cancel completed booking or cancel parts of booking.
+
+
+        Input: booking id in url, type of cancellation in cancelType, the flight
+        ids of flight to cancel in cancelFlight, and boolean cancelHotel to
+        determine whether hotel should be cancelled.
+
+
+        Output: booking information after cancel.
+
+
+        Based on the booking id in url and the json request, we cancel the
+        entire booking or parts of booking, indicated by cancelType ("ALL" or
+        "PARTIAL").
+
+
+        The cancelHotel is used to indicate whether we cancel the hotel or not,
+        and cancelFlight is used to indicate the flight(s) to cancel with a list
+        of flight ids. If we cancel everything, we need to include the
+        cancelHotel (normally we need to include cancelFlight as well, but it
+        was said that flight cancellation is not required for PP1 so it was
+        taken off for simplicity). Partial cancellation only allows hotel
+        cancellation for now.
+
+
+        The response is the updated booking information.
+      operationId: cancelBookingById
+      requestBody:
+        content:
+          application/json:
+            examples:
+              Cancel Booking by Id:
+                value: |-
+                  {
+                      "cancelType": "PARTIAL", // if what you're cancelling is everything in the booking, then ALL, otherwise PARTIAL
+                      "cancelHotel": true
+                  }
+      responses:
+        '200':
+          description: Cancel Entire Booking / Cancel Hotel of Booking
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sat, 08 Mar 2025 15:13:22 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  bookRef:
+                    type: string
+                    example: AD33AE
+                  checkIn:
+                    type: string
+                    nullable: true
+                    example: '2025-03-11T00:00:00.000Z'
+                  checkOut:
+                    type: string
+                    nullable: true
+                    example: '2025-03-15T00:00:00.000Z'
+                  createdAt:
+                    type: string
+                    example: '2025-03-08T14:35:15.242Z'
+                  hotelCost:
+                    type: number
+                    example: 600
+                  id:
+                    type: number
+                    example: 3
+                  itinerary:
+                    type: string
+                    example: ONEWAY_AND_HOTEL
+                  roomId:
+                    type: number
+                    nullable: true
+                    example: 1
+                  status:
+                    type: string
+                    example: CANCELED
+                  ticketNum:
+                    type: string
+                    example: c3b24fec24
+                  updatedAt:
+                    type: string
+                    example: '2025-03-08T15:11:47.520Z'
+                  userId:
+                    type: number
+                    example: 1
+              examples:
+                Cancel Entire Booking:
+                  value:
+                    bookRef: AD33AE
+                    checkIn: '2025-03-11T00:00:00.000Z'
+                    checkOut: '2025-03-15T00:00:00.000Z'
+                    createdAt: '2025-03-08T14:35:15.242Z'
+                    hotelCost: 600
+                    id: 3
+                    itinerary: ONEWAY_AND_HOTEL
+                    roomId: 1
+                    status: CANCELED
+                    ticketNum: c3b24fec24
+                    updatedAt: '2025-03-08T15:11:47.520Z'
+                    userId: 1
+                Cancel Hotel of Booking:
+                  value:
+                    bookRef: 252F60
+                    checkIn: null
+                    checkOut: null
+                    createdAt: '2025-03-08T15:01:44.164Z'
+                    hotelCost: 0
+                    id: 4
+                    itinerary: FLIGHT_ROUNDTRIP
+                    roomId: null
+                    status: CONFIRMED
+                    ticketNum: 1e037c931e
+                    updatedAt: '2025-03-08T15:13:22.393Z'
+                    userId: 1
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '3'
+  /notifications/{nid}:
+    put:
+      tags:
+        - Notifications
+        - '[nid]'
+      summary: Mark as read
+      description: Mark the notification as read.
+      operationId: markAsRead
+      responses:
+        '200':
+          description: Mark as read
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sun, 09 Mar 2025 00:05:20 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: notification updated successfully
+                  notification:
+                    type: object
+                    properties:
+                      createdAt:
+                        type: string
+                        example: '2025-03-09T00:01:06.129Z'
+                      id:
+                        type: number
+                        example: 1
+                      isRead:
+                        type: boolean
+                        example: true
+                      isUpdate:
+                        type: boolean
+                        example: false
+                      message:
+                        type: string
+                        example: >-
+                          To owner: The 101 Room in your Toronto Hotel Hotel has
+                          been booked from Mon Mar 10 2025 20:00:00 GMT-0400
+                          (Eastern Daylight Saving Time) to Fri Mar 14 2025
+                          20:00:00 GMT-0400 (Eastern Daylight Saving Time),
+                          income: 600.
+                      updatedAt:
+                        type: string
+                        example: '2025-03-09T00:05:20.233Z'
+                      userId:
+                        type: number
+                        example: 2
+              examples:
+                Mark as read:
+                  value:
+                    message: notification updated successfully
+                    notification:
+                      createdAt: '2025-03-09T00:01:06.129Z'
+                      id: 1
+                      isRead: true
+                      isUpdate: false
+                      message: >-
+                        To owner: The 101 Room in your Toronto Hotel Hotel has
+                        been booked from Mon Mar 10 2025 20:00:00 GMT-0400
+                        (Eastern Daylight Saving Time) to Fri Mar 14 2025
+                        20:00:00 GMT-0400 (Eastern Daylight Saving Time),
+                        income: 600.
+                      updatedAt: '2025-03-09T00:05:20.233Z'
+                      userId: 2
+    parameters:
+      - name: nid
+        in: path
+        required: true
+        schema:
+          type: string
+          example: '1'
+  /notifications:
+    get:
+      tags:
+        - Notifications
+      summary: get notification list
+      description: >-
+        return the whole notification list,
+
+
+        or filter the unread notifications only, if parameter `unreadOnly` is
+        true.
+      operationId: getNotificationList
+      parameters:
+        - name: unreadOnly
+          in: query
+          schema:
+            type: string
+            example: 'true'
+          description: optional, value must be true or false, case insensitive
+      responses:
+        '200':
+          description: Get all notifications / get unread notification list
+          headers:
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Date:
+              schema:
+                type: string
+                example: Sun, 09 Mar 2025 00:29:57 GMT
+            Keep-Alive:
+              schema:
+                type: string
+                example: timeout=5
+            Transfer-Encoding:
+              schema:
+                type: string
+                example: chunked
+            vary:
+              schema:
+                type: string
+                example: >-
+                  RSC, Next-Router-State-Tree, Next-Router-Prefetch,
+                  Next-Router-Segment-Prefetch
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    createdAt:
+                      type: string
+                      example: '2025-03-08T22:43:07.293Z'
+                    id:
+                      type: string
+                      example: d747c6c4-d3c0-4086-987c-f261c3844e15
+                    isRead:
+                      type: boolean
+                      example: false
+                    isUpdate:
+                      type: boolean
+                      example: false
+                    message:
+                      type: string
+                      example: >-
+                        To user mary: Your Flight Ticket has been booked,
+                        BookingId: 2.
+                    updatedAt:
+                      type: string
+                      example: '2025-03-08T22:43:07.293Z'
+                    userId:
+                      type: number
+                      example: 3
+                example:
+                  - createdAt: '2025-03-08T22:43:07.293Z'
+                    id: d747c6c4-d3c0-4086-987c-f261c3844e15
+                    isRead: false
+                    isUpdate: false
+                    message: >-
+                      To user mary: Your Flight Ticket has been booked,
+                      BookingId: 2.
+                    updatedAt: '2025-03-08T22:43:07.293Z'
+                    userId: 3
+                  - createdAt: '2025-03-08T22:41:36.666Z'
+                    id: 329b42b7-0630-47c8-b650-e504da7fcb10
+                    isRead: false
+                    isUpdate: false
+                    message: >-
+                      To user mary: 101 Room in Toronto Hotel Hotel has been
+                      booked from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern
+                      Daylight Saving Time) to Fri Mar 14 2025 20:00:00 GMT-0400
+                      (Eastern Daylight Saving Time), total cost: 600.
+                    updatedAt: '2025-03-08T22:41:36.666Z'
+                    userId: 3
+              examples:
+                Get all notifications:
+                  value:
+                    - createdAt: '2025-03-08T22:43:07.293Z'
+                      id: d747c6c4-d3c0-4086-987c-f261c3844e15
+                      isRead: false
+                      isUpdate: false
+                      message: >-
+                        To user mary: Your Flight Ticket has been booked,
+                        BookingId: 2.
+                      updatedAt: '2025-03-08T22:43:07.293Z'
+                      userId: 3
+                    - createdAt: '2025-03-08T22:41:36.666Z'
+                      id: 329b42b7-0630-47c8-b650-e504da7fcb10
+                      isRead: false
+                      isUpdate: false
+                      message: >-
+                        To user mary: 101 Room in Toronto Hotel Hotel has been
+                        booked from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern
+                        Daylight Saving Time) to Fri Mar 14 2025 20:00:00
+                        GMT-0400 (Eastern Daylight Saving Time), total cost:
+                        600.
+                      updatedAt: '2025-03-08T22:41:36.666Z'
+                      userId: 3
+                get unread notification list:
+                  value:
+                    - createdAt: '2025-03-09T00:10:39.492Z'
+                      id: 3
+                      isRead: false
+                      isUpdate: false
+                      message: >-
+                        To user yoyo: Your booking of 101 Room in Toronto Hotel
+                        Hotel from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern
+                        Daylight Saving Time) to Fri Mar 14 2025 20:00:00
+                        GMT-0400 (Eastern Daylight Saving Time) has been
+                        cancelled by the hotel owner.
+                      updatedAt: '2025-03-09T00:10:39.492Z'
+                      userId: 2
+                    - createdAt: '2025-03-09T00:01:06.143Z'
+                      id: 2
+                      isRead: false
+                      isUpdate: false
+                      message: >-
+                        To user yoyo: 101 Room in Toronto Hotel Hotel has been
+                        booked from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern
+                        Daylight Saving Time) to Fri Mar 14 2025 20:00:00
+                        GMT-0400 (Eastern Daylight Saving Time), total cost:
+                        600.
+                      updatedAt: '2025-03-09T00:01:06.143Z'
+                      userId: 2
+components:
+  securitySchemes: {}
+tags:
+  - name: Users
+    description: >-
+      Deal with user signup, login, logout, get account infomation, and update
+      profile.
+  - name: status
+    description: Deal with user login or logout.
+  - name: Flights
+    description: Search for the flights that meets up user's request.
+  - name: Destinations
+  - name: Hotels
+  - name: '[hotel_id]'
+  - name: rooms
+  - name: bookings
+  - name: Bookings
+    description: >-
+      Endpoint where all bookings happen, from creating booking, to getting
+      suggestions, updating pending booking, and checkout booking. Implements
+      Booking user story 1-3
+  - name: Checkout
+    description: >-
+      Endpoint for user to checkout their currently pending booking (each user
+      can only have 1 pending booking at a time). If the checkout is successful,
+      then the booking would change to be confirmed and retrievable in records.
+  - name: Suggestions
+  - name: Records
+    description: >-
+      Includes the functionality to show completed or cancelled booking to user,
+      cancel/partial cancel booking, get invoice information, and verify flight
+      booking status. Implemented Booking user story 4-7.
+  - name: '[id]'
+    description: >-
+      Endpoint with specific booking id to perform the user story 4-7
+      functionality on specific booking.
+  - name: Verify
+    description: >-
+      Endpoint to verify the flight booking status of booking. Designed to only
+      be accessible by bookings with a flight (needs implementation in frontend
+      to achieve this).
+  - name: Invoice
+    description: Endpoint to check the invoice of a booking
+  - name: Notifications
+    description: Endpoint to retrieve notifications for user to view.
+  - name: '[nid]'
+    description: Endpoint where a specific notification is viewed.

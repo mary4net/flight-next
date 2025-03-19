@@ -1,0 +1,2957 @@
+{
+	"info": {
+		"_postman_id": "59cc9f02-f669-4472-9cbe-e024930cc2fe",
+		"name": "FlyNext: your most reliable travel companion!",
+		"description": "List of APIs provided by **FlyNext (FN).**\n\nThe FlyNext API provides RESTful endpoints for users to search for flights, book travel itineraries (including flights and hotels), and manage bookings, and for hotel owners to signup and manage thir hotels bookings. It also includes auxiliary APIs for retrieving booking details, listing cities, airports.\n\n### **Key Features:**\n\n- **User Accounts**: Sign up, log in, log out, and manage user profiles with JWT-based authentication.\n    \n- **Flight Search**: Search for one-way and round-trip flights based on source, destination (city/airport), and date(s). View flight details, including departure/arrival times, duration, and layovers.\n    \n- **Hotel Management**: Hotel owners can add and manage hotels, define room types, track bookings, cancel orders and view availability.\n    \n- **Hotel Search**: Users can search hotels by date, city, star rating, and price range, viewing available room details.\n    \n- **Booking System**: Users can book flights and hotels, view booking details, cancel reservations, and receive invoices.\n    \n- **Notifications**: Users and hotel owners receive updates on booking confirmations, cancellations.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33512402",
+		"_collection_link": "https://part17.postman.co/workspace/309-part1-Workspace~3ff1c0c8-40a3-4d98-8573-d54e268eb789/collection/42859981-59cc9f02-f669-4472-9cbe-e024930cc2fe?action=share&source=collection_link&creator=33512402"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "status",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"mary@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"status"
+									]
+								},
+								"description": "This API endpoint is used for user authentication.\n\ninput: email, password\n\nreturn: an access token stored in cookies.\n\nThe user provides their email and password, and if the credentials are valid, the server generates and returns an access token, which can be used for future authenticated requests. The response also includes basic user information such as id, firstName, and lastName."
+							},
+							"response": [
+								{
+									"name": "Login owner",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"yoyo@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/users/status",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users",
+												"status"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "set-cookie",
+											"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6IkhPVEVMX09XTkVSIiwiaWF0IjoxNzQxNDY3NTA4LCJleHAiOjE3NDE0ODU1MDh9.W_ddQVHW-wfsUFf0Esqewkf7rXBWgz0UAEpAP0eRXM0; Path=/; Expires=Sat, 15 Mar 2025 20:58:28 GMT; Max-Age=604800; HttpOnly"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 20:58:28 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"User login successfully\",\n    \"user\": {\n        \"id\": 2,\n        \"firstName\": \"vi\",\n        \"lastName\": \"user\",\n        \"email\": \"yoyo@example.com\",\n        \"password\": \"$2b$10$ImF1V0zPBGV.061EhOXoIOS0Qjyx3lQV0HKkWUNkx7eInU0LDQJ5i\",\n        \"phoneNumber\": \"1234567890\",\n        \"profilePicture\": null,\n        \"role\": \"HOTEL_OWNER\",\n        \"createdAt\": \"2025-03-08T20:56:21.116Z\",\n        \"updatedAt\": \"2025-03-08T20:56:21.116Z\"\n    }\n}"
+								},
+								{
+									"name": "Login user",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"email\": \"mary@example.com\",\r\n  \"password\": \"password123\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/users/status",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users",
+												"status"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "set-cookie",
+											"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlJFR1VMQVJfVVNFUiIsImlhdCI6MTc0MTQ2NzU2OSwiZXhwIjoxNzQxNDg1NTY5fQ.nd-SJx0QtRcuRzU3kK0U3HX57JTM_jOByGKFy9Ja6Wo; Path=/; Expires=Sat, 15 Mar 2025 20:59:29 GMT; Max-Age=604800; HttpOnly"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 20:59:29 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"User login successfully\",\n    \"user\": {\n        \"id\": 3,\n        \"firstName\": \"mary\",\n        \"lastName\": \"xu\",\n        \"email\": \"mary@example.com\",\n        \"password\": \"$2b$10$DCZSfR5Yo7heTpIAMFO/c.Zo2nOkH.4YK4Dn9IF5.iTbVJtcVyDi2\",\n        \"phoneNumber\": \"1234567890\",\n        \"profilePicture\": null,\n        \"role\": \"REGULAR_USER\",\n        \"createdAt\": \"2025-03-08T20:56:46.181Z\",\n        \"updatedAt\": \"2025-03-08T20:56:46.181Z\"\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "Logout",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users/status",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users",
+										"status"
+									]
+								},
+								"description": "return: message indicating success/failure of logging out\n\nThis API endpoint is used to log out a user by invalidating their active session. The user must provide a valid access token in the request header. Once the request is successfully processed, the server will remove or invalidate the access token, effectively logging out the user and ensuring they no longer have access to protected resources."
+							},
+							"response": [
+								{
+									"name": "Logout",
+									"originalRequest": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Cookie",
+												"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Miwicm9sZSI6IkhPVEVMX09XTkVSIiwiaWF0IjoxNzQxNDY3NjkzLCJleHAiOjE3NDE0ODU2OTN9.r2wYb5EKdQiPHwH5Zt7G4JAes79llqW633rWrbfB2Lw",
+												"description": "mock user login. Should only have this cookie after user signup/login",
+												"type": "text",
+												"disabled": true
+											}
+										],
+										"url": {
+											"raw": "{{base_url}}/users/status",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"users",
+												"status"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "set-cookie",
+											"value": "accessToken=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 21:02:51 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"Logged out successfully\"\n}"
+								}
+							]
+						}
+					],
+					"description": "Deal with user login or logout."
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"yoyo@example.com\",\r\n  \"password\": \"password123\",\r\n  \"firstName\": \"vi\",\r\n  \"lastName\": \"user\",\r\n  \"phoneNumber\": \"1234567890\",\r\n  \"role\": \"HOTEL_OWNER\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "input: email, password, firstName, lastName, phoneNumber\n\nreturn: message whether or not signing up is successful, on success, returns user id and userRole\n\nThis endpoint is used to create a new user account by providing the necessary details such as email, password, first name, last name, phone number, and user role. Depending on the provided role (`HOTEL_OWNER` or `REGULAR_USER`), the user will be assigned the appropriate privileges."
+					},
+					"response": [
+						{
+							"name": "Signup user",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"mary@example.com\",\r\n  \"password\": \"password123\",\r\n  \"firstName\": \"mary\",\r\n  \"lastName\": \"xu\",\r\n  \"phoneNumber\": \"1234567890\",\r\n  \"role\": \"REGULAR_USER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "set-cookie",
+									"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlJFR1VMQVJfVVNFUiIsImlhdCI6MTc0MTQ2NzQwNiwiZXhwIjoxNzQxNDg1NDA2fQ.Y-7GCJc-0Q8AYk1mgzN0c7tHpAUaoWqw6W4rkscXgd4; Path=/; Expires=Sat, 15 Mar 2025 20:56:46 GMT; Max-Age=604800; HttpOnly"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 20:56:46 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User created successfully\",\n    \"user\": {\n        \"id\": 3,\n        \"role\": \"REGULAR_USER\"\n    }\n}"
+						},
+						{
+							"name": "Signup owner",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"email\": \"yoyo@example.com\",\r\n  \"password\": \"password123\",\r\n  \"firstName\": \"yoyo\",\r\n  \"lastName\": \"li\",\r\n  \"phoneNumber\": \"1234567890\",\r\n  \"role\": \"HOTEL_OWNER\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "set-cookie",
+									"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IkhPVEVMX09XTkVSIiwiaWF0IjoxNzQxNDcyNDc5LCJleHAiOjE3NDE0OTA0Nzl9.99nHnkaN7m6nxkIIrQVRpyI0OIwCgTNqWIgBhn5o8vM; Path=/; Expires=Sat, 15 Mar 2025 22:21:19 GMT; Max-Age=604800; HttpOnly"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 22:21:19 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User created successfully\",\n    \"user\": {\n        \"id\": 5,\n        \"role\": \"HOTEL_OWNER\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get account",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "input: no parameter needed. uses the JWT token stored in cookie to specify user.\n\nThis API endpoint is used to retrieve the account information of the authenticated user. The user must be logged in, and the request must include a valid JWT token in the `Authorization` header."
+					},
+					"response": [
+						{
+							"name": "Get account info",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 22:22:00 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Account info got successfully\",\n    \"user\": {\n        \"id\": 5,\n        \"firstName\": \"yoyo\",\n        \"lastName\": \"li\",\n        \"email\": \"yoyo@example.com\",\n        \"password\": \"$2b$10$qeJEAroid3scv5ONdY1fT.GfYuI9VCmOZb5Pw.yBjxqS2uoGyzyb.\",\n        \"phoneNumber\": \"1234567890\",\n        \"profilePicture\": null,\n        \"role\": \"HOTEL_OWNER\",\n        \"createdAt\": \"2025-03-08T22:21:19.698Z\",\n        \"updatedAt\": \"2025-03-08T22:21:19.698Z\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit account",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"firstName\": \"mary\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "input: json of the field that user wants to update.\n\nFields that could be updated: `firstName`, `lastName`,`email, phoneNumber, profilePicture`\n\nThis API endpoint allows the authenticated user to update their profile information. The request must include a valid JWT token in the `Authorization` header. Users can modify their profile details like `firstName`, `lastName`, `phoneNumber`, etc."
+					},
+					"response": [
+						{
+							"name": "Edit account info",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"phoneNumber\": \"1122334455\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"users"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 22:22:39 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Profile updated successfully\",\n    \"user\": {\n        \"id\": 5,\n        \"firstName\": \"yoyo\",\n        \"lastName\": \"li\",\n        \"email\": \"yoyo@example.com\",\n        \"password\": \"$2b$10$qeJEAroid3scv5ONdY1fT.GfYuI9VCmOZb5Pw.yBjxqS2uoGyzyb.\",\n        \"phoneNumber\": \"1122334455\",\n        \"profilePicture\": null,\n        \"role\": \"HOTEL_OWNER\",\n        \"createdAt\": \"2025-03-08T22:21:19.698Z\",\n        \"updatedAt\": \"2025-03-08T22:22:39.915Z\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Deal with user signup, login, logout, get account infomation, and update profile."
+		},
+		{
+			"name": "Flights",
+			"item": [
+				{
+					"name": "Get flight",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/flights?origin=YYZ&destination=ATH&date=2025-04-10, 2025-04-20&round=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"flights"
+							],
+							"query": [
+								{
+									"key": "origin",
+									"value": "YYZ",
+									"description": "can either be city or airport code, city must in Title case."
+								},
+								{
+									"key": "destination",
+									"value": "ATH",
+									"description": "can either be city or airport code, airport code must all in CAPITAL case."
+								},
+								{
+									"key": "date",
+									"value": "2025-04-10, 2025-04-20",
+									"description": "must have 2 dates if it's round trip. Otherwise only one date."
+								},
+								{
+									"key": "round",
+									"value": "true",
+									"description": "optional parm. Value must be true or false, case insensitive."
+								}
+							]
+						},
+						"description": "input: origin, destination, date, round\n\nreturn: list of flights that flys from origin to destination."
+					},
+					"response": [
+						{
+							"name": "Get flight",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flights?origin=Toronto&destination=PVG&date=2024-11-07&round=false",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flights"
+									],
+									"query": [
+										{
+											"key": "origin",
+											"value": "Toronto",
+											"description": "can either be city or airport code, city must in Title case."
+										},
+										{
+											"key": "destination",
+											"value": "PVG",
+											"description": "can either be city or airport code, airport code must all in CAPITAL case."
+										},
+										{
+											"key": "date",
+											"value": "2024-11-07"
+										},
+										{
+											"key": "round",
+											"value": "false",
+											"description": "can either ignore this param, or set false. \nvalue must be true or false, case insensitive."
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 21:08:23 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"results\": [\n        {\n            \"legs\": 1,\n            \"flights\": [\n                {\n                    \"id\": \"235ebdd8-66ca-4c63-8a82-aa649762b8ed\",\n                    \"flightNumber\": \"AC7148\",\n                    \"departureTime\": \"2024-11-07T15:05:00.000Z\",\n                    \"arrivalTime\": \"2024-11-07T23:10:00.000Z\",\n                    \"originId\": \"370d2633-ba94-47f5-a735-513c0e332224\",\n                    \"destinationId\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n                    \"duration\": 485,\n                    \"price\": 669,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 189,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"AC\",\n                        \"name\": \"Air Canada\"\n                    },\n                    \"origin\": {\n                        \"code\": \"YYZ\",\n                        \"name\": \"Toronto Pearson International Airport\",\n                        \"city\": \"Toronto\",\n                        \"country\": \"Canada\"\n                    },\n                    \"destination\": {\n                        \"code\": \"PVG\",\n                        \"name\": \"Shanghai Pudong International Airport\",\n                        \"city\": \"Shanghai\",\n                        \"country\": \"China\"\n                    }\n                }\n            ]\n        },\n        {\n            \"legs\": 2,\n            \"flights\": [\n                {\n                    \"id\": \"1c50618c-5474-48f6-86c5-e1973bf077f3\",\n                    \"flightNumber\": \"AC1585\",\n                    \"departureTime\": \"2024-11-07T04:10:00.000Z\",\n                    \"arrivalTime\": \"2024-11-07T17:05:00.000Z\",\n                    \"originId\": \"370d2633-ba94-47f5-a735-513c0e332224\",\n                    \"destinationId\": \"63cea601-895c-4d63-bf1e-746b604f3ff7\",\n                    \"duration\": 775,\n                    \"price\": 1522,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 59,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"AC\",\n                        \"name\": \"Air Canada\"\n                    },\n                    \"origin\": {\n                        \"code\": \"YYZ\",\n                        \"name\": \"Toronto Pearson International Airport\",\n                        \"city\": \"Toronto\",\n                        \"country\": \"Canada\"\n                    },\n                    \"destination\": {\n                        \"code\": \"KUL\",\n                        \"name\": \"Kuala Lumpur International Airport\",\n                        \"city\": \"Kuala Lumpur\",\n                        \"country\": \"Malaysia\"\n                    }\n                },\n                {\n                    \"id\": \"47bc5818-f1a7-4841-b2c0-0647a827c8eb\",\n                    \"flightNumber\": \"MH234\",\n                    \"departureTime\": \"2024-11-08T19:30:00.000Z\",\n                    \"arrivalTime\": \"2024-11-09T08:55:00.000Z\",\n                    \"originId\": \"63cea601-895c-4d63-bf1e-746b604f3ff7\",\n                    \"destinationId\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n                    \"duration\": 805,\n                    \"price\": 1283,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 268,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"MH\",\n                        \"name\": \"Malaysia Airlines\"\n                    },\n                    \"origin\": {\n                        \"code\": \"KUL\",\n                        \"name\": \"Kuala Lumpur International Airport\",\n                        \"city\": \"Kuala Lumpur\",\n                        \"country\": \"Malaysia\"\n                    },\n                    \"destination\": {\n                        \"code\": \"PVG\",\n                        \"name\": \"Shanghai Pudong International Airport\",\n                        \"city\": \"Shanghai\",\n                        \"country\": \"China\"\n                    }\n                }\n            ]\n        }\n    ]\n}"
+						},
+						{
+							"name": "Get flight round trip",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flights?origin=YYZ&destination=ATH&date=2025-04-10, 2025-04-20&round=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flights"
+									],
+									"query": [
+										{
+											"key": "origin",
+											"value": "YYZ"
+										},
+										{
+											"key": "destination",
+											"value": "ATH"
+										},
+										{
+											"key": "date",
+											"value": "2025-04-10, 2025-04-20",
+											"description": "needs two dates for round trip"
+										},
+										{
+											"key": "round",
+											"value": "true",
+											"description": "set true for round trip"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 21:21:58 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"results\": [\n        {\n            \"legs\": 1,\n            \"flights\": [\n                {\n                    \"id\": \"d5952d75-3ed5-417b-a67e-3580d5d1ebd8\",\n                    \"flightNumber\": \"AC4597\",\n                    \"departureTime\": \"2025-04-10T08:55:00.000Z\",\n                    \"arrivalTime\": \"2025-04-10T20:55:00.000Z\",\n                    \"originId\": \"370d2633-ba94-47f5-a735-513c0e332224\",\n                    \"destinationId\": \"74025741-4287-48c7-b7b3-fce954789005\",\n                    \"duration\": 720,\n                    \"price\": 1774,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 129,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"AC\",\n                        \"name\": \"Air Canada\"\n                    },\n                    \"origin\": {\n                        \"code\": \"YYZ\",\n                        \"name\": \"Toronto Pearson International Airport\",\n                        \"city\": \"Toronto\",\n                        \"country\": \"Canada\"\n                    },\n                    \"destination\": {\n                        \"code\": \"ATH\",\n                        \"name\": \"Athens International Airport\",\n                        \"city\": \"Athens\",\n                        \"country\": \"Greece\"\n                    }\n                }\n            ]\n        },\n        {\n            \"legs\": 2,\n            \"flights\": [\n                {\n                    \"id\": \"0e80851b-b393-4711-a05c-163c74a3be36\",\n                    \"flightNumber\": \"AC6980\",\n                    \"departureTime\": \"2025-04-10T12:15:00.000Z\",\n                    \"arrivalTime\": \"2025-04-10T22:40:00.000Z\",\n                    \"originId\": \"370d2633-ba94-47f5-a735-513c0e332224\",\n                    \"destinationId\": \"5b167997-009a-4f1b-bbee-77f99b74ef59\",\n                    \"duration\": 625,\n                    \"price\": 457,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 271,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"AC\",\n                        \"name\": \"Air Canada\"\n                    },\n                    \"origin\": {\n                        \"code\": \"YYZ\",\n                        \"name\": \"Toronto Pearson International Airport\",\n                        \"city\": \"Toronto\",\n                        \"country\": \"Canada\"\n                    },\n                    \"destination\": {\n                        \"code\": \"HND\",\n                        \"name\": \"Tokyo Haneda Airport\",\n                        \"city\": \"Tokyo\",\n                        \"country\": \"Japan\"\n                    }\n                },\n                {\n                    \"id\": \"44520d03-ce0a-4975-ab39-05742438d2f6\",\n                    \"flightNumber\": \"NH608\",\n                    \"departureTime\": \"2025-04-11T05:05:00.000Z\",\n                    \"arrivalTime\": \"2025-04-11T14:40:00.000Z\",\n                    \"originId\": \"5b167997-009a-4f1b-bbee-77f99b74ef59\",\n                    \"destinationId\": \"74025741-4287-48c7-b7b3-fce954789005\",\n                    \"duration\": 575,\n                    \"price\": 1688,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 106,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"NH\",\n                        \"name\": \"ANA All Nippon Airways\"\n                    },\n                    \"origin\": {\n                        \"code\": \"HND\",\n                        \"name\": \"Tokyo Haneda Airport\",\n                        \"city\": \"Tokyo\",\n                        \"country\": \"Japan\"\n                    },\n                    \"destination\": {\n                        \"code\": \"ATH\",\n                        \"name\": \"Athens International Airport\",\n                        \"city\": \"Athens\",\n                        \"country\": \"Greece\"\n                    }\n                }\n            ]\n        },\n        {\n            \"legs\": 2,\n            \"flights\": [\n                {\n                    \"id\": \"183871d7-5ddd-4da1-9aed-b43379afa0b1\",\n                    \"flightNumber\": \"A35038\",\n                    \"departureTime\": \"2025-04-20T04:40:00.000Z\",\n                    \"arrivalTime\": \"2025-04-20T12:10:00.000Z\",\n                    \"originId\": \"74025741-4287-48c7-b7b3-fce954789005\",\n                    \"destinationId\": \"64848eb5-ba4e-4e82-a6c0-641f378e140b\",\n                    \"duration\": 450,\n                    \"price\": 764,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 93,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"A3\",\n                        \"name\": \"Aegean Airlines\"\n                    },\n                    \"origin\": {\n                        \"code\": \"ATH\",\n                        \"name\": \"Athens International Airport\",\n                        \"city\": \"Athens\",\n                        \"country\": \"Greece\"\n                    },\n                    \"destination\": {\n                        \"code\": \"LHR\",\n                        \"name\": \"Heathrow Airport\",\n                        \"city\": \"London\",\n                        \"country\": \"United Kingdom\"\n                    }\n                },\n                {\n                    \"id\": \"3fa4a12b-face-4d79-8ef7-70a1af745db6\",\n                    \"flightNumber\": \"BA480\",\n                    \"departureTime\": \"2025-04-21T01:10:00.000Z\",\n                    \"arrivalTime\": \"2025-04-21T14:35:00.000Z\",\n                    \"originId\": \"64848eb5-ba4e-4e82-a6c0-641f378e140b\",\n                    \"destinationId\": \"370d2633-ba94-47f5-a735-513c0e332224\",\n                    \"duration\": 805,\n                    \"price\": 1312,\n                    \"currency\": \"CAD\",\n                    \"availableSeats\": 208,\n                    \"status\": \"SCHEDULED\",\n                    \"airline\": {\n                        \"code\": \"BA\",\n                        \"name\": \"British Airways\"\n                    },\n                    \"origin\": {\n                        \"code\": \"LHR\",\n                        \"name\": \"Heathrow Airport\",\n                        \"city\": \"London\",\n                        \"country\": \"United Kingdom\"\n                    },\n                    \"destination\": {\n                        \"code\": \"YYZ\",\n                        \"name\": \"Toronto Pearson International Airport\",\n                        \"city\": \"Toronto\",\n                        \"country\": \"Canada\"\n                    }\n                }\n            ]\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Search for the flights that meets up user's request."
+		},
+		{
+			"name": "Destinations",
+			"item": [
+				{
+					"name": "auto-complete //need to update",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/flights/desti?destination=Shang",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"flights",
+								"desti"
+							],
+							"query": [
+								{
+									"key": "destination",
+									"value": "Shang",
+									"description": "case sensitive, must be in Title Case."
+								}
+							]
+						},
+						"description": "Auto-complete the ciy that the user is inputing. Also provides the airports of that city."
+					},
+					"response": [
+						{
+							"name": "auto fill city",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/flights/desti?destination=Shang",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"flights",
+										"desti"
+									],
+									"query": [
+										{
+											"key": "destination",
+											"value": "Shang"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 21:05:32 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"matchingCities\": [\n        {\n            \"city\": \"Shanghai\",\n            \"country\": \"China\"\n        }\n    ],\n    \"matchingAirports\": [\n        {\n            \"id\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n            \"code\": \"PVG\",\n            \"name\": \"Shanghai Pudong International Airport\",\n            \"city\": \"Shanghai\",\n            \"country\": \"China\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Hotels",
+			"item": [
+				{
+					"name": "[hotel_id]",
+					"item": [
+						{
+							"name": "rooms",
+							"item": [
+								{
+									"name": "Create room",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"type\": \"102\",\r\n    \"amenities\": [\"WiFi\", \"Air Conditioning\", \"TV\", \"Mini Bar\"],\r\n    \"pricePerNight\": 150.00,\r\n    \"images\": [\"room1.jpg\", \"room2.jpg\"]\r\n}\r\n",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/hotels/:hotel_id/rooms",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"hotels",
+												":hotel_id",
+												"rooms"
+											],
+											"variable": [
+												{
+													"key": "hotel_id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "This API endpoint is used to create a new room for a specific hotel. The request allows you to specify the room type, amenities, price per night, and associated images for the room."
+									},
+									"response": [
+										{
+											"name": "hotel1 roomtype1-01",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"type\": \"101\",\r\n    \"amenities\": [\"WiFi\", \"Air Conditioning\", \"TV\", \"Mini Bar\"],\r\n    \"pricePerNight\": 150.00,\r\n    \"images\": [\"room1.jpg\", \"room2.jpg\"]\r\n}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{base_url}}/hotels/:hotel_id/rooms",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"hotels",
+														":hotel_id",
+														"rooms"
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "1",
+															"description": "hotel id"
+														}
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 22:29:41 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Room added successfully\",\n    \"room\": {\n        \"id\": 1,\n        \"type\": \"101\",\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"pricePerNight\": 150,\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ],\n        \"hotelId\": 1,\n        \"createdAt\": \"2025-03-08T22:29:41.297Z\",\n        \"updatedAt\": \"2025-03-08T22:29:41.297Z\"\n    }\n}"
+										},
+										{
+											"name": "hotel1 roomtype2-01",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"type\": \"201\",\r\n    \"amenities\": [\"WiFi\", \"Air Conditioning\", \"TV\", \"Mini Bar\"],\r\n    \"pricePerNight\": 1500.00,\r\n    \"images\": [\"room1.jpg\", \"room2.jpg\"]\r\n}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{base_url}}/hotels/:hotel_id/rooms",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"hotels",
+														":hotel_id",
+														"rooms"
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "1",
+															"description": "hotel id"
+														}
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 22:31:28 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Room added successfully\",\n    \"room\": {\n        \"id\": 2,\n        \"type\": \"201\",\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"pricePerNight\": 1500,\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ],\n        \"hotelId\": 1,\n        \"createdAt\": \"2025-03-08T22:31:28.407Z\",\n        \"updatedAt\": \"2025-03-08T22:31:28.407Z\"\n    }\n}"
+										},
+										{
+											"name": "hotel2 roomtype1-01",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "raw",
+													"raw": "{\r\n    \"type\": \"101\",\r\n    \"amenities\": [\"WiFi\", \"Air Conditioning\", \"TV\", \"Mini Bar\"],\r\n    \"pricePerNight\": 100.00,\r\n    \"images\": [\"room1.jpg\", \"room2.jpg\"]\r\n}\r\n",
+													"options": {
+														"raw": {
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{base_url}}/hotels/:hotel_id/rooms",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"hotels",
+														":hotel_id",
+														"rooms"
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "2",
+															"description": "hotel id"
+														}
+													]
+												}
+											},
+											"status": "Created",
+											"code": 201,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 22:34:17 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Room added successfully\",\n    \"room\": {\n        \"id\": 4,\n        \"type\": \"101\",\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"pricePerNight\": 100,\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ],\n        \"hotelId\": 2,\n        \"createdAt\": \"2025-03-08T22:34:17.637Z\",\n        \"updatedAt\": \"2025-03-08T22:34:17.637Z\"\n    }\n}"
+										}
+									]
+								},
+								{
+									"name": "Filter rooms",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/hotels/:hotel_id/rooms?dateStart=2024-10-11&dateEnd=2024-11-11",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"hotels",
+												":hotel_id",
+												"rooms"
+											],
+											"query": [
+												{
+													"key": "dateStart",
+													"value": "2024-10-11"
+												},
+												{
+													"key": "dateEnd",
+													"value": "2024-11-11"
+												}
+											],
+											"variable": [
+												{
+													"key": "hotel_id",
+													"value": "2"
+												}
+											]
+										},
+										"description": "This API endpoint allows users to filter available rooms at a specific hotel within a given date range. The request returns a list of rooms with details such as availability, price, and amenities during the specified time period."
+									},
+									"response": [
+										{
+											"name": "Filter rooms as user",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Cookie",
+														"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mywicm9sZSI6IlJFR1VMQVJfVVNFUiIsImlhdCI6MTc0MTQ3MzU2MCwiZXhwIjoxNzQxNDkxNTYwfQ.IxEVECJUq40-3a5yEnHgo9Jt4yj8ftWmGT30AMSH07U",
+														"description": "mock user cookie",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/hotels/:hotel_id/rooms?dateStart=2024-10-11&dateEnd=2024-11-11",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"hotels",
+														":hotel_id",
+														"rooms"
+													],
+													"query": [
+														{
+															"key": "dateStart",
+															"value": "2024-10-11"
+														},
+														{
+															"key": "dateEnd",
+															"value": "2024-11-11"
+														}
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 23:01:25 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "[\n    {\n        \"roomType\": \"101\",\n        \"availableRooms\": 1,\n        \"pricePerNight\": 150,\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ]\n    },\n    {\n        \"roomType\": \"201\",\n        \"availableRooms\": 1,\n        \"pricePerNight\": 1500,\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ]\n    },\n    {\n        \"roomType\": \"102\",\n        \"availableRooms\": 1,\n        \"pricePerNight\": 150,\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ]\n    }\n]"
+										},
+										{
+											"name": "Filter rooms as owner",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Cookie",
+														"value": "accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwicm9sZSI6IkhPVEVMX09XTkVSIiwiaWF0IjoxNzQxNDc0OTE4LCJleHAiOjE3NDE0OTI5MTh9.zZuCGj-yGhmdPnqnN7QNJ-xORi0aerh3IuG3MmQ2dU4",
+														"description": "mock owner cookie",
+														"type": "text"
+													}
+												],
+												"url": {
+													"raw": "{{base_url}}/hotels/:hotel_id/rooms?dateStart=2024-10-11&dateEnd=2024-11-11",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"hotels",
+														":hotel_id",
+														"rooms"
+													],
+													"query": [
+														{
+															"key": "dateStart",
+															"value": "2024-10-11"
+														},
+														{
+															"key": "dateEnd",
+															"value": "2024-11-11"
+														}
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 23:02:43 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "[\n    {\n        \"roomType\": \"101\",\n        \"totalRooms\": 1,\n        \"availableRooms\": 1\n    },\n    {\n        \"roomType\": \"102\",\n        \"totalRooms\": 1,\n        \"availableRooms\": 1\n    },\n    {\n        \"roomType\": \"201\",\n        \"totalRooms\": 1,\n        \"availableRooms\": 1\n    }\n]"
+										}
+									]
+								}
+							]
+						},
+						{
+							"name": "bookings",
+							"item": [
+								{
+									"name": "Cancel booking",
+									"request": {
+										"auth": {
+											"type": "noauth"
+										},
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/hotels/:hotel_id/bookings?bookingId=1",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"hotels",
+												":hotel_id",
+												"bookings"
+											],
+											"query": [
+												{
+													"key": "bookingId",
+													"value": "1"
+												}
+											],
+											"variable": [
+												{
+													"key": "hotel_id",
+													"value": "1"
+												}
+											]
+										},
+										"description": "This method allows cancellation of booking by hotel owner.\n\nInput: booking id.\n\nOutput: message indicating how the cancellation went.\n\nThis API endpoint allows users to cancel an existing booking by specifying the booking ID and the hotel ID. The request will update the status of the booking, marking it as cancelled."
+									},
+									"response": [
+										{
+											"name": "Cancel booking",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:3000/api/hotels/:hotel_id/bookings?bookingId=1",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"api",
+														"hotels",
+														":hotel_id",
+														"bookings"
+													],
+													"query": [
+														{
+															"key": "bookingId",
+															"value": "1"
+														}
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sun, 09 Mar 2025 00:10:39 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"message\": \"Booking cancelled successfully.\"\n}"
+										}
+									]
+								},
+								{
+									"name": "Get hotel bookings",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"description": "This API endpoint retrieves the list of bookings for a specific hotel. You can filter the bookings based on parameters such as room type and date.\n\ninput: roomType and/or date.\n\nreturn: booking details that satisfy the criteria\n\nThis is useful for viewing the reservation details and tracking bookings for specific rooms."
+									},
+									"response": [
+										{
+											"name": "Filter hotel bookings",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{base_url}}/hotels/:hotel_id/bookings?roomType=101",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"hotels",
+														":hotel_id",
+														"bookings"
+													],
+													"query": [
+														{
+															"key": "date",
+															"value": "2025-03-11",
+															"description": "optional param",
+															"disabled": true
+														},
+														{
+															"key": "roomType",
+															"value": "101",
+															"description": "optional param"
+														}
+													],
+													"variable": [
+														{
+															"key": "hotel_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 23:15:59 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "[\n    {\n        \"id\": 1,\n        \"userId\": 3,\n        \"itinerary\": \"HOTEL_RESERVATION\",\n        \"hotelCost\": 600,\n        \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n        \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n        \"roomId\": 1,\n        \"bookRef\": null,\n        \"ticketNum\": null,\n        \"status\": \"CONFIRMED\",\n        \"createdAt\": \"2025-03-08T22:39:41.670Z\",\n        \"updatedAt\": \"2025-03-08T22:41:36.623Z\",\n        \"room\": {\n            \"id\": 1,\n            \"type\": \"101\",\n            \"amenities\": [\n                \"WiFi\",\n                \"Air Conditioning\",\n                \"TV\",\n                \"Mini Bar\"\n            ],\n            \"pricePerNight\": 150,\n            \"images\": [\n                \"room1.jpg\",\n                \"room2.jpg\"\n            ],\n            \"hotelId\": 1,\n            \"createdAt\": \"2025-03-08T22:29:41.297Z\",\n            \"updatedAt\": \"2025-03-08T22:29:41.297Z\"\n        }\n    }\n]"
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "create hotels",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Toronto Hotel\",\r\n  \"logo\": \"https://example.com/logo.png\",\r\n  \"address\": \"123 Beach Road, Toronto City\",\r\n  \"city\": \"Toronto\",\r\n  \"starRating\": 5,\r\n  \"images\": [\"https://example.com/image1.png\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/hotels",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"hotels"
+							]
+						},
+						"description": "This API endpoint allows the creation of a new hotel.\n\ninput: The hotel details such as name, logo, address, city, star rating, and images.\n\nreturn: message whether or not successful creating hotel and hotel details\n\nIt ensures the hotel is added to the system and returns the created hotel information."
+					},
+					"response": [
+						{
+							"name": "Athens Hotel",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Athens Hotel\",\r\n  \"logo\": \"https://example.com/logo.png\",\r\n  \"address\": \"111 Rome Road, Athens City\",\r\n  \"city\": \"Athens\",\r\n  \"starRating\": 5,\r\n  \"images\": [\"https://example.com/image1.png\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/hotels",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"hotels"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 22:26:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Hotel added successfully\",\n    \"hotel\": {\n        \"id\": 2,\n        \"name\": \"Athens Hotel\",\n        \"logo\": \"https://example.com/logo.png\",\n        \"address\": \"111 Rome Road, Athens City\",\n        \"city\": \"Athens\",\n        \"starRating\": 5,\n        \"images\": [\n            \"https://example.com/image1.png\"\n        ],\n        \"ownerId\": 5,\n        \"createdAt\": \"2025-03-08T22:26:49.452Z\",\n        \"updatedAt\": \"2025-03-08T22:26:49.452Z\"\n    }\n}"
+						},
+						{
+							"name": "Toronto Hotel",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"name\": \"Toronto Hotel\",\r\n  \"logo\": \"https://example.com/logo.png\",\r\n  \"address\": \"123 Beach Road, Toronto City\",\r\n  \"city\": \"Toronto\",\r\n  \"starRating\": 5,\r\n  \"images\": [\"https://example.com/image1.png\"]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/hotels",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"hotels"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 22:23:50 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Hotel added successfully\",\n    \"hotel\": {\n        \"id\": 1,\n        \"name\": \"Toronto Hotel\",\n        \"logo\": \"https://example.com/logo.png\",\n        \"address\": \"123 Beach Road, Toronto City\",\n        \"city\": \"Toronto\",\n        \"starRating\": 5,\n        \"images\": [\n            \"https://example.com/image1.png\"\n        ],\n        \"ownerId\": 5,\n        \"createdAt\": \"2025-03-08T22:23:50.820Z\",\n        \"updatedAt\": \"2025-03-08T22:23:50.820Z\"\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "Checkout",
+					"item": [
+						{
+							"name": "Validate Payment and Confirm/Finalize Booking",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cardNumber\": \"1234567890123456\",\n    \"expiryMonth\": \"02\", \n    \"expiryYear\": \"27\", \n    \"cvv\": \"333\", \n    \"booking\": {\n        \"id\": 5,\n        \"userId\": 1,\n        \"itinerary\": \"ROUNDTRIP_AND_HOTEL\",\n        \"hotelCost\": 300,\n        \"checkIn\": \"2025-03-15T00:00:00.000Z\",\n        \"checkOut\": \"2025-03-17T00:00:00.000Z\",\n        \"roomId\": 1,\n        \"bookRef\": null,\n        \"ticketNum\": null,\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2025-03-08T15:01:44.164Z\",\n        \"updatedAt\": \"2025-03-08T15:04:25.459Z\"\n    },\n    \"passportNumber\": \"123456789\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/bookings/checkout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings",
+										"checkout"
+									]
+								},
+								"description": "This endpoint is used for validating payment for booking and finalizing a booking (actually perform the booking on AFS and hotel room management).\n\nInput: payment card information, booking information, passport number (optional).\n\nOutput: updated booking information.\n\nInputs card information, booking information that we can get from create booking and update booking, and passport number if the booking includes flight.\n\nThe return value would be the updated booking information, with status CONFIRMED and booking reference and ticket number if the booking includes flight."
+							},
+							"response": [
+								{
+									"name": "Confirm Booking",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cardNumber\": \"1234567890123456\",\n    \"expiryMonth\": \"02\", \n    \"expiryYear\": \"27\", \n    \"cvv\": \"333\", \n    \"booking\": {\n        \"id\": 2,\n        \"userId\": 1,\n        \"itinerary\": \"ONEWAY_AND_HOTEL\",\n        \"hotelCost\": 600,\n        \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n        \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n        \"roomId\": 1,\n        \"bookRef\": null,\n        \"ticketNum\": null,\n        \"status\": \"PENDING\",\n        \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n        \"updatedAt\": \"2025-03-08T14:39:15.149Z\"\n    },\n    \"passportNumber\": \"123456789\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/bookings/checkout",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"bookings",
+												"checkout"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 22:43:07 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 2,\n    \"userId\": 3,\n    \"itinerary\": \"FLIGHT_ROUNDTRIP\",\n    \"hotelCost\": null,\n    \"checkIn\": null,\n    \"checkOut\": null,\n    \"roomId\": null,\n    \"bookRef\": \"5B714A\",\n    \"ticketNum\": \"83779e6cb8\",\n    \"status\": \"CONFIRMED\",\n    \"createdAt\": \"2025-03-08T22:42:32.434Z\",\n    \"updatedAt\": \"2025-03-08T22:43:07.278Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Booking Details",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/bookings/checkout?bookingId=3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings",
+										"checkout"
+									],
+									"query": [
+										{
+											"key": "bookingId",
+											"value": "3"
+										}
+									]
+								},
+								"description": "This method returns the full booking details of the pending booking during checkout.\n\nInput: booking id.\n\nOutput: booking information.\n\n  \nThe parameters include a unique booking id, based on the id we can view detailed information of the booking. Meant for the user to view on frontend during checkout."
+							},
+							"response": [
+								{
+									"name": "Get Booking Details",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/bookings/checkout?bookingId=3",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"bookings",
+												"checkout"
+											],
+											"query": [
+												{
+													"key": "bookingId",
+													"value": "3"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 14:40:48 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 3,\n    \"userId\": 1,\n    \"itinerary\": \"ONEWAY_AND_HOTEL\",\n    \"hotelCost\": 600,\n    \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": null,\n    \"ticketNum\": null,\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n    \"updatedAt\": \"2025-03-08T14:39:15.149Z\",\n    \"room\": {\n        \"id\": 1,\n        \"type\": \"301\",\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"pricePerNight\": 150,\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ],\n        \"hotelId\": 1,\n        \"createdAt\": \"2025-03-08T05:21:30.117Z\",\n        \"updatedAt\": \"2025-03-08T05:21:30.117Z\",\n        \"hotel\": {\n            \"id\": 1,\n            \"name\": \"cccccc Sunshine\",\n            \"logo\": \"https://example.com/logo.png\",\n            \"address\": \"123 Beach Road, Sunshine City\",\n            \"city\": \"Toronto\",\n            \"starRating\": 3,\n            \"images\": [\n                \"https://example.com/image1.png\"\n            ],\n            \"ownerId\": 1,\n            \"createdAt\": \"2025-03-08T05:19:27.638Z\",\n            \"updatedAt\": \"2025-03-08T05:19:27.638Z\"\n        }\n    },\n    \"flights\": [\n        {\n            \"flightId\": \"41ce6d63-192d-4707-92b5-ed8655510bd3\",\n            \"flightNum\": \"MU8547\",\n            \"departureTime\": \"2024-11-07T18:25:00.000Z\",\n            \"arrivalTime\": \"2024-11-08T05:55:00.000Z\",\n            \"flightCost\": 928,\n            \"origin\": \"PVG, Shanghai Pudong International Airport, Shanghai, China\",\n            \"destination\": \"MNL, Ninoy Aquino International Airport, Manila, Philippines\",\n            \"airline\": \"MU, China Eastern Airlines\"\n        },\n        {\n            \"flightId\": \"a5689f60-2feb-4237-b6c3-0383472dd5bd\",\n            \"flightNum\": \"PR2062\",\n            \"departureTime\": \"2024-11-08T18:20:00.000Z\",\n            \"arrivalTime\": \"2024-11-09T06:10:00.000Z\",\n            \"flightCost\": 710,\n            \"origin\": \"MNL, Ninoy Aquino International Airport, Manila, Philippines\",\n            \"destination\": \"YTZ, Billy Bishop Toronto City Airport, Toronto, Canada\",\n            \"airline\": \"PR, Philippine Airlines\"\n        }\n    ]\n}"
+								}
+							]
+						}
+					],
+					"description": "Endpoint for user to checkout their currently pending booking (each user can only have 1 pending booking at a time). If the checkout is successful, then the booking would change to be confirmed and retrievable in records."
+				},
+				{
+					"name": "Suggestions",
+					"item": [
+						{
+							"name": "Flight/Hotel Suggestions",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/bookings/suggestions?itinerary=FLIGHT_ROUNDTRIP&flightDestination=Toronto&date=2025-04-21",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings",
+										"suggestions"
+									],
+									"query": [
+										{
+											"key": "itinerary",
+											"value": "FLIGHT_ROUNDTRIP"
+										},
+										{
+											"key": "flightDestination",
+											"value": "Toronto"
+										},
+										{
+											"key": "date",
+											"value": "2025-04-21"
+										}
+									]
+								},
+								"description": "Finds flight/hotel suggestions for pending booking.\n\nInput: itinerary, flight destination (optional), origin (optional), destination (optional), date.\n\nOutput: json of flights suggested or json of hotels suggested.\n\nThe url parameters provide information about the type of itinerary the current pending booking has, which is always required. The flight destination and date is provided if booking has flight and need suggestion for hotels. If the booking has hotel, the hotel, origin, destination, and date must be provided for search of flight suggestions.\n\nThe response should be information of suggested flights or information of suggested hotel, depending on which itinerary was given, the user may choose which suggestion they take in frontend and get redirect to filter page using the response information. If itinerary shows pending booking already has flight and hotel, then no suggestion would be given."
+							},
+							"response": [
+								{
+									"name": "Suggested Some Flights",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/api/bookings/suggestions?itinerary=HOTEL_RESERVATION&hotel=cccccc%20Sunshine&origin=Shanghai&destination=Toronto&date=2024-11-07",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"api",
+												"bookings",
+												"suggestions"
+											],
+											"query": [
+												{
+													"key": "itinerary",
+													"value": "HOTEL_RESERVATION"
+												},
+												{
+													"key": "hotel",
+													"value": "cccccc%20Sunshine"
+												},
+												{
+													"key": "origin",
+													"value": "Shanghai"
+												},
+												{
+													"key": "destination",
+													"value": "Toronto"
+												},
+												{
+													"key": "date",
+													"value": "2024-11-07"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 14:36:11 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": {\n        \"results\": [\n            {\n                \"legs\": 2,\n                \"flights\": [\n                    {\n                        \"id\": \"41ce6d63-192d-4707-92b5-ed8655510bd3\",\n                        \"flightNumber\": \"MU8547\",\n                        \"departureTime\": \"2024-11-07T18:25:00.000Z\",\n                        \"arrivalTime\": \"2024-11-08T05:55:00.000Z\",\n                        \"originId\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n                        \"destinationId\": \"061fc0c6-d34e-4de1-8e08-8297d5e9b7de\",\n                        \"duration\": 690,\n                        \"price\": 928,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 207,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"MU\",\n                            \"name\": \"China Eastern Airlines\"\n                        },\n                        \"origin\": {\n                            \"code\": \"PVG\",\n                            \"name\": \"Shanghai Pudong International Airport\",\n                            \"city\": \"Shanghai\",\n                            \"country\": \"China\"\n                        },\n                        \"destination\": {\n                            \"code\": \"MNL\",\n                            \"name\": \"Ninoy Aquino International Airport\",\n                            \"city\": \"Manila\",\n                            \"country\": \"Philippines\"\n                        }\n                    },\n                    {\n                        \"id\": \"a5689f60-2feb-4237-b6c3-0383472dd5bd\",\n                        \"flightNumber\": \"PR2062\",\n                        \"departureTime\": \"2024-11-08T18:20:00.000Z\",\n                        \"arrivalTime\": \"2024-11-09T06:10:00.000Z\",\n                        \"originId\": \"061fc0c6-d34e-4de1-8e08-8297d5e9b7de\",\n                        \"destinationId\": \"b4183787-d9e7-4c29-939d-1cc1cfc72b19\",\n                        \"duration\": 710,\n                        \"price\": 710,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 251,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"PR\",\n                            \"name\": \"Philippine Airlines\"\n                        },\n                        \"origin\": {\n                            \"code\": \"MNL\",\n                            \"name\": \"Ninoy Aquino International Airport\",\n                            \"city\": \"Manila\",\n                            \"country\": \"Philippines\"\n                        },\n                        \"destination\": {\n                            \"code\": \"YTZ\",\n                            \"name\": \"Billy Bishop Toronto City Airport\",\n                            \"city\": \"Toronto\",\n                            \"country\": \"Canada\"\n                        }\n                    }\n                ]\n            },\n            {\n                \"legs\": 2,\n                \"flights\": [\n                    {\n                        \"id\": \"e6c01d8c-646b-4c67-be76-ec962b2d8354\",\n                        \"flightNumber\": \"MU9277\",\n                        \"departureTime\": \"2024-11-07T10:25:00.000Z\",\n                        \"arrivalTime\": \"2024-11-07T16:40:00.000Z\",\n                        \"originId\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n                        \"destinationId\": \"950d78c3-b084-4ae1-929a-67678322d737\",\n                        \"duration\": 375,\n                        \"price\": 1492,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 137,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"MU\",\n                            \"name\": \"China Eastern Airlines\"\n                        },\n                        \"origin\": {\n                            \"code\": \"PVG\",\n                            \"name\": \"Shanghai Pudong International Airport\",\n                            \"city\": \"Shanghai\",\n                            \"country\": \"China\"\n                        },\n                        \"destination\": {\n                            \"code\": \"DOH\",\n                            \"name\": \"Hamad International Airport\",\n                            \"city\": \"Doha\",\n                            \"country\": \"Qatar\"\n                        }\n                    },\n                    {\n                        \"id\": \"76380954-3a35-4de2-8c32-f62ab94e7099\",\n                        \"flightNumber\": \"QR3121\",\n                        \"departureTime\": \"2024-11-08T07:05:00.000Z\",\n                        \"arrivalTime\": \"2024-11-08T13:20:00.000Z\",\n                        \"originId\": \"950d78c3-b084-4ae1-929a-67678322d737\",\n                        \"destinationId\": \"b4183787-d9e7-4c29-939d-1cc1cfc72b19\",\n                        \"duration\": 375,\n                        \"price\": 1634,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 276,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"QR\",\n                            \"name\": \"Qatar Airways\"\n                        },\n                        \"origin\": {\n                            \"code\": \"DOH\",\n                            \"name\": \"Hamad International Airport\",\n                            \"city\": \"Doha\",\n                            \"country\": \"Qatar\"\n                        },\n                        \"destination\": {\n                            \"code\": \"YTZ\",\n                            \"name\": \"Billy Bishop Toronto City Airport\",\n                            \"city\": \"Toronto\",\n                            \"country\": \"Canada\"\n                        }\n                    }\n                ]\n            },\n            {\n                \"legs\": 2,\n                \"flights\": [\n                    {\n                        \"id\": \"42c470f2-5ede-4cf4-8fae-5c3b1a99b83d\",\n                        \"flightNumber\": \"MU3172\",\n                        \"departureTime\": \"2024-11-07T20:35:00.000Z\",\n                        \"arrivalTime\": \"2024-11-08T10:10:00.000Z\",\n                        \"originId\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n                        \"destinationId\": \"fa35cff2-4d06-4933-9e2b-b3f329253b48\",\n                        \"duration\": 815,\n                        \"price\": 1544,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 83,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"MU\",\n                            \"name\": \"China Eastern Airlines\"\n                        },\n                        \"origin\": {\n                            \"code\": \"PVG\",\n                            \"name\": \"Shanghai Pudong International Airport\",\n                            \"city\": \"Shanghai\",\n                            \"country\": \"China\"\n                        },\n                        \"destination\": {\n                            \"code\": \"CDG\",\n                            \"name\": \"Charles de Gaulle Airport\",\n                            \"city\": \"Paris\",\n                            \"country\": \"France\"\n                        }\n                    },\n                    {\n                        \"id\": \"ebad0b78-5ad9-4db3-ae3f-2e6a25f0d037\",\n                        \"flightNumber\": \"AF590\",\n                        \"departureTime\": \"2024-11-08T11:10:00.000Z\",\n                        \"arrivalTime\": \"2024-11-08T16:50:00.000Z\",\n                        \"originId\": \"fa35cff2-4d06-4933-9e2b-b3f329253b48\",\n                        \"destinationId\": \"b4183787-d9e7-4c29-939d-1cc1cfc72b19\",\n                        \"duration\": 340,\n                        \"price\": 895,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 120,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"AF\",\n                            \"name\": \"Air France\"\n                        },\n                        \"origin\": {\n                            \"code\": \"CDG\",\n                            \"name\": \"Charles de Gaulle Airport\",\n                            \"city\": \"Paris\",\n                            \"country\": \"France\"\n                        },\n                        \"destination\": {\n                            \"code\": \"YTZ\",\n                            \"name\": \"Billy Bishop Toronto City Airport\",\n                            \"city\": \"Toronto\",\n                            \"country\": \"Canada\"\n                        }\n                    }\n                ]\n            }\n        ]\n    }\n}"
+								},
+								{
+									"name": "Suggested Some Hotel",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/bookings/suggestions?itinerary=FLIGHT_ROUNDTRIP&flightDestination=Toronto&date=2025-04-21",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"bookings",
+												"suggestions"
+											],
+											"query": [
+												{
+													"key": "itinerary",
+													"value": "FLIGHT_ROUNDTRIP"
+												},
+												{
+													"key": "flightDestination",
+													"value": "Toronto"
+												},
+												{
+													"key": "date",
+													"value": "2025-04-21"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 15:02:53 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"hotels\": [\n        {\n            \"id\": 1,\n            \"name\": \"cccccc Sunshine\",\n            \"logo\": \"https://example.com/logo.png\",\n            \"address\": \"123 Beach Road, Sunshine City\",\n            \"city\": \"Toronto\",\n            \"starRating\": 3,\n            \"images\": [\n                \"https://example.com/image1.png\"\n            ],\n            \"ownerId\": 1,\n            \"createdAt\": \"2025-03-08T05:19:27.638Z\",\n            \"updatedAt\": \"2025-03-08T05:19:27.638Z\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"cccccc Sunshine\",\n            \"logo\": \"https://example.com/logo.png\",\n            \"address\": \"123 Beach Road, Sunshine City\",\n            \"city\": \"Toronto\",\n            \"starRating\": 3,\n            \"images\": [\n                \"https://example.com/image1.png\"\n            ],\n            \"ownerId\": 1,\n            \"createdAt\": \"2025-03-08T14:32:38.294Z\",\n            \"updatedAt\": \"2025-03-08T14:32:38.294Z\"\n        }\n    ],\n    \"checkIn\": \"2025-04-21T00:00:00.000Z\"\n}"
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Create Booking",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"itinerary\": \"FLIGHT_ROUNDTRIP\",\n    \"flights\": [\n        {\n            \"id\": \"e883decc-6437-4789-ba67-12de5bf0c9cf\",\n            \"flightNumber\": \"AC6856\",\n            \"departureTime\": \"2025-04-10T02:50:00.000Z\",\n            \"arrivalTime\": \"2025-04-10T09:20:00.000Z\",\n            \"duration\": 390,\n            \"price\": 419,\n            \"currency\": \"CAD\",\n            \"availableSeats\": 236,\n            \"status\": \"SCHEDULED\",\n            \"airline\": {\n                \"code\": \"AC\",\n                \"name\": \"Air Canada\"\n            },\n            \"origin\": {\n                \"code\": \"YYZ\",\n                \"name\": \"Toronto Pearson International Airport\",\n                \"city\": \"Toronto\",\n                \"country\": \"Canada\"\n            },\n            \"destination\": {\n                \"code\": \"ATH\",\n                \"name\": \"Athens International Airport\",\n                \"city\": \"Athens\",\n                \"country\": \"Greece\"\n            }\n        },\n        {\n            \"id\": \"c671a05d-e384-4b80-b6c8-845db6d4d5d9\",\n            \"flightNumber\": \"A34322\",\n            \"departureTime\": \"2025-04-20T19:40:00.000Z\",\n            \"arrivalTime\": \"2025-04-21T08:10:00.000Z\",\n            \"duration\": 750,\n            \"price\": 759,\n            \"currency\": \"CAD\",\n            \"availableSeats\": 98,\n            \"status\": \"SCHEDULED\",\n            \"airline\": {\n                \"code\": \"A3\",\n                \"name\": \"Aegean Airlines\"\n            },\n            \"origin\": {\n                \"code\": \"ATH\",\n                \"name\": \"Athens International Airport\",\n                \"city\": \"Athens\",\n                \"country\": \"Greece\"\n            },\n            \"destination\": {\n                \"code\": \"YYZ\",\n                \"name\": \"Toronto Pearson International Airport\",\n                \"city\": \"Toronto\",\n                \"country\": \"Canada\"\n            }\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						},
+						"description": "This creates a new booking if the user haven't started creating one or have finished all their booking's checkout.\n\nInput: itinerary of booking, flights to book, hotel to book.\n\nOutput: created booking information.\n\nThe request should include the itinerary type of the booking and the flight(s) or hotel details to make the booking. The response would be the booking information created if request is formated correctly."
+					},
+					"response": [
+						{
+							"name": "Create Hotel Booking",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"itinerary\": \"HOTEL_RESERVATION\",\n    \"hotelRoom\": {\n        \"id\": 1,\n        \"price\": 150.00,\n        \"checkIn\": \"2025-03-11\",\n        \"checkOut\": \"2025-03-15\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/bookings",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 14:35:15 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"userId\": 1,\n    \"itinerary\": \"HOTEL_RESERVATION\",\n    \"hotelCost\": 600,\n    \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": null,\n    \"ticketNum\": null,\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n    \"updatedAt\": \"2025-03-08T14:35:15.242Z\"\n}"
+						},
+						{
+							"name": "Create Flight Booking",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"itinerary\": \"FLIGHT_ROUNDTRIP\",\n    \"flights\": [\n        {\n            \"id\": \"e883decc-6437-4789-ba67-12de5bf0c9cf\",\n            \"flightNumber\": \"AC6856\",\n            \"departureTime\": \"2025-04-10T02:50:00.000Z\",\n            \"arrivalTime\": \"2025-04-10T09:20:00.000Z\",\n            \"duration\": 390,\n            \"price\": 419,\n            \"currency\": \"CAD\",\n            \"availableSeats\": 236,\n            \"status\": \"SCHEDULED\",\n            \"airline\": {\n                \"code\": \"AC\",\n                \"name\": \"Air Canada\"\n            },\n            \"origin\": {\n                \"code\": \"YYZ\",\n                \"name\": \"Toronto Pearson International Airport\",\n                \"city\": \"Toronto\",\n                \"country\": \"Canada\"\n            },\n            \"destination\": {\n                \"code\": \"ATH\",\n                \"name\": \"Athens International Airport\",\n                \"city\": \"Athens\",\n                \"country\": \"Greece\"\n            }\n        },\n        {\n            \"id\": \"c671a05d-e384-4b80-b6c8-845db6d4d5d9\",\n            \"flightNumber\": \"A34322\",\n            \"departureTime\": \"2025-04-20T19:40:00.000Z\",\n            \"arrivalTime\": \"2025-04-21T08:10:00.000Z\",\n            \"duration\": 750,\n            \"price\": 759,\n            \"currency\": \"CAD\",\n            \"availableSeats\": 98,\n            \"status\": \"SCHEDULED\",\n            \"airline\": {\n                \"code\": \"A3\",\n                \"name\": \"Aegean Airlines\"\n            },\n            \"origin\": {\n                \"code\": \"ATH\",\n                \"name\": \"Athens International Airport\",\n                \"city\": \"Athens\",\n                \"country\": \"Greece\"\n            },\n            \"destination\": {\n                \"code\": \"YYZ\",\n                \"name\": \"Toronto Pearson International Airport\",\n                \"city\": \"Toronto\",\n                \"country\": \"Canada\"\n            }\n        }\n    ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/bookings",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 15:01:44 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"userId\": 1,\n    \"itinerary\": \"FLIGHT_ROUNDTRIP\",\n    \"hotelCost\": null,\n    \"checkIn\": null,\n    \"checkOut\": null,\n    \"roomId\": null,\n    \"bookRef\": null,\n    \"ticketNum\": null,\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2025-03-08T15:01:44.164Z\",\n    \"updatedAt\": \"2025-03-08T15:01:44.164Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Booking",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{   \n    \"id\": 5,\n    \"addFlight\": [],\n    \"addHotel\": {\n        \"id\": 1,\n        \"price\": 150,\n        \"checkIn\": \"2025-03-15\",\n        \"checkOut\": \"2025-03-17\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bookings",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							]
+						},
+						"description": "Updates a pending booking adding flight or adding/switching hotel.\n\nInput: booking id, flights to add, and hotel to add/switch to.\n\nThe request would be a json of id of booking to update booking, addFlights or addHotel at least one of them should not be empty. They contain the new flight(s) or new hotel to update the pending booking to include. This method is usually triggered when a person chooses flight(s) or hotel but they have a pending booking, so they would be directed to this method.\n\nOnly one hotel could be in a booking, so the original hotel would be overwritten if there was already a hotel in the booking. There's no limit to the number of flight to book."
+					},
+					"response": [
+						{
+							"name": "Add Flight",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \n    \"id\": 3,\n    \"addFlight\": [\n                    {\n                        \"id\": \"41ce6d63-192d-4707-92b5-ed8655510bd3\",\n                        \"flightNumber\": \"MU8547\",\n                        \"departureTime\": \"2024-11-07T18:25:00.000Z\",\n                        \"arrivalTime\": \"2024-11-08T05:55:00.000Z\",\n                        \"originId\": \"42fb9788-abab-4395-be2c-0ee891a161d6\",\n                        \"destinationId\": \"061fc0c6-d34e-4de1-8e08-8297d5e9b7de\",\n                        \"duration\": 690,\n                        \"price\": 928,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 208,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"MU\",\n                            \"name\": \"China Eastern Airlines\"\n                        },\n                        \"origin\": {\n                            \"code\": \"PVG\",\n                            \"name\": \"Shanghai Pudong International Airport\",\n                            \"city\": \"Shanghai\",\n                            \"country\": \"China\"\n                        },\n                        \"destination\": {\n                            \"code\": \"MNL\",\n                            \"name\": \"Ninoy Aquino International Airport\",\n                            \"city\": \"Manila\",\n                            \"country\": \"Philippines\"\n                        }\n                    },\n                    {\n                        \"id\": \"a5689f60-2feb-4237-b6c3-0383472dd5bd\",\n                        \"flightNumber\": \"PR2062\",\n                        \"departureTime\": \"2024-11-08T18:20:00.000Z\",\n                        \"arrivalTime\": \"2024-11-09T06:10:00.000Z\",\n                        \"originId\": \"061fc0c6-d34e-4de1-8e08-8297d5e9b7de\",\n                        \"destinationId\": \"b4183787-d9e7-4c29-939d-1cc1cfc72b19\",\n                        \"duration\": 710,\n                        \"price\": 710,\n                        \"currency\": \"CAD\",\n                        \"availableSeats\": 252,\n                        \"status\": \"SCHEDULED\",\n                        \"airline\": {\n                            \"code\": \"PR\",\n                            \"name\": \"Philippine Airlines\"\n                        },\n                        \"origin\": {\n                            \"code\": \"MNL\",\n                            \"name\": \"Ninoy Aquino International Airport\",\n                            \"city\": \"Manila\",\n                            \"country\": \"Philippines\"\n                        },\n                        \"destination\": {\n                            \"code\": \"YTZ\",\n                            \"name\": \"Billy Bishop Toronto City Airport\",\n                            \"city\": \"Toronto\",\n                            \"country\": \"Canada\"\n                        }\n                    }\n                ],\n    \"addHotel\": {}\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/bookings",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 14:39:15 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"userId\": 1,\n    \"itinerary\": \"ONEWAY_AND_HOTEL\",\n    \"hotelCost\": 600,\n    \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": null,\n    \"ticketNum\": null,\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n    \"updatedAt\": \"2025-03-08T14:39:15.149Z\"\n}"
+						},
+						{
+							"name": "Add Hotel",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{   \n    \"id\": 4,\n    \"addFlight\": [],\n    \"addHotel\": {\n        \"id\": 1,\n        \"price\": 150,\n        \"checkIn\": \"2025-03-15\",\n        \"checkOut\": \"2025-03-17\"\n    }\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/bookings",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 15:04:25 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 4,\n    \"userId\": 1,\n    \"itinerary\": \"ROUNDTRIP_AND_HOTEL\",\n    \"hotelCost\": 300,\n    \"checkIn\": \"2025-03-15T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-17T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": null,\n    \"ticketNum\": null,\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2025-03-08T15:01:44.164Z\",\n    \"updatedAt\": \"2025-03-08T15:04:25.459Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Pending Booking",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/bookings?id=3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bookings"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "3"
+								}
+							]
+						},
+						"description": "Get booking information of currently pending booking for user to view.\n\nInput: booking id in url.\n\nOutput: booking information.\n\nThe parameter includes a booking id to get the corresponding booking information as response. For user to view the booking they have currently pending."
+					},
+					"response": [
+						{
+							"name": "Get Pending Booking",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/bookings?id=3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"bookings"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 14:40:08 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 3,\n    \"userId\": 1,\n    \"itinerary\": \"ONEWAY_AND_HOTEL\",\n    \"hotelCost\": 600,\n    \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": null,\n    \"ticketNum\": null,\n    \"status\": \"PENDING\",\n    \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n    \"updatedAt\": \"2025-03-08T14:39:15.149Z\",\n    \"room\": {\n        \"id\": 1,\n        \"type\": \"301\",\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"pricePerNight\": 150,\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ],\n        \"hotelId\": 1,\n        \"createdAt\": \"2025-03-08T05:21:30.117Z\",\n        \"updatedAt\": \"2025-03-08T05:21:30.117Z\"\n    },\n    \"flights\": [\n        {\n            \"flightId\": \"41ce6d63-192d-4707-92b5-ed8655510bd3\",\n            \"flightNum\": \"MU8547\",\n            \"departureTime\": \"2024-11-07T18:25:00.000Z\",\n            \"arrivalTime\": \"2024-11-08T05:55:00.000Z\",\n            \"flightCost\": 928,\n            \"origin\": \"PVG, Shanghai Pudong International Airport, Shanghai, China\",\n            \"destination\": \"MNL, Ninoy Aquino International Airport, Manila, Philippines\",\n            \"airline\": \"MU, China Eastern Airlines\"\n        },\n        {\n            \"flightId\": \"a5689f60-2feb-4237-b6c3-0383472dd5bd\",\n            \"flightNum\": \"PR2062\",\n            \"departureTime\": \"2024-11-08T18:20:00.000Z\",\n            \"arrivalTime\": \"2024-11-09T06:10:00.000Z\",\n            \"flightCost\": 710,\n            \"origin\": \"MNL, Ninoy Aquino International Airport, Manila, Philippines\",\n            \"destination\": \"YTZ, Billy Bishop Toronto City Airport, Toronto, Canada\",\n            \"airline\": \"PR, Philippine Airlines\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Endpoint where all bookings happen, from creating booking, to getting suggestions, updating pending booking, and checkout booking. Implements Booking user story 1-3"
+		},
+		{
+			"name": "Records",
+			"item": [
+				{
+					"name": "[id]",
+					"item": [
+						{
+							"name": "Verify",
+							"item": [
+								{
+									"name": "Verify Booking and Flight Status by Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/records/4/verify",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"records",
+												"4",
+												"verify"
+											]
+										},
+										"description": "Gets flight booking status.\n\nInput: booking id in url.\n\nOutput: status of flight booking, flight ids of flights booked, flight status of flights booked.\n\nThe url tells information about which booking we need to check flight status. The output would be the booking status, the flightIds of the flights booked, and their status. The flightStatus at the nth index would correspond to the status of the flight with id at nth index of flightId."
+									},
+									"response": [
+										{
+											"name": "Verify Status of Booking",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{base_url}}/records/4/verify",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"records",
+														"4",
+														"verify"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 15:20:36 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"bookStatus\": \"CONFIRMED\",\n    \"flightId\": [\n        \"c671a05d-e384-4b80-b6c8-845db6d4d5d9\",\n        \"e883decc-6437-4789-ba67-12de5bf0c9cf\"\n    ],\n    \"flightsStatus\": [\n        \"SCHEDULED\",\n        \"SCHEDULED\"\n    ]\n}"
+										}
+									]
+								}
+							],
+							"description": "Endpoint to verify the flight booking status of booking. Designed to only be accessible by bookings with a flight (needs implementation in frontend to achieve this)."
+						},
+						{
+							"name": "Invoice",
+							"item": [
+								{
+									"name": "Booking Invoice by Id",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/records/5/invoice",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"records",
+												"5",
+												"invoice"
+											]
+										},
+										"description": "Get information to generate a minimal pdf invoice for the booking.\n\nInput: booking id in url.\n\nOutput: invoice information to be displayed in pdf invoice (created on frontend).\n\n  \nBased on the id in url, the information of the invoice with the corresponding booking id would be in the response.\n\nThe currency here indicates the currency of hotel and/or flights. The hotel's cost currency goes first, then the flights' currency in the order of how the flights are stored in booking."
+									},
+									"response": [
+										{
+											"name": "Check Invoice of Booking Id 4",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "{{base_url}}/records/4/invoice",
+													"host": [
+														"{{base_url}}"
+													],
+													"path": [
+														"records",
+														"4",
+														"invoice"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "vary",
+													"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+												},
+												{
+													"key": "content-type",
+													"value": "application/json"
+												},
+												{
+													"key": "Date",
+													"value": "Sat, 08 Mar 2025 15:14:23 GMT"
+												},
+												{
+													"key": "Connection",
+													"value": "keep-alive"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5"
+												},
+												{
+													"key": "Transfer-Encoding",
+													"value": "chunked"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"id\": 2,\n    \"bookingId\": 4,\n    \"userId\": 1,\n    \"hotelCost\": 300,\n    \"flightCost\": 1178,\n    \"refundAmount\": 300,\n    \"currency\": \"CAD, CAD\",\n    \"status\": \"REFUNDED\",\n    \"createdAt\": \"2025-03-08T15:06:32.473Z\",\n    \"updatedAt\": \"2025-03-08T15:13:22.396Z\"\n}"
+										}
+									]
+								}
+							],
+							"description": "Endpoint to check the invoice of a booking"
+						},
+						{
+							"name": "Cancel Booking by Id",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"cancelType\": \"PARTIAL\", // if what you're cancelling is everything in the booking, then ALL, otherwise PARTIAL\n    \"cancelHotel\": true\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/records/4",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"records",
+										"4"
+									]
+								},
+								"description": "Cancel completed booking or cancel parts of booking.\n\nInput: booking id in url, type of cancellation in cancelType, the flight ids of flight to cancel in cancelFlight, and boolean cancelHotel to determine whether hotel should be cancelled.\n\nOutput: booking information after cancel.\n\nBased on the booking id in url and the json request, we cancel the entire booking or parts of booking, indicated by cancelType (\"ALL\" or \"PARTIAL\").\n\nThe cancelHotel is used to indicate whether we cancel the hotel or not, and cancelFlight is used to indicate the flight(s) to cancel with a list of flight ids. If we cancel everything, we need to include the cancelHotel (normally we need to include cancelFlight as well, but it was said that flight cancellation is not required for PP1 so it was taken off for simplicity). Partial cancellation only allows hotel cancellation for now.\n\nThe response is the updated booking information."
+							},
+							"response": [
+								{
+									"name": "Cancel Entire Booking",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cancelType\": \"ALL\", // if what you're cancelling is everything in the booking, then ALL, otherwise PARTIAL\n    \"cancelFlight\": [\"41ce6d63-192d-4707-92b5-ed8655510bd3\", \"a5689f60-2feb-4237-b6c3-0383472dd5bd\"], // what's inside the array doesn't matter for PP1, as long as cancelHotel is true the cancellation would work\n    \"cancelHotel\": true\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/records/3",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"records",
+												"3"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 15:11:47 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 3,\n    \"userId\": 1,\n    \"itinerary\": \"ONEWAY_AND_HOTEL\",\n    \"hotelCost\": 600,\n    \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": \"AD33AE\",\n    \"ticketNum\": \"c3b24fec24\",\n    \"status\": \"CANCELED\",\n    \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n    \"updatedAt\": \"2025-03-08T15:11:47.520Z\"\n}"
+								},
+								{
+									"name": "Cancel Hotel of Booking",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"cancelType\": \"PARTIAL\", // if what you're cancelling is everything in the booking, then ALL, otherwise PARTIAL\n    \"cancelHotel\": true\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{base_url}}/records/4",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"records",
+												"4"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 15:13:22 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 4,\n    \"userId\": 1,\n    \"itinerary\": \"FLIGHT_ROUNDTRIP\",\n    \"hotelCost\": 0,\n    \"checkIn\": null,\n    \"checkOut\": null,\n    \"roomId\": null,\n    \"bookRef\": \"252F60\",\n    \"ticketNum\": \"1e037c931e\",\n    \"status\": \"CONFIRMED\",\n    \"createdAt\": \"2025-03-08T15:01:44.164Z\",\n    \"updatedAt\": \"2025-03-08T15:13:22.393Z\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Booking Details by Id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/records/3",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"records",
+										"3"
+									]
+								},
+								"description": "Get booking details of booking with specific id.\n\nInput: booking id in url.\n\nOutput: detailed booking information.\n\nThe url with booking id indicates the booking information to retrieve as response. The response would be a detailed booking information with flight information and room and hotel information of the booking."
+							},
+							"response": [
+								{
+									"name": "Get Booking Detail of Id 3",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/records/3",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"records",
+												"3"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sat, 08 Mar 2025 15:09:56 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"id\": 3,\n    \"userId\": 1,\n    \"itinerary\": \"ONEWAY_AND_HOTEL\",\n    \"hotelCost\": 600,\n    \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n    \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n    \"roomId\": 1,\n    \"bookRef\": \"AD33AE\",\n    \"ticketNum\": \"c3b24fec24\",\n    \"status\": \"CONFIRMED\",\n    \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n    \"updatedAt\": \"2025-03-08T14:58:01.051Z\",\n    \"room\": {\n        \"id\": 1,\n        \"type\": \"301\",\n        \"amenities\": [\n            \"WiFi\",\n            \"Air Conditioning\",\n            \"TV\",\n            \"Mini Bar\"\n        ],\n        \"pricePerNight\": 150,\n        \"images\": [\n            \"room1.jpg\",\n            \"room2.jpg\"\n        ],\n        \"hotelId\": 1,\n        \"createdAt\": \"2025-03-08T05:21:30.117Z\",\n        \"updatedAt\": \"2025-03-08T05:21:30.117Z\",\n        \"hotel\": {\n            \"id\": 1,\n            \"name\": \"cccccc Sunshine\",\n            \"logo\": \"https://example.com/logo.png\",\n            \"address\": \"123 Beach Road, Sunshine City\",\n            \"city\": \"Toronto\",\n            \"starRating\": 3,\n            \"images\": [\n                \"https://example.com/image1.png\"\n            ],\n            \"ownerId\": 1,\n            \"createdAt\": \"2025-03-08T05:19:27.638Z\",\n            \"updatedAt\": \"2025-03-08T05:19:27.638Z\"\n        }\n    },\n    \"flights\": [\n        {\n            \"flightId\": \"41ce6d63-192d-4707-92b5-ed8655510bd3\",\n            \"flightNum\": \"MU8547\",\n            \"departureTime\": \"2024-11-07T18:25:00.000Z\",\n            \"arrivalTime\": \"2024-11-08T05:55:00.000Z\",\n            \"flightCost\": 928,\n            \"origin\": \"PVG, Shanghai Pudong International Airport, Shanghai, China\",\n            \"destination\": \"MNL, Ninoy Aquino International Airport, Manila, Philippines\",\n            \"airline\": \"MU, China Eastern Airlines\"\n        },\n        {\n            \"flightId\": \"a5689f60-2feb-4237-b6c3-0383472dd5bd\",\n            \"flightNum\": \"PR2062\",\n            \"departureTime\": \"2024-11-08T18:20:00.000Z\",\n            \"arrivalTime\": \"2024-11-09T06:10:00.000Z\",\n            \"flightCost\": 710,\n            \"origin\": \"MNL, Ninoy Aquino International Airport, Manila, Philippines\",\n            \"destination\": \"YTZ, Billy Bishop Toronto City Airport, Toronto, Canada\",\n            \"airline\": \"PR, Philippine Airlines\"\n        }\n    ]\n}"
+								}
+							]
+						}
+					],
+					"description": "Endpoint with specific booking id to perform the user story 4-7 functionality on specific booking."
+				},
+				{
+					"name": "List of Bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/records",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"records"
+							]
+						},
+						"description": "Get list of bookings that are CONFIRMED or CANCELED (paid or cancelled).\n\nInput: user id saved in request.\n\nOutput: all bookings the user has paid or paid then cancelled.\n\nIn the records endpoint, we get a list of bookings with minimal information of the booking. Only for display purposes and provide user the choice to see a specific booking and see invoice, verify flight status, etc."
+					},
+					"response": [
+						{
+							"name": "List of Bookings",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/records",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"records"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 15:08:10 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 1,\n        \"userId\": 1,\n        \"itinerary\": \"ONEWAY_AND_HOTEL\",\n        \"hotelCost\": 600,\n        \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n        \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n        \"roomId\": 1,\n        \"bookRef\": \"5EE273\",\n        \"ticketNum\": \"8b46d64d62\",\n        \"status\": \"CANCELED\",\n        \"createdAt\": \"2025-03-08T05:22:13.005Z\",\n        \"updatedAt\": \"2025-03-08T06:14:37.108Z\"\n    },\n    {\n        \"id\": 2,\n        \"userId\": 1,\n        \"itinerary\": \"FLIGHT_ONEWAY\",\n        \"hotelCost\": 0,\n        \"checkIn\": null,\n        \"checkOut\": null,\n        \"roomId\": null,\n        \"bookRef\": \"D75902\",\n        \"ticketNum\": \"53a552e059\",\n        \"status\": \"CONFIRMED\",\n        \"createdAt\": \"2025-03-08T05:46:39.167Z\",\n        \"updatedAt\": \"2025-03-08T06:16:58.856Z\"\n    },\n    {\n        \"id\": 3,\n        \"userId\": 1,\n        \"itinerary\": \"ONEWAY_AND_HOTEL\",\n        \"hotelCost\": 600,\n        \"checkIn\": \"2025-03-11T00:00:00.000Z\",\n        \"checkOut\": \"2025-03-15T00:00:00.000Z\",\n        \"roomId\": 1,\n        \"bookRef\": \"AD33AE\",\n        \"ticketNum\": \"c3b24fec24\",\n        \"status\": \"CONFIRMED\",\n        \"createdAt\": \"2025-03-08T14:35:15.242Z\",\n        \"updatedAt\": \"2025-03-08T14:58:01.051Z\"\n    },\n    {\n        \"id\": 4,\n        \"userId\": 1,\n        \"itinerary\": \"ROUNDTRIP_AND_HOTEL\",\n        \"hotelCost\": 300,\n        \"checkIn\": \"2025-03-15T00:00:00.000Z\",\n        \"checkOut\": \"2025-03-17T00:00:00.000Z\",\n        \"roomId\": 1,\n        \"bookRef\": \"252F60\",\n        \"ticketNum\": \"1e037c931e\",\n        \"status\": \"CONFIRMED\",\n        \"createdAt\": \"2025-03-08T15:01:44.164Z\",\n        \"updatedAt\": \"2025-03-08T15:06:32.473Z\"\n    }\n]"
+						}
+					]
+				}
+			],
+			"description": "Includes the functionality to show completed or cancelled booking to user, cancel/partial cancel booking, get invoice information, and verify flight booking status. Implemented Booking user story 4-7."
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "[nid]",
+					"item": [
+						{
+							"name": "Mark as read",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/notifications/:nid",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										":nid"
+									],
+									"variable": [
+										{
+											"key": "nid",
+											"value": "1"
+										}
+									]
+								},
+								"description": "Mark the notification as read."
+							},
+							"response": [
+								{
+									"name": "Mark as read",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"url": {
+											"raw": "{{base_url}}/notifications/:nid",
+											"host": [
+												"{{base_url}}"
+											],
+											"path": [
+												"notifications",
+												":nid"
+											],
+											"variable": [
+												{
+													"key": "nid",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "vary",
+											"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+										},
+										{
+											"key": "content-type",
+											"value": "application/json"
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 09 Mar 2025 00:05:20 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										},
+										{
+											"key": "Transfer-Encoding",
+											"value": "chunked"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"message\": \"notification updated successfully\",\n    \"notification\": {\n        \"id\": 1,\n        \"userId\": 2,\n        \"message\": \"To owner: The 101 Room in your Toronto Hotel Hotel has been booked from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time) to Fri Mar 14 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time), income: 600.\",\n        \"isRead\": true,\n        \"isUpdate\": false,\n        \"createdAt\": \"2025-03-09T00:01:06.129Z\",\n        \"updatedAt\": \"2025-03-09T00:05:20.233Z\"\n    }\n}"
+								}
+							]
+						}
+					],
+					"description": "Endpoint where a specific notification is viewed."
+				},
+				{
+					"name": "get notification list",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/notifications?unreadOnly=true",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications"
+							],
+							"query": [
+								{
+									"key": "unreadOnly",
+									"value": "true",
+									"description": "optional, value must be true or false, case insensitive"
+								}
+							]
+						},
+						"description": "return the whole notification list,\n\nor filter the unread notifications only, if parameter `unreadOnly` is true."
+					},
+					"response": [
+						{
+							"name": "Get all notifications",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/notifications",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications"
+									],
+									"query": [
+										{
+											"key": "unreadOnly",
+											"value": "false",
+											"description": "optional, can either ignore it or be false",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 08 Mar 2025 22:49:09 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": \"d747c6c4-d3c0-4086-987c-f261c3844e15\",\n        \"userId\": 3,\n        \"message\": \"To user mary: Your Flight Ticket has been booked, BookingId: 2.\",\n        \"isRead\": false,\n        \"isUpdate\": false,\n        \"createdAt\": \"2025-03-08T22:43:07.293Z\",\n        \"updatedAt\": \"2025-03-08T22:43:07.293Z\"\n    },\n    {\n        \"id\": \"329b42b7-0630-47c8-b650-e504da7fcb10\",\n        \"userId\": 3,\n        \"message\": \"To user mary: 101 Room in Toronto Hotel Hotel has been booked from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time) to Fri Mar 14 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time), total cost: 600.\",\n        \"isRead\": false,\n        \"isUpdate\": false,\n        \"createdAt\": \"2025-03-08T22:41:36.666Z\",\n        \"updatedAt\": \"2025-03-08T22:41:36.666Z\"\n    }\n]"
+						},
+						{
+							"name": "get unread notification list",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/notifications?unreadOnly=true",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications"
+									],
+									"query": [
+										{
+											"key": "unreadOnly",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "vary",
+									"value": "RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Router-Segment-Prefetch"
+								},
+								{
+									"key": "content-type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 09 Mar 2025 00:29:57 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"id\": 3,\n        \"userId\": 2,\n        \"message\": \"To user yoyo: Your booking of 101 Room in Toronto Hotel Hotel from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time) to Fri Mar 14 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time) has been cancelled by the hotel owner.\",\n        \"isRead\": false,\n        \"isUpdate\": false,\n        \"createdAt\": \"2025-03-09T00:10:39.492Z\",\n        \"updatedAt\": \"2025-03-09T00:10:39.492Z\"\n    },\n    {\n        \"id\": 2,\n        \"userId\": 2,\n        \"message\": \"To user yoyo: 101 Room in Toronto Hotel Hotel has been booked from Mon Mar 10 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time) to Fri Mar 14 2025 20:00:00 GMT-0400 (Eastern Daylight Saving Time), total cost: 600.\",\n        \"isRead\": false,\n        \"isUpdate\": false,\n        \"createdAt\": \"2025-03-09T00:01:06.143Z\",\n        \"updatedAt\": \"2025-03-09T00:01:06.143Z\"\n    }\n]"
+						}
+					]
+				}
+			],
+			"description": "Endpoint to retrieve notifications for user to view."
+		}
+	]
+}
