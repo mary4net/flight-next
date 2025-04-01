@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import dynamic from "next/dynamic"; // Import Next.js dynamic module
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/app/components/ui/dialog";
 
 // Dynamically import Leaflet components with no SSR
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });

@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 export default function Home() {
   return (
     <div>
@@ -12,6 +11,9 @@ export default function Home() {
       <Link href="/hotelsearch">
         Go to Hotel
       </Link>
+      <Link href="/notification">
+      Go to notif
+    </Link>
     </div>
   );
 }
