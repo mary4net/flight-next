@@ -176,19 +176,11 @@ async function createBooking(request) {
 
 // Get pending booking details
 async function getBookedInfo(request) {
-    const { searchParams } = new URL(request.url);
-    let id = searchParams.get("id");
     const user = request.user;
-
-    if (!id || isNaN(parseInt(id))) {
-      return NextResponse.json({"error": 'Invalid booking id.' }, { status: 400 });
-    }
-    id = parseInt(id);
 
     try {
         const booking = await prisma.booking.findUnique({
             where: {
-                id: id,
                 userId: user.id,
                 status: "PENDING"
             },
@@ -199,7 +191,7 @@ async function getBookedInfo(request) {
         });
 
         if (!booking) {
-          return NextResponse.json({ "error": "Booking not found"}, { status: 404 });
+          return NextResponse.json({}, { status: 200 });
         }
 
         return NextResponse.json(booking, { status: 200 });
