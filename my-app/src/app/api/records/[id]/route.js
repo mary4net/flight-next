@@ -54,7 +54,7 @@ async function cancelBooking(request) {
     const url = new URL(request.url);
     let id = url.pathname.split("/").pop();
     // cancelType: "ALL" | "PARTIAL"
-    // cancelFlight: json string of flightIds to cancel
+    // cancelFlight: json string of flightIds to cancel ! changed to boolean cause of AFS system cancel all flights
     // cancelHotel: true or false
     // case for cancelFlight deleted for simplicity and marking
     const { cancelType, cancelFlight, cancelHotel } = await request.json();
@@ -109,6 +109,10 @@ async function cancelBooking(request) {
                 where: {
                     id: booking.id
                 },
+                include: {
+                    user: true,
+                    flights: true
+                },
                 data: {
                     status: "CANCELED"
                 }
@@ -121,6 +125,26 @@ async function cancelBooking(request) {
                     refundAmount: invoice.hotelCost + invoice.flightCost,
                     status: "REFUNDED"
                 }
+            });
+
+            updatedBooking.flights.forEach(async (flight) => {
+                await prisma.flight.delete({
+                    where: {
+                        id: flight.id
+                    }
+                });
+            });
+            
+            let response = await fetch('https://advanced-flights-system.replit.app/api/bookings/cancel', {
+                method: 'POST',
+                headers: {
+                    'x-api-key': process.env.AFS_API_KEY,  
+                    'accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    bookingReference: updatedBooking.bookRef,  
+                    lastName: updatedBooking.user.lastName, 
+                })
             });
 
             // notify the user
@@ -155,7 +179,7 @@ async function cancelBooking(request) {
                         bookingId: updatedBooking.id
                     },
                     data: {
-                        refundAmount: invoice.hotelCost,
+                        refundAmount: (refundAmount ?? 0) + (invoice.hotelCost ?? 0),
                         status: "REFUNDED"
                     }
                 });
@@ -172,10 +196,70 @@ async function cancelBooking(request) {
                     }
                 });
 
+            } else if (cancelFlight) {
+                updatedBooking = await prisma.booking.update({
+                    where: {
+                        id: booking.id
+                    },
+                    include: {
+                        user: true,
+                        flights: true
+                    },
+                    data: {
+                        itinerary: booking.itinerary === "HOTEL_RESERVATION",
+                        flightCost: 0
+                    }
+                });
+
+                await prisma.invoice.update({
+                    where: {
+                        bookingId: updatedBooking.id
+                    },
+                    data: {
+                        refundAmount: (refundAmount ?? 0) + (invoice.flightCost ?? 0),
+                        status: "REFUNDED"
+                    }
+                });
+
+                updatedBooking.flights.forEach(async (flight) => {
+                    await prisma.flight.delete({
+                        where: {
+                            id: flight.id
+                        }
+                    });
+                });
+
+                let response = await fetch('https://advanced-flights-system.replit.app/api/bookings/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'x-api-key': process.env.AFS_API_KEY,  
+                        'accept': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        bookingReference: updatedBooking.bookRef,  
+                        lastName: updatedBooking.user.lastName, 
+                    })
+                });
+
+                if (response.ok) {
+                    response = await response.json();
+                } else {
+                    return NextResponse.json({ error: response?.error || "Error cancelling flight." }, { status: 400 });
+                }
+
+                // notify the user
+                const user = await prisma.user.findUnique({
+                    where: { id: booking.userId},
+                });
+                var message = `To user ${user.firstName}: Your booking(flight) with id ${booking.id} has been cancelled successfully.`;
+                const noti = await prisma.Notification.create({
+                    data:{
+                        userId : booking.userId,
+                        message: message
+                    }
+                });
             }
         }
-
-
 
         return NextResponse.json(updatedBooking, { status: 200 });
     } catch (error) {
