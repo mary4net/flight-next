@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
-function Booking = () => {
+
+const Booking = () => {
     const router = useRouter();
     const { info } = router.query;
 
@@ -56,7 +57,7 @@ function Booking = () => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ 
-                    itinerary
+                    itinerary,
                     flights: Array.isArray(info) ? info : [],
                     hotelRoom: typeof info === "object" ? info : {},
                 }),
@@ -132,3 +133,5 @@ function Booking = () => {
         </>
     )
 }
+
+export default Booking;
