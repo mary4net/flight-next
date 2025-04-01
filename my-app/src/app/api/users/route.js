@@ -9,15 +9,15 @@ import { setCookie, hashPassword, generateToken, withAuth } from "@/utils/auth";
 import { prisma } from "@/utils/db";
 import { Role } from "@prisma/client";
 
-const SECRET_KEY = process.env.JWT_SECRET || 'mysecret';
 
 export async function POST(request) {
-  try{
-    var {email, password, firstName, lastName, phoneNumber, profilePicture, role} 
+  try {
+    var { email, password, firstName, lastName, phoneNumber, profilePicture, role }
       = await request.json();
 
     // check types for db
     if (typeof email !== "string") {
+      console.log(email, password);
       return NextResponse.json({ error: "Email must be a string" }, { status: 400 });
     }
     if (typeof password !== "string") {
@@ -50,23 +50,23 @@ export async function POST(request) {
 
     // check if missing values for db
     if (!email || !password || !firstName || !lastName || !role) {
-      return NextResponse.json({error: "data missing, plz fill in all blanks"}, {status: 400});
+      return NextResponse.json({ error: "data missing, plz fill in all blanks" }, { status: 400 });
     }
 
     // check if email already exist in db
     const check_email = await prisma.User.findUnique({
-      where: {email: email}
+      where: { email: email }
     });
 
     if (check_email != null) {
-      return NextResponse.json({error: "email has been used"}, {status: 401});
+      return NextResponse.json({ error: "email has been used" }, { status: 401 });
     }
 
     // store user info into db
     const account = await prisma.User.create({
-      data:{
-        email:email,
-        password : hashPassword(password),
+      data: {
+        email: email,
+        password: hashPassword(password),
         firstName: firstName,
         lastName: lastName,
         phoneNumber: phoneNumber,
@@ -108,7 +108,7 @@ export async function POST(request) {
 
 async function PUT_edit(request) {
   try {
-    const { firstName, lastName, email, 
+    const { firstName, lastName, email,
       phoneNumber, profilePicture } = await request.json();
 
     if (!firstName && !lastName && !email && !phoneNumber && !profilePicture) {
@@ -133,7 +133,7 @@ async function PUT_edit(request) {
       {
         message: 'Profile updated successfully',
         user: updatedUser
-      }, 
+      },
       { status: 200 });
 
   } catch (error) {
@@ -156,7 +156,7 @@ async function GET_acc(request) {
       {
         message: 'Account info got successfully',
         user: acc
-      }, 
+      },
       { status: 200 });
 
   } catch (error) {
