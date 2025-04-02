@@ -1,6 +1,7 @@
 import { prisma } from "@/utils/db";
 import { NextResponse } from "next/server";
 import { withAuth } from "@/utils/auth";
+import { generateInvoicePdf } from '@/utils/pdf';
 
 
 // As a user, I want to receive an minimal, PDF invoice for my trip booking, so that I have a record of the booking and transaction.
@@ -35,7 +36,14 @@ async function getInvoice(request) {
 
     const invoiceInfo = await prisma.invoice.findUnique({ where: { bookingId: booking.id } });
 
-    return NextResponse.json(invoiceInfo, { status: 200 });
+    const pdfBuffer = await generateInvoicePdf(booking, invoice);
+
+    return new NextResponse(pdfBuffer, {
+      headers: {
+        'Content-Type': 'application/pdf',
+        'Content-Disposition': `attachment; filename="invoice-${booking.itinerary}.pdf"`,
+      },
+    });
 }
 
 export const GET = withAuth(getInvoice);

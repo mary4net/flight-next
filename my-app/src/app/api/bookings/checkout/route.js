@@ -136,7 +136,7 @@ async function checkout(request) {
                 status: "CONFIRMED",
                 invoice: {
                     create: {
-                        userId: user.id,
+                        userId: user.name,
                         hotelCost: hotelcost || 0,
                         flightCost: flightcost || 0,
                         currency: currency,
