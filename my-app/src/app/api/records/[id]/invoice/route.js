@@ -5,7 +5,7 @@ import { withAuth } from "@/utils/auth";
 
 // As a user, I want to receive an minimal, PDF invoice for my trip booking, so that I have a record of the booking and transaction.
 
-export async function getInvoice(request) {
+async function getInvoice(request) {
     const url = new URL(request.url);
     let id = url.pathname.split("/")[3];
     const user = request.user;

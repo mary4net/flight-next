@@ -14,19 +14,17 @@
     "bcrypt": "^5.1.1",
     "cookie": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.486.0",
     "next": "^15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "20.17.23",
-    "@types/react": "19.0.10",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.2.0",
     "prisma": "^6.4.1",
-    "tailwindcss": "^4",
-    "typescript": "5.8.2"
+    "tailwindcss": "^4.1.0"
   }
 }

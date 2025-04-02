@@ -20,6 +20,14 @@ async function getBookings(request) {
                     { status: "CANCELED" }
                 ]
         },
+        include: {
+            room: {
+                include: {
+                    hotel: true // Include hotel info
+                }
+            },
+            flights: true
+        }
     });
     return NextResponse.json(bookings, { status: 200 });
 }
