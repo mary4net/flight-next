@@ -21,7 +21,7 @@ const HotelSearchPage = () => {
     const [checkInDate, setCheckInDate] = useState<string | "">("");
     const [checkOutDate, setCheckOutDate] = useState<string | "">("");
     const [hotelResults, setHotelResults] = useState<any[]>([]); // Example results array
-    const [selectedHotel, setSelectedHotel] = useState<any|null>(null);
+    const [selectedHotel, setSelectedHotel] = useState<any | null>(null);
     const [checkInRoomDate, setCheckInRoomDate] = useState<string | "">("");
     const [checkOutRoomDate, setCheckOutRoomDate] = useState<string | "">("");
 
@@ -42,12 +42,12 @@ const HotelSearchPage = () => {
 
         // Simulate fetching hotel results with some locations
         const dummyResults = [
-            { hotelId: 1, name: "Hotel A", rating: 4, price: 100, location: "New York", lat: 40.7128, lon: -74.0060, amenities: ["Free WiFi", "Pool", "Gym"]},
-            { hotelId: 2,name: "Hotel B", rating: 3, price: 200, location: "Los Angeles", lat: 34.0522, lon: -118.2437, amenities: ["Free WiFi", "Pool", "Hello"] },
+            { hotelId: 1, name: "Hotel A", rating: 4, price: 100, location: "New York", lat: 40.7128, lon: -74.0060, amenities: ["Free WiFi", "Pool", "Gym"] },
+            { hotelId: 2, name: "Hotel B", rating: 3, price: 200, location: "Los Angeles", lat: 34.0522, lon: -118.2437, amenities: ["Free WiFi", "Pool", "Hello"] },
             { hotelId: 3, name: "Hotel C", rating: 5, price: 150, location: "Chicago", lat: 41.8781, lon: -87.6298, amenities: ["Free WiFi", "Gym"] },
-            {  hotelId: 4, name: "Hotel A", rating: 4, price: 100, location: "New York", lat: 40.7128, lon: -74.0060, amenities: ["Free WiFi", "Bar"] },
-            {  hotelId: 5, name: "Hotel B", rating: 3, price: 200, location: "Los Angeles", lat: 34.0522, lon: -118.2437, amenities: ["Free WiFi", "Swim"] },
-            {  hotelId: 5, name: "Hotel C", rating: 5, price: 150, location: "Chicago", lat: 41.8781, lon: -87.6298, amenities: ["Free WiFi", "Hall"] },
+            { hotelId: 4, name: "Hotel A", rating: 4, price: 100, location: "New York", lat: 40.7128, lon: -74.0060, amenities: ["Free WiFi", "Bar"] },
+            { hotelId: 5, name: "Hotel B", rating: 3, price: 200, location: "Los Angeles", lat: 34.0522, lon: -118.2437, amenities: ["Free WiFi", "Swim"] },
+            { hotelId: 5, name: "Hotel C", rating: 5, price: 150, location: "Chicago", lat: 41.8781, lon: -87.6298, amenities: ["Free WiFi", "Hall"] },
         ];
         setHotelResults(dummyResults);
     };
@@ -94,7 +94,7 @@ const HotelSearchPage = () => {
                         onChange={(e) => setSearchTerm(e.target.value)}
                         className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
-                    
+
                     <div className="flex space-x-4">
                         <input
                             type="date"
@@ -134,42 +134,42 @@ const HotelSearchPage = () => {
                     {priceFilterVisible && (
                         <div className="absolute mt-2 p-4 border rounded-lg bg-white shadow-md w-72">
                             <div className="flex flex-col justify-between items-center mb-2">
-                            {/* Close Button */}
-                            <button
-                                onClick={handlePriceClick} // Function to close the price filter
-                                className="text-red-500 font-semibold text-lg"
-                                aria-label="Close price filter"
-                            >
-                                Close
-                            </button>
+                                {/* Close Button */}
+                                <button
+                                    onClick={handlePriceClick} // Function to close the price filter
+                                    className="text-red-500 font-semibold text-lg"
+                                    aria-label="Close price filter"
+                                >
+                                    Close
+                                </button>
 
-                            {/* Price Filters */}
-                            <div className="flex flex-row space-x-2 w-full">
-                                <input
-                                type="number"
-                                placeholder="Min Price"
-                                value={startingPrice}
-                                className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 w-32"
-                                min="0"
-                                onChange={(e) => handlePriceChange(e, "start")}
-                                />
-                                <input
-                                type="number"
-                                placeholder="Max Price"
-                                value={maxPrice}
-                                className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 w-32"
-                                min="0"
-                                onChange={(e) => handlePriceChange(e, "max")}
-                                />
-                            </div>
+                                {/* Price Filters */}
+                                <div className="flex flex-row space-x-2 w-full">
+                                    <input
+                                        type="number"
+                                        placeholder="Min Price"
+                                        value={startingPrice}
+                                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 w-32"
+                                        min="0"
+                                        onChange={(e) => handlePriceChange(e, "start")}
+                                    />
+                                    <input
+                                        type="number"
+                                        placeholder="Max Price"
+                                        value={maxPrice}
+                                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 w-32"
+                                        min="0"
+                                        onChange={(e) => handlePriceChange(e, "max")}
+                                    />
+                                </div>
                             </div>
                         </div>
-                        )}
+                    )}
 
                 </div>
                 <button
                     type="submit"
-                    className= "w-80 h-25 bg-blue-500 text-white py-2 rounded-lg mt-4 md:mt-0"
+                    className="w-80 h-25 bg-blue-500 text-white py-2 rounded-lg mt-4 md:mt-0"
                 >
                     Search Hotels
                 </button>
@@ -198,70 +198,70 @@ const HotelSearchPage = () => {
             {selectedHotel && (
                 <Dialog open={!!selectedHotel} onOpenChange={closeHotelDetails}>
                     <DialogContent className="w-[600px] max-h-[90vh] overflow-y-auto p-6">
-                    {/* Hotel Image */}
-                    <div className="flex justify-center mb-4">
-                        <img 
-                        src={selectedHotel.imageUrl} // Replace with your actual image source
-                        alt={selectedHotel.name} 
-                        className="rounded-lg max-w-full h-auto" 
-                        />
-                    </div>
+                        {/* Hotel Image */}
+                        <div className="flex justify-center mb-4">
+                            <img
+                                src={selectedHotel.imageUrl} // Replace with your actual image source
+                                alt={selectedHotel.name}
+                                className="rounded-lg max-w-full h-auto"
+                            />
+                        </div>
 
-                    {/* Room Type, Date inputs */}
-                    <div className="flex flex-row items-center justify-center w-full mb-6 md:mb-0 m-2 space-x-6">
-                        <div className="flex flex-col items-start space-y-2">
-                            <label htmlFor="start-date" className="text-sm font-medium">Room Type</label>
+                        {/* Room Type, Date inputs */}
+                        <div className="flex flex-row items-center justify-center w-full mb-6 md:mb-0 m-2 space-x-6">
+                            <div className="flex flex-col items-start space-y-2">
+                                <label htmlFor="start-date" className="text-sm font-medium">Room Type</label>
                                 <input
-                                type="text"
-                                placeholder="Room Type"
-                                value={searchRoomType}
-                                onKeyDown={handleKeyDown}
-                                onChange={(e) => setSearchRoomType(e.target.value)}
-                                className="py-3 px-5 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-center w-48"
+                                    type="text"
+                                    placeholder="Room Type"
+                                    value={searchRoomType}
+                                    onKeyDown={handleKeyDown}
+                                    onChange={(e) => setSearchRoomType(e.target.value)}
+                                    className="py-3 px-5 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400 text-center w-48"
                                 />
-                        </div>
-                        {/* Start Date and End Date */}
-                        <div className="flex flex-col items-start space-y-2">
-                        <label htmlFor="start-date" className="text-sm font-medium">Start Date</label>
-                        <input
-                            id="start-date"
-                            type="date"
-                            value={checkInRoomDate}
-                            onChange={(e) => setCheckInRoomDate(e.target.value)}
-                            className="py-3 px-5 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
-                        />
+                            </div>
+                            {/* Start Date and End Date */}
+                            <div className="flex flex-col items-start space-y-2">
+                                <label htmlFor="start-date" className="text-sm font-medium">Start Date</label>
+                                <input
+                                    id="start-date"
+                                    type="date"
+                                    value={checkInRoomDate}
+                                    onChange={(e) => setCheckInRoomDate(e.target.value)}
+                                    className="py-3 px-5 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
+                                />
+                            </div>
+
+                            <div className="flex flex-col items-start space-y-2">
+                                <label htmlFor="end-date" className="text-sm font-medium">End Date</label>
+                                <input
+                                    id="end-date"
+                                    type="date"
+                                    value={checkOutRoomDate}
+                                    onChange={(e) => setCheckOutRoomDate(e.target.value)}
+                                    className="py-3 px-5 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
+                                />
+                            </div>
                         </div>
 
-                        <div className="flex flex-col items-start space-y-2">
-                        <label htmlFor="end-date" className="text-sm font-medium">End Date</label>
-                        <input
-                            id="end-date"
-                            type="date"
-                            value={checkOutRoomDate}
-                            onChange={(e) => setCheckOutRoomDate(e.target.value)}
-                            className="py-3 px-5 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-48"
-                        />
-                        </div>
-                    </div>
+                        {/* Hotel Details */}
+                        <DialogTitle>{selectedHotel.name}</DialogTitle>
+                        <DialogDescription>
+                            {/* show only available rooms */}
+                            {/* show images */}
+                            <span>⭐ Rating: {selectedHotel.rating} Stars</span><br />
+                            <span>💰 Price: ${selectedHotel.price} per night</span><br />
+                            <span>📍 Location: {selectedHotel.location}</span><br />
+                            <span>🛏️ Amenities: {selectedHotel.amenities.join(", ")}</span>
+                        </DialogDescription>
 
-                    {/* Hotel Details */}
-                    <DialogTitle>{selectedHotel.name}</DialogTitle>
-                    <DialogDescription>
-                        {/* show only available rooms */}
-                        {/* show images */}
-                        <span>⭐ Rating: {selectedHotel.rating} Stars</span><br />
-                        <span>💰 Price: ${selectedHotel.price} per night</span><br />
-                        <span>📍 Location: {selectedHotel.location}</span><br />
-                        <span>🛏️ Amenities: {selectedHotel.amenities.join(", ")}</span>
-                    </DialogDescription>
-
-                    {/* Close Button */}
-                    <DialogClose asChild>
-                        <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg w-full">Close</button>
-                    </DialogClose>
+                        {/* Close Button */}
+                        <DialogClose asChild>
+                            <button className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg w-full">Close</button>
+                        </DialogClose>
                     </DialogContent>
                 </Dialog>
-                )}
+            )}
 
 
 
