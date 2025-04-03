@@ -10,22 +10,20 @@ interface Notification {
 const NotificationsList = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
-  // Mock data
   useEffect(() => {
-    const fetchNotifications = () => {
-      const sampleNotifications = [
-        { id: 1, message: 'Booking confirmed for your itinerary', isRead: false },
-        { id: 2, message: 'Hotel booking canceled by owner', isRead: false },
-        { id: 3, message: 'You have a new message from your booking agent', isRead: false },
-      ];
-
-      setNotifications(sampleNotifications);
+    const fetchNotifications = async () => {
+      const response = await fetch("/api/notification");
+      const data = await response.json();
+      setNotifications(data);
     };
-
     fetchNotifications();
   }, []);
 
   const markAsRead = async (id: number) => {
+    await fetch(`/api/notification/${id}`, {
+      method: "PUT",
+    });
+
     setNotifications((prevNotifications) =>
       prevNotifications.map((noti) =>
         noti.id === id ? { ...noti, isRead: true } : noti
