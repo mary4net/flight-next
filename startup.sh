@@ -39,7 +39,7 @@ cd my-app
 echo "Installing project dependencies..."
 rm -rf package-lock.json
 npm install
-npm install dotenv-cli
+npm install -g dotenv-cli
 # npm install bcrypt
 # npm install jsonwebtoken
 # npm install cookie
