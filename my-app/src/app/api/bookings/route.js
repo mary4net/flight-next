@@ -158,6 +158,10 @@ async function createBooking(request) {
                         flights: {
                             connect: { flightId: flightRecord.flightId }
                         }
+                    },
+                    include: {
+                        room: true,
+                        flights: true
                     }
                 });
             }
@@ -233,6 +237,9 @@ async function updateBooking(request) {
     const booking = await prisma.booking.findUnique({
         where: {
             id: id,
+        }, include: {
+            user: true,
+            flights: true
         }
     });
 
@@ -338,6 +345,10 @@ async function updateBooking(request) {
                         flights: {
                             connect: { flightId: flightRecord.flightId }
                         }
+                    },
+                    include: {
+                        room: true,
+                        flights: true
                     }
                 });
             }
@@ -388,6 +399,10 @@ async function updateBooking(request) {
             updatedBooking = await prisma.booking.update({
                 where: { id: booking.id },
                 data: updatedBookingData,
+                include: {
+                    room: true,
+                    flights: true
+                }
             });
         }
 

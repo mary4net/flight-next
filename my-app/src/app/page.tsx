@@ -1,6 +1,10 @@
 import Link from "next/link";
+import Navigation from "@/components/ui/navigation";
+
 export default function Home() {
   return (
+    <>
+    <Navigation />
     <div>
       <h1>Home Page</h1>
 
@@ -27,5 +31,6 @@ export default function Home() {
         </Link>
       </p>
     </div>
+    </>
   );
 }

@@ -136,7 +136,7 @@ async function checkout(request) {
                 status: "CONFIRMED",
                 invoice: {
                     create: {
-                        userId: user.id,
+                        userId: user.name,
                         hotelCost: hotelcost || 0,
                         flightCost: flightcost || 0,
                         currency: currency,
@@ -180,20 +180,14 @@ async function checkout(request) {
 
 // Details about itinerary
 async function getBookedInfo(request) {
-    const { searchParams } = new URL(request.url);
-    const bookingId = searchParams.get("bookingId");
     const user = request.user;
 
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (isNaN(parseInt(bookingId))) {
-        return NextResponse.json({"error": 'Invalid booking id. It must be a number.' }, { status: 400 });
-    }
-
     const booking = await prisma.booking.findUnique({
-        where: { id: parseInt(bookingId), userId: user.id },
+        where: { userId: user.id, status: "PENDING" },
         include: {
             room: {
                 include: {
