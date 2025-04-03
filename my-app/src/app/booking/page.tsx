@@ -41,36 +41,36 @@ export default function Records() {
             method: 'GET' 
         });
         const data = await response.json();
-        // const test = [{
-        //     "id": 1,
-        //     "userId": 1,
-        //     "itinerary": "ONEWAY_AND_HOTEL",
-        //     "hotelCost": 600,
-        //     "checkIn": "2025-03-11T00:00:00.000Z",
-        //     "checkOut": "2025-03-15T00:00:00.000Z",
-        //     "roomId": 1,
-        //     "room": {
-        //         "type": "302",
-        //         "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
-        //         "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
-        //     },
-        //     "flights": [{
-        //         "flightId": "ABC123",
-        //         "flightNum": "XY789",
-        //         "departureTime": "2025-03-10T10:00:00.000Z",
-        //         "arrivalTime": "2025-03-10T14:00:00.000Z",
-        //         "flightCost": 350,
-        //         "origin": "JFK, John F. Kennedy International Airport, New York, USA",
-        //         "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
-        //         "airline": "AA, American Airlines"
-        //     }],
-        //     "bookRef": null,
-        //     "ticketNum": null,
-        //     "status": "CONFIRMED",
-        //     "createdAt": "2025-03-08T23:54:12.775Z",
-        //     "updatedAt": "2025-03-08T23:55:48.230Z"
-        // }]
-        // setBookings(test);
+        const test = [{
+            "id": 1,
+            "userId": 1,
+            "itinerary": "ONEWAY_AND_HOTEL",
+            "hotelCost": 600,
+            "checkIn": "2025-03-11T00:00:00.000Z",
+            "checkOut": "2025-03-15T00:00:00.000Z",
+            "roomId": 1,
+            "room": {
+                "type": "302",
+                "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
+                "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
+            },
+            "flights": [{
+                "flightId": "ABC123",
+                "flightNum": "XY789",
+                "departureTime": "2025-03-10T10:00:00.000Z",
+                "arrivalTime": "2025-03-10T14:00:00.000Z",
+                "flightCost": 350,
+                "origin": "JFK, John F. Kennedy International Airport, New York, USA",
+                "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
+                "airline": "AA, American Airlines"
+            }],
+            "bookRef": null,
+            "ticketNum": null,
+            "status": "CONFIRMED",
+            "createdAt": "2025-03-08T23:54:12.775Z",
+            "updatedAt": "2025-03-08T23:55:48.230Z"
+        }]
+        setBookings(test);
         if (response.ok) {
             setBookings(data);
         } else {
@@ -187,8 +187,8 @@ export default function Records() {
         </div>
       </div>
     )}
-    <div className="bg-white shadow-2xl rounded-lg p-6 min-h-screen max-w-4xl mx-auto mt-6">
-        <h1 className="text-center text-2xl font-bold mb-6 font-helvetica">My Bookings</h1>
+    <div className="bg-gray-300 text-black shadow-2xl rounded-lg p-6 min-h-screen max-w-4xl mx-auto mt-6">
+        <h1 className="text-center text-black text-2xl font-bold mb-6 font-helvetica">My Bookings</h1>
 
         {sortedBookings.map((booking, index) => (
         <div
@@ -220,7 +220,7 @@ export default function Records() {
             <div className="mt-4 space-y-3">
                 {/* Hotel Info */}
                 {booking.room && booking.hotelCost && (
-                    <div className="bg-white p-4 rounded-lg border shadow">
+                    <div className="bg-gray-200 p-4 rounded-lg border shadow">
                     <div className="flex flex-row justify-between items-start gap-4 mt-4">
                         <div className="flex-1">
                         <strong>Hotel: ${booking.hotelCost}</strong> <br />
@@ -230,7 +230,7 @@ export default function Records() {
                         <br/>
                         <br/>
                         <button
-                            className="mt-2  bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                            className="mt-2 bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                             onClick={() => cancelBooking(booking.id, 'hotel')}
                         >
                             Cancel Hotel
@@ -246,7 +246,7 @@ export default function Records() {
             
                 {/* Flights Section */}
                 {booking.flights?.length > 0 && (
-                <div className="bg-white p-4 rounded-lg border shadow space-y-4">
+                <div className="bg-gray-200 p-4 rounded-lg border shadow space-y-4">
                     <h3 className="text-lg font-semibold">Flights</h3>
 
                     {booking.flights.map(flight => (

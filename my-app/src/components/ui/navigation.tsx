@@ -12,11 +12,9 @@ export default function Navigation({}: NavigationProps): JSX.Element {
 
     return (
         <nav className={`flex justify-between items-center p-4 text-white shadow-md font-helvetica ${darkMode ? 'bg-gray-900' : 'bg-blue-500'}`}>
-            <h1 className="text-2xl font-bold">FlyNext</h1>
+            <h1 className="text-2xl font-bold">
+                <Link href="/" className="hover:underline">FlyNext</Link></h1>
             <ul className="flex space-x-6 text-lg font-medium">
-                <li>
-                    <Link href="/" className="hover:underline">Home</Link>
-                </li>
                 <li>
                     <Link href="/flights" className="hover:underline">Flights</Link>
                 </li>
