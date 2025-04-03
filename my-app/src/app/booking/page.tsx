@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { JSX, useEffect, useState } from 'react';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
@@ -8,12 +8,14 @@ import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
 
 interface Booking { 
     id: number;
+    itinerary: string;
     checkIn?: string;
     checkOut?: string;
     hotelCost?: number;
     room?: {
         hotel: { name: string, address: string };
         type: string;
+        images?: string[];
     };
     flights?: {
         flightId: number;
@@ -21,8 +23,11 @@ interface Booking {
         airline: string;
         origin: string;
         destination: string;
+        departureTime: string;
+        arrivalTime: string;
     }[];
     status: string;
+    createdAt: string;
  }
 
 export default function Records() {
@@ -41,43 +46,13 @@ export default function Records() {
             method: 'GET' 
         });
         const data = await response.json();
-        const test = [{
-            "id": 1,
-            "userId": 1,
-            "itinerary": "ONEWAY_AND_HOTEL",
-            "hotelCost": 600,
-            "checkIn": "2025-03-11T00:00:00.000Z",
-            "checkOut": "2025-03-15T00:00:00.000Z",
-            "roomId": 1,
-            "room": {
-                "type": "302",
-                "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
-                "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
-            },
-            "flights": [{
-                "flightId": "ABC123",
-                "flightNum": "XY789",
-                "departureTime": "2025-03-10T10:00:00.000Z",
-                "arrivalTime": "2025-03-10T14:00:00.000Z",
-                "flightCost": 350,
-                "origin": "JFK, John F. Kennedy International Airport, New York, USA",
-                "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
-                "airline": "AA, American Airlines"
-            }],
-            "bookRef": null,
-            "ticketNum": null,
-            "status": "CONFIRMED",
-            "createdAt": "2025-03-08T23:54:12.775Z",
-            "updatedAt": "2025-03-08T23:55:48.230Z"
-        }]
-        setBookings(test);
         if (response.ok) {
             setBookings(data);
         } else {
             setMessage(response.statusText);
         }
     } catch (error) {
-        setMessage('Error fetching booking.');
+        setMessage("Error fetching booking");
     }
   };
 
@@ -108,7 +83,7 @@ export default function Records() {
 
   const cancelBooking = async (id: number, type: string) => {
     let res;
-    if (type === "all") {
+    if (type === "all" || (type === "hotel" && !bookings.find(b => b.id === id)?.flights?.length) || (type === "flights" && !bookings.find(b => b.id === id)?.room)) {
         res = await fetch(`/api/records/${id}`, { 
             method: 'PATCH',
             headers: { "Content-Type": "application/json" },
@@ -126,6 +101,11 @@ export default function Records() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ cancelType: "PARTIAL", cancelFlight: false, cancelHotel: true })
         });
+    }
+
+    if (!res) {
+        setMessage('Cancellation failed.');
+        return;
     }
 
     if (res.ok) {
@@ -245,7 +225,7 @@ export default function Records() {
                 )}
             
                 {/* Flights Section */}
-                {booking.flights?.length > 0 && (
+                {Array.isArray(booking.flights) && booking.flights.length > 0 && (
                 <div className="bg-gray-200 p-4 rounded-lg border shadow space-y-4">
                     <h3 className="text-lg font-semibold">Flights</h3>
 
@@ -271,7 +251,7 @@ export default function Records() {
 
                 <div className="bottom">
                 <strong>Total:</strong> $
-                {booking.hotelCost + (booking.flights?.reduce((acc, f) => acc + f.flightCost, 0) ?? 0)}
+                {(booking.hotelCost ?? 0) + (booking.flights?.reduce((acc, f) => acc + f.flightCost, 0) ?? 0)}
                 </div>
 
                 <div className="flex gap-4 mt-2">
