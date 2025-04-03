@@ -41,36 +41,36 @@ export default function Records() {
             method: 'GET' 
         });
         const data = await response.json();
-        const test = [{
-            "id": 1,
-            "userId": 1,
-            "itinerary": "ONEWAY_AND_HOTEL",
-            "hotelCost": 600,
-            "checkIn": "2025-03-11T00:00:00.000Z",
-            "checkOut": "2025-03-15T00:00:00.000Z",
-            "roomId": 1,
-            "room": {
-                "type": "302",
-                "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
-                "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
-            },
-            "flights": [{
-                "flightId": "ABC123",
-                "flightNum": "XY789",
-                "departureTime": "2025-03-10T10:00:00.000Z",
-                "arrivalTime": "2025-03-10T14:00:00.000Z",
-                "flightCost": 350,
-                "origin": "JFK, John F. Kennedy International Airport, New York, USA",
-                "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
-                "airline": "AA, American Airlines"
-            }],
-            "bookRef": null,
-            "ticketNum": null,
-            "status": "CONFIRMED",
-            "createdAt": "2025-03-08T23:54:12.775Z",
-            "updatedAt": "2025-03-08T23:55:48.230Z"
-        }]
-        setBookings(test);
+        // const test = [{
+        //     "id": 1,
+        //     "userId": 1,
+        //     "itinerary": "ONEWAY_AND_HOTEL",
+        //     "hotelCost": 600,
+        //     "checkIn": "2025-03-11T00:00:00.000Z",
+        //     "checkOut": "2025-03-15T00:00:00.000Z",
+        //     "roomId": 1,
+        //     "room": {
+        //         "type": "302",
+        //         "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
+        //         "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
+        //     },
+        //     "flights": [{
+        //         "flightId": "ABC123",
+        //         "flightNum": "XY789",
+        //         "departureTime": "2025-03-10T10:00:00.000Z",
+        //         "arrivalTime": "2025-03-10T14:00:00.000Z",
+        //         "flightCost": 350,
+        //         "origin": "JFK, John F. Kennedy International Airport, New York, USA",
+        //         "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
+        //         "airline": "AA, American Airlines"
+        //     }],
+        //     "bookRef": null,
+        //     "ticketNum": null,
+        //     "status": "CONFIRMED",
+        //     "createdAt": "2025-03-08T23:54:12.775Z",
+        //     "updatedAt": "2025-03-08T23:55:48.230Z"
+        // }]
+        // setBookings(test);
         if (response.ok) {
             setBookings(data);
         } else {
@@ -86,12 +86,12 @@ export default function Records() {
   };
 
   const verifyFlight = async (id: number) => {
-    // const res = await fetch(`/api/records/${id}/verify`, { method: 'GET' });
-    // const result = await res.json();
-    const result = {
-        "bookStatus": "CONFIRMED",
-        "flightsStatus": ["CONFIRMED"]
-    }
+    const res = await fetch(`/api/records/${id}/verify`, { method: 'GET' });
+    const result = await res.json();
+    // const result = {
+    //     "bookStatus": "CONFIRMED",
+    //     "flightsStatus": ["CONFIRMED"]
+    // }
     const popup = (
         <div className="text-left">
           <h2 className="text-lg font-semibold mb-2">Booking Status: <span className="text-blue-600">{result.bookStatus}</span></h2>
@@ -173,6 +173,7 @@ export default function Records() {
   return (
     <>
     <Navigation />
+    <p>{message}</p>
     {popupContent && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 text-center">
@@ -218,7 +219,7 @@ export default function Records() {
             {booking.status !== 'CANCELED' && expanded === booking.id && (
             <div className="mt-4 space-y-3">
                 {/* Hotel Info */}
-                {booking.room && (
+                {booking.room && booking.hotelCost && (
                     <div className="bg-white p-4 rounded-lg border shadow">
                     <div className="flex flex-row justify-between items-start gap-4 mt-4">
                         <div className="flex-1">
