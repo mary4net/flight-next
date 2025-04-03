@@ -42,7 +42,7 @@ const HotelSearchPage = () => {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
-            
+
             if (!fetchResponse.ok) {
                 const errorText = await fetchResponse.text();
                 console.error('Server response:', {
@@ -52,7 +52,7 @@ const HotelSearchPage = () => {
                 });
                 throw new Error(`Network response was not ok: ${fetchResponse.status} ${fetchResponse.statusText}`);
             }
-            
+
             const data = await fetchResponse.json();
             console.log('Fetched room data:', data);
             return data;
@@ -69,7 +69,7 @@ const HotelSearchPage = () => {
 
     const handleRoomDateChange = async () => {
         if (!selectedHotel) return;
-        
+
         // Call handleSearchAvailability when dates change
         handleSearchAvailability();
     };
@@ -81,7 +81,7 @@ const HotelSearchPage = () => {
 
     const handleSearchSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault(); // Prevent page reload
-        
+
         // Construct the query string from parameters
         const params = new URLSearchParams();
         // Always include parameters, even if empty
@@ -93,13 +93,13 @@ const HotelSearchPage = () => {
         params.append("lowerpriceRange", String(startingPrice));
         params.append("upperpriceRange", String(maxPrice));
 
-    
+
         try {
             const fetchResponse = await fetch(`/api/hotels?${params.toString()}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
             });
-    
+
             if (!fetchResponse.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -107,15 +107,15 @@ const HotelSearchPage = () => {
             console.log("Fetched hotels:", data); // Debugging log
             setHotelResults(data); // Set the actual hotel data in state
             console.log("hotelResults", hotelResults)
-            setUniqueHotels(data.filter((hotel: any, index: number, self: any[]) => 
+            setUniqueHotels(data.filter((hotel: any, index: number, self: any[]) =>
                 index === self.findIndex((h) => h.hotel.id === hotel.hotel.id) // Keep only first occurrence
             ));
-            
+
         } catch (error) {
             console.error("Error fetching hotels:", error);
         }
     };
-    
+
 
     const handlePriceClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
@@ -158,7 +158,7 @@ const HotelSearchPage = () => {
 
                 // Apply room type filter if provided
                 if (searchRoomType) {
-                    filteredRooms = rooms.filter((room: any) => 
+                    filteredRooms = rooms.filter((room: any) =>
                         room.type.toLowerCase().includes(searchRoomType.toLowerCase())
                     );
                 }
@@ -167,10 +167,10 @@ const HotelSearchPage = () => {
             } else {
                 // If no dates, show all rooms from initial results
                 let rooms = hotelResults.filter(room => room.hotel.id === selectedHotel.hotel.id);
-                
+
                 // Apply room type filter if provided
                 if (searchRoomType) {
-                    rooms = rooms.filter((room: any) => 
+                    rooms = rooms.filter((room: any) =>
                         room.type.toLowerCase().includes(searchRoomType.toLowerCase())
                     );
                 }
@@ -345,14 +345,14 @@ const HotelSearchPage = () => {
                             {uniqueHotels.length > 0 ? (
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {uniqueHotels.map((eachhotel, index) => (
-                                        <div 
-                                            key={index} 
+                                        <div
+                                            key={index}
                                             className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
                                             onClick={() => openSelectedHotel(eachhotel)}
                                         >
                                             <div className="relative h-48">
-                                                <img 
-                                                    src={eachhotel.hotel.logo || '/default-hotel.jpg'} 
+                                                <img
+                                                    src={eachhotel.hotel.logo || '/default-hotel.jpg'}
                                                     alt={eachhotel.hotel.name}
                                                     className="w-full h-full object-cover"
                                                 />
@@ -363,9 +363,9 @@ const HotelSearchPage = () => {
                                             <div className="p-6">
                                                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{eachhotel.hotel.name}</h3>
                                                 <p className="text-gray-600 dark:text-gray-300 mb-2">{eachhotel.hotel.city}</p>
-                                                <a 
-                                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eachhotel.hotel.address)}`} 
-                                                    target="_blank" 
+                                                <a
+                                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eachhotel.hotel.address)}`}
+                                                    target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm flex items-center"
                                                     onClick={(e) => e.stopPropagation()}
@@ -391,11 +391,11 @@ const HotelSearchPage = () => {
                                 <DialogTitle className="sr-only">
                                     {selectedHotel.hotel.name} Details
                                 </DialogTitle>
-                                
+
                                 {/* Hotel Header */}
                                 <div className="relative h-72 bg-gray-200 dark:bg-gray-800">
-                                    <img 
-                                        src={selectedHotel.hotel.logo || '/default-hotel.jpg'} 
+                                    <img
+                                        src={selectedHotel.hotel.logo || '/default-hotel.jpg'}
                                         alt={selectedHotel.hotel.name}
                                         className="w-full h-full object-cover"
                                     />
@@ -481,14 +481,14 @@ const HotelSearchPage = () => {
                                         <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Available Rooms</h3>
                                         {selectedHotelRooms.length > 0 ? (
                                             selectedHotelRooms.map((room) => (
-                                                <div 
+                                                <div
                                                     key={room.id}
                                                     className="flex items-start p-6 border border-gray-300 dark:border-gray-600 rounded-xl hover:shadow-lg transition-shadow bg-white dark:bg-gray-900"
                                                 >
                                                     <div className="flex-1">
                                                         <h4 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">{room.type}</h4>
                                                         <div className="text-sm text-gray-700 dark:text-gray-200 mb-4 grid grid-cols-2 gap-2">
-                                                            {room.amenities && typeof room.amenities === 'string' 
+                                                            {room.amenities && typeof room.amenities === 'string'
                                                                 ? JSON.parse(room.amenities).map((amenity: string, index: number) => (
                                                                     <span key={`${room.id}-amenity-${index}`} className="flex items-center">
                                                                         <span className="mr-2">•</span>
@@ -510,7 +510,7 @@ const HotelSearchPage = () => {
                                                             <span className="text-gray-700 dark:text-gray-200 text-base ml-2">per night</span>
                                                         </div>
                                                     </div>
-                                                    <button 
+                                                    <button
                                                         className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
                                                         onClick={() => handleBookNow(room)}
                                                     >
@@ -521,8 +521,8 @@ const HotelSearchPage = () => {
                                         ) : (
                                             <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl">
                                                 <p className="text-xl text-gray-700 dark:text-gray-200">
-                                                    {searchRoomType 
-                                                        ? "No rooms match your search criteria" 
+                                                    {searchRoomType
+                                                        ? "No rooms match your search criteria"
                                                         : "No rooms available"}
                                                 </p>
                                             </div>

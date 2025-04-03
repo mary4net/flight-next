@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import AuthForm from '@/components/ui/AuthForm';
 import Button from '@/components/ui/button';
+import Navigation from "@/components/ui/navigation";
 
 export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login');
@@ -48,6 +49,7 @@ export default function AuthPage() {
   };
   return (
     <div className="max-w-sm mx-auto p-4 border rounded-lg shadow-md">
+      <Navigation />
       <AuthForm
         mode={mode}
         onSubmitAction={handleAuth}
