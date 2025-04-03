@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Input from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import CityDropDown from '@/components/search/cityDropDown';
 
 interface cityPickerProps {
@@ -40,9 +40,10 @@ export default function CityPicker({ type, onCitySelect }: cityPickerProps) {
   return (
     <div className="relative">
       <Input
-        label="Choose City"
+        name="Choose City"
         value={query}
-        onChangeAction={(value) => setQuery(value)}
+        placeholder='City/Country/Airport Code'
+        onChange={(event) => setQuery(event.target.value)}
       />
       <CityDropDown
         query={query}

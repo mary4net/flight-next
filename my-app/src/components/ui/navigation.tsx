@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Sun, Moon, ShoppingCart, User, Plane, Hotel } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sun, Moon, ShoppingCart, User, Plane, Hotel, Building } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from '@/components/ui/context';
 
@@ -9,6 +9,24 @@ interface NavigationProps { }
 
 export default function Navigation({ }: NavigationProps): JSX.Element {
     const [darkMode, toggleDarkMode] = useTheme();
+    const [isHotelOwner, setIsHotelOwner] = useState(false);
+
+    // Check if the user is a hotel owner
+    useEffect(() => {
+        const checkUserRole = async () => {
+            try {
+                const response = await fetch('/api/users/me');
+                if (response.ok) {
+                    const userData = await response.json();
+                    setIsHotelOwner(userData.role === 'HOTEL_OWNER');
+                }
+            } catch (error) {
+                console.error('Error checking user role:', error);
+            }
+        };
+
+        checkUserRole();
+    }, []);
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-opacity-90 ${darkMode ? 'bg-gray-900/90' : 'bg-white/90'
@@ -37,7 +55,7 @@ export default function Navigation({ }: NavigationProps): JSX.Element {
                         </li>
                         <li>
                             <Link
-                                href="/flight/search"
+                                href="/flight"
                                 className={`text-sm font-medium transition-colors hover:text-blue-600 ${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600'
                                     }`}
                             >
@@ -62,6 +80,17 @@ export default function Navigation({ }: NavigationProps): JSX.Element {
                                 Bookings
                             </Link>
                         </li>
+                        {isHotelOwner && (
+                            <li>
+                                <Link
+                                    href="/hotel-management"
+                                    className={`text-sm font-medium transition-colors hover:text-blue-600 ${darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600'
+                                        }`}
+                                >
+                                    Manage Hotels
+                                </Link>
+                            </li>
+                        )}
                     </ul>
 
                     {/* Right Side Actions */}
@@ -69,8 +98,8 @@ export default function Navigation({ }: NavigationProps): JSX.Element {
                         <Link
                             href="/cart"
                             className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${darkMode
-                                    ? 'text-gray-300 hover:bg-gray-800 hover:text-blue-400'
-                                    : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
+                                ? 'text-gray-300 hover:bg-gray-800 hover:text-blue-400'
+                                : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
                                 }`}
                         >
                             <ShoppingCart size={20} />
@@ -80,8 +109,8 @@ export default function Navigation({ }: NavigationProps): JSX.Element {
                         <button
                             onClick={toggleDarkMode}
                             className={`p-2 rounded-lg transition-colors ${darkMode
-                                    ? 'text-gray-300 hover:bg-gray-800 hover:text-blue-400'
-                                    : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
+                                ? 'text-gray-300 hover:bg-gray-800 hover:text-blue-400'
+                                : 'text-gray-600 hover:bg-gray-100 hover:text-blue-600'
                                 }`}
                         >
                             {darkMode ? <Sun size={20} /> : <Moon size={20} />}
@@ -90,8 +119,8 @@ export default function Navigation({ }: NavigationProps): JSX.Element {
                         <Link
                             href="/user/profile"
                             className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${darkMode
-                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                : 'bg-blue-600 text-white hover:bg-blue-700'
                                 }`}
                         >
                             <User size={20} />
