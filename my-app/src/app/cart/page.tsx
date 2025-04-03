@@ -94,39 +94,39 @@ export default function BookingPage() {
         headers: { 'Content-Type': 'application/json' },
       });
 
-    //   const data: Booking = await response.json();
-    const data = {
-        "id": 1,
-        "userId": 1,
-        "itinerary": "ONEWAY_AND_HOTEL",
-        "hotelCost": 600,
-        "checkIn": "2025-03-11T00:00:00.000Z",
-        "checkOut": "2025-03-15T00:00:00.000Z",
-        "roomId": 1,
-        "room": {
-            "type": "302",
-            "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
-            "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
-        },
-        "flights": [{
-            "flightId": "ABC123",
-            "flightNum": "XY789",
-            "departureTime": "2025-03-10T10:00:00.000Z",
-            "arrivalTime": "2025-03-10T14:00:00.000Z",
-            "flightCost": 350,
-            "origin": "JFK, John F. Kennedy International Airport, New York, USA",
-            "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
-            "airline": "AA, American Airlines"
-        }],
-        "bookRef": null,
-        "ticketNum": null,
-        "status": "CONFIRMED",
-        "createdAt": "2025-03-08T23:54:12.775Z",
-        "updatedAt": "2025-03-08T23:55:48.230Z"
-    };
+      const data: Booking = await response.json();
+    // const data = {
+    //     "id": 1,
+    //     "userId": 1,
+    //     "itinerary": "ONEWAY_AND_HOTEL",
+    //     "hotelCost": 600,
+    //     "checkIn": "2025-03-11T00:00:00.000Z",
+    //     "checkOut": "2025-03-15T00:00:00.000Z",
+    //     "roomId": 1,
+    //     "room": {
+    //         "type": "302",
+    //         "hotel": {name: "Hilton Hotel", address: "123 Main St, New York, NY 10001"},
+    //         "images": ["https://www.thespruce.com/thmb/2_Q52GK3rayV1wnqm6vyBvgI3Ew=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/put-together-a-perfect-guest-room-1976987-hero-223e3e8f697e4b13b62ad4fe898d492d.jpg", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBmqNgjci6KnLjSU9WFIKi0Y8NiE6XOEVPMg&s"]
+    //     },
+    //     "flights": [{
+    //         "flightId": "ABC123",
+    //         "flightNum": "XY789",
+    //         "departureTime": "2025-03-10T10:00:00.000Z",
+    //         "arrivalTime": "2025-03-10T14:00:00.000Z",
+    //         "flightCost": 350,
+    //         "origin": "JFK, John F. Kennedy International Airport, New York, USA",
+    //         "destination": "LAX, Los Angeles International Airport, Los Angeles, USA",
+    //         "airline": "AA, American Airlines"
+    //     }],
+    //     "bookRef": null,
+    //     "ticketNum": null,
+    //     "status": "CONFIRMED",
+    //     "createdAt": "2025-03-08T23:54:12.775Z",
+    //     "updatedAt": "2025-03-08T23:55:48.230Z"
+    // };
 
-    if (true){
-    //   if (response.ok) {
+    // if (true){
+      if (response.ok) {
         setBooking(data);
 
         if (2 > Object.keys(data).length) {
@@ -362,7 +362,7 @@ export default function BookingPage() {
             ))}
             </ul>
         ) : (
-            <p className="text-gray-500">No flight suggestions available at the moment.</p>
+            <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
         )}
         </div>
 
