@@ -50,20 +50,20 @@ export default function AuthForm({ mode, onSubmitAction }: AuthFormProps) {
 				label="email"
 				type="text"
 				value={email}
-				onChange={setEmail}
+				onChangeAction={setEmail}
 			/>
 			<Input
 				label="Password"
 				type="password"
 				value={password}
-				onChange={setPassword}
+				onChangeAction={setPassword}
 			/>
 			{mode == "signup" &&
 				<Input
 					label="First Name"
 					type="text"
 					value={firstName}
-					onChange={setFirstName}
+					onChangeAction={setFirstName}
 				/>
 			}
 			{mode == "signup" &&
@@ -71,7 +71,7 @@ export default function AuthForm({ mode, onSubmitAction }: AuthFormProps) {
 					label="Last Name"
 					type="text"
 					value={lastName}
-					onChange={setLastName}
+					onChangeAction={setLastName}
 				/>
 			}
 			{mode == "signup" &&
@@ -79,7 +79,7 @@ export default function AuthForm({ mode, onSubmitAction }: AuthFormProps) {
 					label="phone number"
 					type="text"
 					value={phoneNumber}
-					onChange={setPhoneNumber}
+					onChangeAction={setPhoneNumber}
 				/>
 			}
 			{mode == "signup" && (
