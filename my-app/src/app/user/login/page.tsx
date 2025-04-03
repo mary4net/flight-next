@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import AuthForm from '@/app/components/ui/AuthForm';
-import Button from '@/app/components/ui/button';
+import AuthForm from '@/components/ui/AuthForm';
+import Button from '@/components/ui/button';
 
 export default function AuthPage() {
   const [mode, setMode] = useState<'login' | 'signup'>('login');

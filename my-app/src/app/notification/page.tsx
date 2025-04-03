@@ -1,6 +1,6 @@
 // app/notification/page.tsx
 "use client";
-import NotificationsList from "@/app/components/NotificationsList";
+import NotificationsList from "@/components/NotificationsList";
 
 const NotificationPage = () => {
   return (

@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic"; // Import Next.js dynamic module
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
-import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/app/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import Navigation from '@/components/ui/navigation';
+import { useRouter } from 'next/navigation';
 
 // Dynamically import Leaflet components with no SSR
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
@@ -12,6 +14,7 @@ const Marker = dynamic(() => import("react-leaflet").then((mod) => mod.Marker), 
 const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), { ssr: false });
 
 const HotelSearchPage = () => {
+    const router = useRouter();
     const [priceFilterVisible, setPriceFilterVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchRoomType, setSearchRoomType] = useState('');
@@ -178,290 +181,360 @@ const HotelSearchPage = () => {
             console.error('Error searching rooms:', error);
             setSelectedHotelRooms([]);
         }
+    }
+
+    const handleBookNow = (room: any) => {
+        if (!checkInRoomDate || !checkOutRoomDate) {
+            alert('Please select check-in and check-out dates first');
+            return;
+        }
+
+        const hotelRoomInfo = {
+            roomId: room.id,
+            checkIn: checkInRoomDate,
+            checkOut: checkOutRoomDate,
+            hotelName: selectedHotel.hotel.name,
+            roomType: room.type,
+            pricePerNight: room.pricePerNight,
+            hotel: {
+                name: selectedHotel.hotel.name,
+                address: selectedHotel.hotel.address
+            }
+        };
+
+        const params = new URLSearchParams({
+            info: JSON.stringify(hotelRoomInfo)
+        });
+
+        router.push(`/cart?${params.toString()}`);
     };
 
     return (
-        <div className="container mx-auto mt">
-            <form className="flex flex-col md:flex-row w-l max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg m-10" onSubmit={handleSearchSubmit}>
-                <div className="flex flex-col w-900 mb-4 md:mb-0 m-2">
-                    <input
-                        type="text"
-                        placeholder="Search for hotels"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                    <input
-                        type="text"
-                        placeholder="city"
-                        value={city}
-                        onChange={(e) => setCity(e.target.value)}
-                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 mb-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-
-                    <div className="flex space-x-4">
-                        <input
-                            type="date"
-                            value={checkInDate}
-                            onChange={(e) => setCheckInDate(e.target.value)}
-                            className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                        />
-                        <input
-                            type="date"
-                            value={checkOutDate}
-                            onChange={(e) => setCheckOutDate(e.target.value)}
-                            className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                        />
-                    </div>
-                </div>
-
-                <div className="flex flex-col w-full mb-4 md:mb-0 m-2">
-                    <select
-                        value={starRating}
-                        onChange={handleStarRatingChange}
-                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-2"
-                    >
-                        <option value="">Guest Rating</option>
-                        <option value={1}>1 Star</option>
-                        <option value={2}>2 Stars</option>
-                        <option value={3}>3 Stars</option>
-                        <option value={4}>4 Stars</option>
-                        <option value={5}>5 Stars</option>
-                    </select>
-
-                    <button
-                        onClick={handlePriceClick}
-                        className="py-2 pl-4 pr-4 px-2 rounded-lg border border-gray-300 text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
-                    >
-                        Price Range
-                    </button>
-                    {priceFilterVisible && (
-                        <div className="absolute mt-2 p-4 border rounded-lg bg-white shadow-md w-72">
-                            <div className="flex flex-col justify-between items-center mb-2">
-                                {/* Close Button */}
-                                <button
-                                    onClick={handlePriceClick} // Function to close the price filter
-                                    className="text-red-500 font-semibold text-lg"
-                                    aria-label="Close price filter"
-                                >
-                                    Close
-                                </button>
-
-                                {/* Price Filters */}
-                                <div className="flex flex-row space-x-2 w-full">
-                                    <input
-                                        type="number"
-                                        placeholder="Min Price"
-                                        value={startingPrice}
-                                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 w-32"
-                                        min="0"
-                                        onChange={(e) => handlePriceChange(e, "start")}
-                                    />
-                                    <input
-                                        type="number"
-                                        placeholder="Max Price"
-                                        value={maxPrice}
-                                        className="py-2 pl-4 pr-4 rounded-lg border border-gray-300 w-32"
-                                        min="0"
-                                        onChange={(e) => handlePriceChange(e, "max")}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                <button
-                    type="submit"
-                    className=" py-2 pl-4 pr-4 px-2 w-full bg-blue-500 text-white py-2 rounded-lg my-3"
-                >
-                    Search Hotels
-                </button>
-
-                </div>
-            </form>
-
-            {/* Display Hotel Results */}
-
-            <div className="mt-12 flex justify-center items-center">
-                {uniqueHotels.length > 0 ? (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {uniqueHotels.map((eachhotel, index) => (
-                            <div key={index} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-2xl transition-all duration-300 mb-6" onClick={() => openSelectedHotel(eachhotel)}>
-  
-                                <h3 className="text-xl font-semibold text-gray-800 mb-2">{eachhotel.hotel.name}</h3>
-                                <p className="text-gray-500 mb-2">Rating: {eachhotel.hotel.starRating} Stars</p>
-                                {/* <p className="text-gray-700 mb-2">Starting Price: ${hotel.}</p> */}
-                                <p className="text-gray-500 mb-2">Location: {eachhotel.hotel.city}</p>
-                                {/* <p className="text-gray-500 mb-2">Amenities:{eachhotel.amenities.join(", ")}</p> */}
-                                <p>
-                                <a 
-                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eachhotel.hotel.address)}`} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-blue-500 hover:underline"
-                                >
-                                    Open on Google Map
-                                </a>
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                ) : (
-                    <p className="text-lg text-gray-700 text-center">No hotels found matching your search criteria.</p>
-                )}
-            </div>
-
-            {selectedHotel && (
-                <Dialog open={!!selectedHotel} onOpenChange={closeHotelDetails}>
-                    <DialogContent className="w-[1000px] h-[90vh] max-h-[90vh] overflow-hidden p-0">
-                        <DialogTitle className="sr-only">
-                            {selectedHotel.hotel.name} Details
-                        </DialogTitle>
-                        
-                        {/* Hotel Header - Fixed at top */}
-                        <div className="relative h-72 bg-gray-200">
-                            <img 
-                                src={selectedHotel.hotel.logo || '/default-hotel.jpg'} 
-                                alt={selectedHotel.hotel.name}
-                                className="w-full h-full object-cover"
-                            />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-6">
-                                <h2 className="text-3xl font-bold text-white mb-2">{selectedHotel.hotel.name}</h2>
-                                <div className="flex items-center text-white">
-                                    <span className="mr-2">{"★".repeat(selectedHotel.hotel.starRating)}</span>
-                                    <span>{selectedHotel.hotel.starRating} Stars</span>
-                                </div>
-                            </div>
-
-                            {/* Close Button - Replace nested buttons with a single one */}
-                            <DialogClose asChild>
-                                <div className="absolute top-6 right-6">
-                                    <span className="p-2 rounded-full bg-white/90 hover:bg-white transition-colors cursor-pointer inline-flex items-center justify-center text-xl font-bold">
-                                        x
-                                    </span>
-                                </div>
-                            </DialogClose>
-                        </div>
-
-                        {/* Scrollable Content */}
-                        <div className="overflow-y-auto h-[calc(90vh-18rem)] p-6">
-                            {/* Hotel Info */}
-                            <div className="mb-8">
-                                <div className="flex items-center mb-4">
-                                    <p className="text-gray-600 text-lg">{selectedHotel.hotel.address}</p>
-                                </div>
-                            </div>
-
-                            {/* Date and Room Type Selection */}
-                            <div className="bg-gray-50 p-6 rounded-xl mb-8 shadow-sm">
-                                <h3 className="text-xl font-semibold mb-6">Search Room Availability</h3>
-                                <div className="grid grid-cols-3 gap-6">
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Check-in</label>
-                                        <input
-                                            type="date"
-                                            value={checkInRoomDate}
-                                            onChange={(e) => {
-                                                setCheckInRoomDate(e.target.value);
-                                                if (checkOutRoomDate) {  // Only search if both dates are set
-                                                    handleRoomDateChange();
-                                                }
-                                            }}
-                                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            min={new Date().toISOString().split('T')[0]}
-                                        />
+        <>
+            <Navigation />
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+                <div className="container mx-auto px-4 py-8">
+                    {/* Search Form Section */}
+                    <div className="max-w-6xl mx-auto">
+                        <div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-xl rounded-2xl p-8 mb-12">
+                            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Find Your Perfect Stay</h1>
+                            <form className="flex flex-col md:flex-row gap-6" onSubmit={handleSearchSubmit}>
+                                {/* Left Column */}
+                                <div className="flex-1 space-y-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Hotel Name</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Search for hotels"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                                className="w-full py-3 px-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">City</label>
+                                            <input
+                                                type="text"
+                                                placeholder="Enter city"
+                                                value={city}
+                                                onChange={(e) => setCity(e.target.value)}
+                                                className="w-full py-3 px-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                            />
+                                        </div>
                                     </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Check-out</label>
-                                        <input
-                                            type="date"
-                                            value={checkOutRoomDate}
-                                            onChange={(e) => {
-                                                setCheckOutRoomDate(e.target.value);
-                                                if (checkInRoomDate) {  // Only search if both dates are set
-                                                    handleRoomDateChange();
-                                                }
-                                            }}
-                                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                            min={checkInRoomDate || new Date().toISOString().split('T')[0]}
-                                        />
-                                    </div>
-                                    <div>
-                                        <label className="block text-sm font-medium text-gray-700 mb-2">Room Type</label>
-                                        <input
-                                            type="text"
-                                            value={searchRoomType}
-                                            onChange={(e) => setSearchRoomType(e.target.value)}
-                                            placeholder="Any room type"
-                                            className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                                        />
+
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-in Date</label>
+                                            <input
+                                                type="date"
+                                                value={checkInDate}
+                                                onChange={(e) => setCheckInDate(e.target.value)}
+                                                className="w-full py-3 px-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-out Date</label>
+                                            <input
+                                                type="date"
+                                                value={checkOutDate}
+                                                onChange={(e) => setCheckOutDate(e.target.value)}
+                                                className="w-full py-3 px-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                                <button
-                                    onClick={handleSearchAvailability}
-                                    className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
-                                >
-                                    Search Availability
-                                </button>
-                            </div>
 
-                            {/* Available Rooms */}
-                            <div className="space-y-6">
-                                <h3 className="text-2xl font-semibold mb-6">Available Rooms</h3>
-                                {selectedHotelRooms.length > 0 ? (
-                                    selectedHotelRooms.map((room) => (
-                                        <div 
-                                            key={room.id}
-                                            className="flex items-start p-6 border rounded-xl hover:shadow-lg transition-shadow bg-white"
+                                {/* Right Column */}
+                                <div className="flex-1 space-y-4">
+                                    <div>
+                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Guest Rating</label>
+                                        <select
+                                            value={starRating}
+                                            onChange={handleStarRatingChange}
+                                            className="w-full py-3 px-4 rounded-lg border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                                         >
-                                            <div className="flex-1">
-                                                <h4 className="text-xl font-semibold mb-3">{room.type}</h4>
-                                                <div className="text-sm text-gray-600 mb-4 grid grid-cols-2 gap-2">
-                                                    {room.amenities && typeof room.amenities === 'string' 
-                                                        ? JSON.parse(room.amenities).map((amenity: string, index: number) => (
-                                                            <span key={`${room.id}-amenity-${index}`} className="flex items-center">
-                                                                <span className="mr-2">•</span>
-                                                                {amenity}
-                                                            </span>
-                                                        ))
-                                                        : Array.isArray(room.amenities) && room.amenities.map((amenity: string, index: number) => (
-                                                            <span key={`${room.id}-amenity-${index}`} className="flex items-center">
-                                                                <span className="mr-2">•</span>
-                                                                {amenity}
-                                                            </span>
-                                                        ))
-                                                    }
+                                            <option value="">Select Rating</option>
+                                            <option value={1}>1 Star</option>
+                                            <option value={2}>2 Stars</option>
+                                            <option value={3}>3 Stars</option>
+                                            <option value={4}>4 Stars</option>
+                                            <option value={5}>5 Stars</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="relative">
+                                        <button
+                                            onClick={handlePriceClick}
+                                            className="w-full py-3 px-4 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                                        >
+                                            Price Range
+                                        </button>
+                                        {priceFilterVisible && (
+                                            <div className="absolute mt-2 p-6 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 shadow-xl w-72 z-10">
+                                                <div className="flex justify-between items-center mb-4">
+                                                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Price Range</h3>
+                                                    <button
+                                                        onClick={handlePriceClick}
+                                                        className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                                    >
+                                                        ✕
+                                                    </button>
                                                 </div>
-                                                <div className="mt-4">
-                                                    <span className="text-3xl font-bold text-blue-600">
-                                                        ${room.pricePerNight}
-                                                    </span>
-                                                    <span className="text-gray-500 text-base ml-2">per night</span>
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Min Price</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Min Price"
+                                                            value={startingPrice}
+                                                            className="w-full py-2 px-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                                            min="0"
+                                                            onChange={(e) => handlePriceChange(e, "start")}
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Max Price</label>
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Max Price"
+                                                            value={maxPrice}
+                                                            className="w-full py-2 px-4 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                                            min="0"
+                                                            onChange={(e) => handlePriceChange(e, "max")}
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <button 
-                                                className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
-                                                onClick={() => {/* Add booking logic here */}}
-                                            >
-                                                Book Now
-                                            </button>
-                                        </div>
-                                    ))
-                                ) : (
-                                    <div className="text-center py-12 bg-gray-50 rounded-xl">
-                                        <p className="text-xl text-gray-500">
-                                            {searchRoomType 
-                                                ? "No rooms match your search criteria" 
-                                                : "No rooms available"}
-                                        </p>
+                                        )}
                                     </div>
-                                )}
-                            </div>
+
+                                    <button
+                                        type="submit"
+                                        className="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                                    >
+                                        Search Hotels
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </DialogContent>
-                </Dialog>
-            )}
-        </div>
+
+                        {/* Hotel Results Section */}
+                        <div className="mb-12">
+                            {uniqueHotels.length > 0 ? (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                    {uniqueHotels.map((eachhotel, index) => (
+                                        <div 
+                                            key={index} 
+                                            className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-1"
+                                            onClick={() => openSelectedHotel(eachhotel)}
+                                        >
+                                            <div className="relative h-48">
+                                                <img 
+                                                    src={eachhotel.hotel.logo || '/default-hotel.jpg'} 
+                                                    alt={eachhotel.hotel.name}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 px-3 py-1 rounded-full shadow-md">
+                                                    <span className="text-yellow-500">{"★".repeat(eachhotel.hotel.starRating)}</span>
+                                                </div>
+                                            </div>
+                                            <div className="p-6">
+                                                <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">{eachhotel.hotel.name}</h3>
+                                                <p className="text-gray-600 dark:text-gray-300 mb-2">{eachhotel.hotel.city}</p>
+                                                <a 
+                                                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(eachhotel.hotel.address)}`} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer"
+                                                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm flex items-center"
+                                                    onClick={(e) => e.stopPropagation()}
+                                                >
+                                                    <span className="mr-1">📍</span> View on Map
+                                                </a>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm rounded-xl shadow-lg">
+                                    <p className="text-xl text-gray-700 dark:text-gray-300">No hotels found matching your search criteria.</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Hotel Details Modal */}
+                    {selectedHotel && (
+                        <Dialog open={!!selectedHotel} onOpenChange={closeHotelDetails}>
+                            <DialogContent className="w-[1000px] h-[90vh] max-h-[90vh] overflow-hidden p-0 bg-white dark:bg-gray-900">
+                                <DialogTitle className="sr-only">
+                                    {selectedHotel.hotel.name} Details
+                                </DialogTitle>
+                                
+                                {/* Hotel Header */}
+                                <div className="relative h-72 bg-gray-200 dark:bg-gray-800">
+                                    <img 
+                                        src={selectedHotel.hotel.logo || '/default-hotel.jpg'} 
+                                        alt={selectedHotel.hotel.name}
+                                        className="w-full h-full object-cover"
+                                    />
+                                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                                        <h2 className="text-3xl font-bold text-white mb-2">{selectedHotel.hotel.name}</h2>
+                                        <div className="flex items-center text-white">
+                                            <span className="mr-2">{"★".repeat(selectedHotel.hotel.starRating)}</span>
+                                            <span>{selectedHotel.hotel.starRating} Stars</span>
+                                        </div>
+                                    </div>
+
+                                    <DialogClose asChild>
+                                        <button className="absolute top-6 right-6 p-2 rounded-full bg-white/90 dark:bg-gray-900/90 hover:bg-white dark:hover:bg-gray-800 transition-colors">
+                                            <span className="text-xl font-bold text-gray-900 dark:text-white">✕</span>
+                                        </button>
+                                    </DialogClose>
+                                </div>
+
+                                {/* Scrollable Content */}
+                                <div className="overflow-y-auto h-[calc(90vh-18rem)] p-6">
+                                    {/* Hotel Info */}
+                                    <div className="mb-8">
+                                        <div className="flex items-center mb-4">
+                                            <p className="text-gray-700 dark:text-gray-200 text-lg">{selectedHotel.hotel.address}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* Date and Room Type Selection */}
+                                    <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-xl mb-8 shadow-sm">
+                                        <h3 className="text-xl font-semibold mb-6 text-gray-900 dark:text-white">Search Room Availability</h3>
+                                        <div className="grid grid-cols-3 gap-6">
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-in</label>
+                                                <input
+                                                    type="date"
+                                                    value={checkInRoomDate}
+                                                    onChange={(e) => {
+                                                        setCheckInRoomDate(e.target.value);
+                                                        if (checkOutRoomDate) {
+                                                            handleRoomDateChange();
+                                                        }
+                                                    }}
+                                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                                                    min={new Date().toISOString().split('T')[0]}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Check-out</label>
+                                                <input
+                                                    type="date"
+                                                    value={checkOutRoomDate}
+                                                    onChange={(e) => {
+                                                        setCheckOutRoomDate(e.target.value);
+                                                        if (checkInRoomDate) {
+                                                            handleRoomDateChange();
+                                                        }
+                                                    }}
+                                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                                                    min={checkInRoomDate || new Date().toISOString().split('T')[0]}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Room Type</label>
+                                                <input
+                                                    type="text"
+                                                    value={searchRoomType}
+                                                    onChange={(e) => setSearchRoomType(e.target.value)}
+                                                    placeholder="Any room type"
+                                                    className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-900 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                                />
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={handleSearchAvailability}
+                                            className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
+                                        >
+                                            Search Availability
+                                        </button>
+                                    </div>
+
+                                    {/* Available Rooms */}
+                                    <div className="space-y-6">
+                                        <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Available Rooms</h3>
+                                        {selectedHotelRooms.length > 0 ? (
+                                            selectedHotelRooms.map((room) => (
+                                                <div 
+                                                    key={room.id}
+                                                    className="flex items-start p-6 border border-gray-300 dark:border-gray-600 rounded-xl hover:shadow-lg transition-shadow bg-white dark:bg-gray-900"
+                                                >
+                                                    <div className="flex-1">
+                                                        <h4 className="text-xl font-semibold mb-3 text-gray-900 dark:text-white">{room.type}</h4>
+                                                        <div className="text-sm text-gray-700 dark:text-gray-200 mb-4 grid grid-cols-2 gap-2">
+                                                            {room.amenities && typeof room.amenities === 'string' 
+                                                                ? JSON.parse(room.amenities).map((amenity: string, index: number) => (
+                                                                    <span key={`${room.id}-amenity-${index}`} className="flex items-center">
+                                                                        <span className="mr-2">•</span>
+                                                                        {amenity}
+                                                                    </span>
+                                                                ))
+                                                                : Array.isArray(room.amenities) && room.amenities.map((amenity: string, index: number) => (
+                                                                    <span key={`${room.id}-amenity-${index}`} className="flex items-center">
+                                                                        <span className="mr-2">•</span>
+                                                                        {amenity}
+                                                                    </span>
+                                                                ))
+                                                            }
+                                                        </div>
+                                                        <div className="mt-4">
+                                                            <span className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                                                                ${room.pricePerNight}
+                                                            </span>
+                                                            <span className="text-gray-700 dark:text-gray-200 text-base ml-2">per night</span>
+                                                        </div>
+                                                    </div>
+                                                    <button 
+                                                        className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
+                                                        onClick={() => handleBookNow(room)}
+                                                    >
+                                                        Book Now
+                                                    </button>
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <div className="text-center py-12 bg-gray-50 dark:bg-gray-800 rounded-xl">
+                                                <p className="text-xl text-gray-700 dark:text-gray-200">
+                                                    {searchRoomType 
+                                                        ? "No rooms match your search criteria" 
+                                                        : "No rooms available"}
+                                                </p>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            </DialogContent>
+                        </Dialog>
+                    )}
+                </div>
+            </div>
+        </>
     );
 };
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from "next/link";
-import ProfileForm from '@/app/components/ui/profileForm';
+import ProfileForm from '@/components/ui/profileForm';
 
 export default function ProfilePage() {
 	const [mode, setMode] = useState<'edit' | 'view'>('view');
