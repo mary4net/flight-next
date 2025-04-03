@@ -22,6 +22,7 @@ interface HotelRoom {
   hotel: {
     name: string;
     address: string;
+    city: string;
   };
   images?: string[];
 }
@@ -75,7 +76,8 @@ interface Flight {
 export default function BookingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const infoParam = searchParams.get('info');
+  const infoEncoded = searchParams.get('bookings');
+  let infoParam = infoEncoded ? JSON.parse(decodeURIComponent(infoParam)) : [];
 
   const [booking, setBooking] = useState<Booking>({ flights: [] });
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -128,19 +130,35 @@ export default function BookingPage() {
     // if (true){
       if (response.ok) {
         setBooking(data);
-
-        if (2 > Object.keys(data).length) {
+        if (Object.keys(data).length === 0 && 
+          (
+            (Array.isArray(infoParam) && infoParam.length > 0) ||
+            (typeof infoParam === 'object' && !Array.isArray(infoParam) && Object.keys(infoParam).length > 0)
+          )
+        ) {
           handleCreateBooking();
-        } else if (infoParam) {
+        } else if (Object.keys(data).length > 0 && 
+          (
+            (Array.isArray(infoParam) && infoParam.length > 0) ||
+            (typeof infoParam === 'object' && !Array.isArray(infoParam) && Object.keys(infoParam).length > 0)
+          )
+        ) {
           handleUpdateBooking();
+        } else if (Object.keys(data).length > 0 && 
+          (
+            (Array.isArray(infoParam) && infoParam.length === 0) ||
+            (typeof infoParam === 'object' && !Array.isArray(infoParam) && Object.keys(infoParam).length === 0)
+          )
+        ){
+          fetchSuggestions("Toronto", data);
         } else {
-          fetchSuggestions("Toronto");
+          setMessage("No booking found.");
         }
       } else {
-        setMessage(response.statusText);
+        setMessage("No booking found.");
       }
     } catch (err) {
-      setMessage('Error fetching booking.');
+      setMessage(err.message || 'Error fetching booking.');
     } finally {
       setLoading(false);
     }
@@ -150,7 +168,7 @@ export default function BookingPage() {
     if (!infoParam) return;
 
     try {
-      const info = JSON.parse(infoParam);
+      const info = infoParam;
 
       const itinerary = Array.isArray(info)
         ? info.length === 2
@@ -158,8 +176,9 @@ export default function BookingPage() {
           : 'FLIGHT_ONEWAY'
         : typeof info === 'object'
         ? 'HOTEL_RESERVATION'
-        : null;
+        : "";
 
+      
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -173,13 +192,14 @@ export default function BookingPage() {
       const data: Booking = await response.json();
 
       if (response.ok) {
+        infoParam = [];
         setBooking(data);
         fetchSuggestions("Toronto");
       } else {
-        setMessage('Failed to create booking.');
+        setMessage("Error creating booking.");
       }
     } catch (err) {
-      setMessage('Error creating booking.');
+      setMessage(err.message || 'Error creating booking.');
     }
   };
 
@@ -211,13 +231,13 @@ export default function BookingPage() {
     }
   };
 
-  const fetchSuggestions = async (origin?: string) => {
-    if (!booking) return;
+  const fetchSuggestions = async (origin?: string, data: Booking) => {
+    if (!data) return;
 
-    const date = booking.checkIn ? booking.checkIn : booking.flights[0]?.arrivalTime ? booking.flights[0].arrivalTime : '';
+    const date = data.checkIn ? data.checkIn : data.flights[0]?.arrivalTime ? data.flights[0].arrivalTime : '';
     try {
-      const itinerary = booking.itinerary ?? '';
-      const hasFlights = booking.flights?.length > 0;
+      const itinerary = data.itinerary ?? '';
+      const hasFlights = data.flights?.length > 0;
 
       const params = new URLSearchParams({
         itinerary,
@@ -225,13 +245,13 @@ export default function BookingPage() {
       });
 
       if (hasFlights) {
-        params.append('flightDestination', booking.flights[0].destination);
-        params.append('date', booking.flights[0].arrivalTime);
+        params.append('flightDestination', data.flights[0].destination);
+        params.append('date', data.flights[0].arrivalTime);
       } else {
-        params.append('hotel', booking.room?.hotel.name ?? '');
+        params.append('hotel', data.room?.hotel.name ?? '');
         params.append('origin', origin ?? '');
-        params.append('destination', booking.flights[0]?.destination ?? '');
-        params.append('date', booking.checkIn ?? '');
+        params.append('destination', data.room?.hotel.city ?? '');
+        params.append('date', data.checkIn ?? '');
       }
 
       const response = await fetch(`/api/bookings/suggestions?${params.toString()}`, {
@@ -240,13 +260,14 @@ export default function BookingPage() {
       });
 
       if (!response.ok) {
-        setMessage(response.statusText);
+        const text = await response.json();
+        setMessage(text.error.error);
       } else {
-        const data: Suggestion[] = await response.json();
+        const s: Suggestion[] = await response.json();
         if (hasFlights) {
-            setFlightSuggestions(data);
+            setFlightSuggestions(s);
         } else {
-            setSuggestions(data);
+            setSuggestions(s);
         }
       }
     } catch (err) {
@@ -339,7 +360,7 @@ export default function BookingPage() {
         </div> */}
 
         <div className="bg-yellow-50 p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggested Flights</h2>
+        <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggestions</h2>
 
         {flightSuggestions.length > 0 ? (
             <ul className="space-y-4">
@@ -365,7 +386,8 @@ export default function BookingPage() {
             <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
         )}
         </div>
-
+        
+        <p>{message}</p>
         {/* Go to Checkout */}
         <div className="mt-8 text-center">
           <button

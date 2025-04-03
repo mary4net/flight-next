@@ -106,8 +106,8 @@ export default function Checkout() {
         <div className="flex flex-col sm:flex-row justify-center w-full gap-8 p-8 md:p-10">
         <div className="md:w-1/2 p-6 bg-white shadow-lg rounded-lg mt-6">
 
-            <h2 className="text-2xl font-semibold mt-6">Payment</h2>
-            <div className="space-y-4 mt-4">
+            <h2 className="text-2xl text-black font-semibold mt-6">Payment</h2>
+            <div className="text-gray-500 space-y-4 mt-4">
                 <input 
                     type="text" 
                     name="cardNumber" 
@@ -143,7 +143,7 @@ export default function Checkout() {
             </div>
         </div>
 
-        <div className="md:w-1/2 p-6 bg-white shadow-lg rounded-lg mt-6">
+        <div className="md:w-1/2 p-6 bg-white text-black shadow-lg rounded-lg mt-6">
             <h2 className="text-2xl font-semibold">{bookings.flights ? bookings.flights.length + (bookings.hotelCost ? 1: 0) : 0} Item</h2>
             <ul className="divide-y divide-gray-300">
                 {bookings.hotelCost && (
