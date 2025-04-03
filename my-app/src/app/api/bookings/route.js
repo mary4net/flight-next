@@ -183,13 +183,17 @@ async function getBookedInfo(request) {
     const user = request.user;
 
     try {
-        const booking = await prisma.booking.findUnique({
+        const booking = await prisma.booking.findFirst({
             where: {
                 userId: user.id,
                 status: "PENDING"
             },
             include: {
-                room: true,
+                room: {
+                    include: {
+                        hotel: true
+                    }
+                },
                 flights: true
             }
         });

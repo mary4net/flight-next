@@ -16,7 +16,7 @@ export default function Navigation({}: NavigationProps): JSX.Element {
         } border-b ${
             darkMode ? 'border-gray-800' : 'border-gray-200'
         }`}>
-            <div className="container mx-auto px-4">
+            <div className="w-full px-4">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2">
