@@ -117,7 +117,7 @@ export default function BookingPage() {
         if (Object.keys(data).length === 0 && infoParam) {
           handleCreateBooking();
         } else if (Object.keys(data).length > 0 && infoParam) {
-          handleUpdateBooking();
+          handleUpdateBooking(data);
         } else if (Object.keys(data).length > 0 && !infoParam) {
           fetchSuggestions("Toronto", data);
         } else {
@@ -163,7 +163,7 @@ export default function BookingPage() {
     }
   };
 
-  const handleUpdateBooking = async () => {
+  const handleUpdateBooking = async (data: Booking) => {
     if (!infoParam || !booking) return;
 
     try {
@@ -171,22 +171,21 @@ export default function BookingPage() {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: booking.id,
-          flights: [],
-          hotelRoom: infoParam,
+          id: data.id,
+          addFlight: [],
+          addHotel: infoParam,
         }),
       });
 
-      const data: Booking = await response.json();
+      const res: Booking = await response.json();
       if (response.ok) {
-        setBooking(data);
-        fetchSuggestions("Toronto", data);
+        setBooking(res);
+        fetchSuggestions("Toronto", res);
       } else {
-        setMessage('Failed to update booking.');
+        setMessage("Could not update booking, please try again.");
       }
     } catch (error) {
-      const err = error as Error;
-      setMessage('Error updating booking.');
+      setMessage("Error updating booking");
     }
   };
 

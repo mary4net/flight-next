@@ -182,6 +182,10 @@ async function createBooking(request) {
 async function getBookedInfo(request) {
     const user = request.user;
 
+    if (!user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const booking = await prisma.booking.findFirst({
             where: {
@@ -227,7 +231,7 @@ async function updateBooking(request) {
         addFlight is a list of flights to add
         addHotel is the hotel to add with json string (id, checkIn, checkOut) or {}
     */
-    const { id, addFlight = [], addHotel } = await request.json();
+    const { id, addFlight = [], addHotel = {} } = await request.json();
     const user = request.user;
 
     if (!user) {
@@ -351,7 +355,11 @@ async function updateBooking(request) {
                         }
                     },
                     include: {
-                        room: true,
+                        room: {
+                            include: {
+                                hotel: true
+                            }
+                        },
                         flights: true
                     }
                 });
@@ -386,7 +394,7 @@ async function updateBooking(request) {
             }
 
             const updatedBookingData = {
-                itinerary: booking.itinerary.includes("ONEWAY") ? "ONEWAY_AND_HOTEL" : "ROUNDTRIP_AND_HOTEL",
+                itinerary: booking.itinerary.includes("ONEWAY") ? "ONEWAY_AND_HOTEL" : booking.itinerary.includes("ROUNDTRIP")? "ROUNDTRIP_AND_HOTEL": "HOTEL_RESERVATION",
                 roomId: addHotel.id,
                 hotelCost: hotelCost,
                 checkIn: addHotel.checkIn,
@@ -404,7 +412,11 @@ async function updateBooking(request) {
                 where: { id: booking.id },
                 data: updatedBookingData,
                 include: {
-                    room: true,
+                    room: {
+                        include: {
+                            hotel: true
+                        }
+                    },
                     flights: true
                 }
             });

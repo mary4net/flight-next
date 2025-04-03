@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef} from 'react';
+import Button from '@/components/ui/button';
 import Navigation from '@/components/ui/navigation';
-
+import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
 
 interface Booking {
     hotelCost?: number;
@@ -33,6 +33,7 @@ export default function Checkout() {
         cvv: '',
         passportNumber: ''
     });
+    const lastExpiryRef = useRef<string>('');
     const [message, setMessage] = useState<string | null>(null);
 
     useEffect(() => {
@@ -45,7 +46,6 @@ export default function Checkout() {
                 method: 'GET' 
             });
             const data = await response.json();
-
             if (response.ok) {
                 setBookings(data);
                 let total = data.hotelCost ?? 0;
@@ -63,10 +63,28 @@ export default function Checkout() {
         let { name, value } = e.target;
 
         if (name === 'expiry') {
-            value = value.replace(/\D/g, ''); 
-            if (value.length > 2) {
-                value = value.slice(0, 2) + '/' + value.slice(2, 4); 
+            const prev = lastExpiryRef.current;
+
+            // Remove all non-digits
+            let digits = value.replace(/\D/g, '');
+
+            // If user is deleting the slash
+            if (prev.length === 3 && value.length === 2) {
+            value = value.slice(0, 2); // allow slash deletion
+            } else {
+            if (digits.length === 1) {
+                if (parseInt(digits) > 1) {
+                digits = '0' + digits;
+                }
+                value = digits;
+            } else if (digits.length === 2) {
+                value = digits + '/';
+            } else if (digits.length > 2) {
+                value = digits.slice(0, 2) + '/' + digits.slice(2, 4);
             }
+            }
+
+            lastExpiryRef.current = value;
         }
 
         setPaymentInfo({ ...paymentInfo, [name]: value });
@@ -75,7 +93,7 @@ export default function Checkout() {
     const handleCheckout = async () => {
         try {
             const [expiryMonth, expiryYear] = paymentInfo.expiry.split('/');
-            const response = await fetch('/api/checkout', {
+            const response = await fetch('/api/bookings/checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -88,15 +106,14 @@ export default function Checkout() {
                 })
             });
             
-            const result = await response.json();
+            const result = await response.text();
             if (response.ok) {
                 setMessage('Payment successful!');
             } else {
-                setMessage(result.error || 'Payment failed. Please make sure the inputs are all in valid format.');
+                setMessage(result || 'Payment failed. Please make sure the inputs are all in valid format.');
             }
         } catch (error) {
-            console.error('Error during checkout:', error);
-            setMessage('Payment failed. Please try again later.');
+            setMessage(error.message || 'Payment failed. Please try again later.');
         }
     };
 
@@ -120,6 +137,7 @@ export default function Checkout() {
                     name="expiry" 
                     placeholder="Expiry Date (MM/YY)" 
                     className="w-full p-2 border rounded"
+                    value={paymentInfo.expiry}
                     onChange={handleInputChange}
                 />
                 <input 
@@ -148,19 +166,17 @@ export default function Checkout() {
             <ul className="divide-y divide-gray-300">
                 {bookings.hotelCost && (
                     <li className="flex justify-between py-2">
-                        <span>Hotel</span>
-                        <span className="font-semibold">${bookings.hotelCost.toFixed(2)}</span>
-                        <span>{bookings.room.hotel.name}, {bookings.room.type}</span>
-                        <span>{bookings.checkIn} -- {bookings.checkOut}</span>
+                        <p><strong>Hotel: ${bookings.hotelCost}</strong></p>
+                        <p>{bookings.room.hotel.name}, {bookings.room.hotel.address}</p>
+                        <p>Room {bookings.room.type}, {formatDate(bookings.checkIn)} — {formatDate(bookings.checkOut)}</p>
                     </li>
                 )}
                 {bookings.flights && bookings.flights.map(flight => (
                     <li key={flight.id} className="flex justify-between py-2">
-                        <span>Flight</span>
-                        <span className="font-semibold">${flight.flightCost.toFixed(2)}</span>
-                        <span>{flight.airline}</span>
-                        <span>{flight.origin} to {flight.destination}</span>
-                        <span>{flight.departTime} -- {flight.arrivalTime}</span>
+                        <p><strong>Price:</strong> ${flight.flightCost.toFixed(2)}</p>
+                        <p>{extractName(flight.airline)}</p>
+                        <p>{extractName(flight.origin)} → {extractName(flight.destination)}</p>
+                        <p>{formatDate(flight.departureTime)} — {formatDate(flight.arrivalTime)}</p>
                     </li>
                 ))}
                 <div className="relative">
