@@ -30,7 +30,7 @@ async function checkout(request) {
         return NextResponse.json({ error: "User not found." }, { status: 404 });
     }
 
-    if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !booking || !booking.itinerary || (booking.flights && !passportNumber)) {
+    if (!cardNumber || !expiryMonth || !expiryYear || !cvv || !booking || !booking.itinerary || (booking.flights && booking.flights.length > 0 && !passportNumber)) {
         return NextResponse.json({ error: "Please fill in all required component." }, { status: 400 });
     }
 
@@ -136,7 +136,7 @@ async function checkout(request) {
                 status: "CONFIRMED",
                 invoice: {
                     create: {
-                        userId: user.name,
+                        userId: user.id,
                         hotelCost: hotelcost || 0,
                         flightCost: flightcost || 0,
                         currency: currency,
@@ -186,7 +186,7 @@ async function getBookedInfo(request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const booking = await prisma.booking.findUnique({
+    const booking = await prisma.booking.findFirst({
         where: { userId: user.id, status: "PENDING" },
         include: {
             room: {
