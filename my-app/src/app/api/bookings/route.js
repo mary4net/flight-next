@@ -182,6 +182,10 @@ async function createBooking(request) {
 async function getBookedInfo(request) {
     const user = request.user;
 
+    if (!user) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     try {
         const booking = await prisma.booking.findFirst({
             where: {

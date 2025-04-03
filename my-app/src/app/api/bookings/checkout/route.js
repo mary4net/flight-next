@@ -19,7 +19,7 @@ async function checkout(request) {
     let user = request.user;
 
     if (!user) {
-        return NextResponse.json({ error: "Please login before checkout." }, { status: 403 });
+        return NextResponse.json({ error: "Unauthorized." }, { status: 403 });
     }   
 
     user = await prisma.user.findUnique({
