@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import Input from '@/components/ui/input';
-import Button from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface AuthFormProps {
 	mode: 'login' | 'signup';
@@ -40,66 +40,95 @@ export default function AuthForm({ mode, onSubmitAction }: AuthFormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="max-w-sm mx-auto p-4 border rounded-lg shadow-md"
+			className="space-y-6"
 		>
-			<h2 className="text-xl font-bold mb-4">
-				{mode == "signup" ? 'Sign Up' : 'Login'}
-			</h2>
+			<div className="space-y-4">
+				<div>
+					<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+						Email
+					</label>
+					<Input
+						type="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						className="w-full"
+						required
+					/>
+				</div>
+				<div>
+					<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+						Password
+					</label>
+					<Input
+						type="password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						className="w-full"
+						required
+					/>
+				</div>
+			</div>
 
-			<Input
-				label="email"
-				type="text"
-				value={email}
-				onChangeAction={setEmail}
-			/>
-			<Input
-				label="Password"
-				type="password"
-				value={password}
-				onChangeAction={setPassword}
-			/>
-			{mode == "signup" &&
-				<Input
-					label="First Name"
-					type="text"
-					value={firstName}
-					onChangeAction={setFirstName}
-				/>
-			}
-			{mode == "signup" &&
-				<Input
-					label="Last Name"
-					type="text"
-					value={lastName}
-					onChangeAction={setLastName}
-				/>
-			}
-			{mode == "signup" &&
-				<Input
-					label="phone number"
-					type="text"
-					value={phoneNumber}
-					onChangeAction={setPhoneNumber}
-				/>
-			}
-			{mode == "signup" && (
-				<div className="mt-4">
-					<label className="flex items-center space-x-2">
+			{mode === "signup" && (
+				<div className="space-y-4">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+						<div>
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								First Name
+							</label>
+							<Input
+								type="text"
+								value={firstName}
+								onChange={(e) => setFirstName(e.target.value)}
+								className="w-full"
+								required
+							/>
+						</div>
+						<div>
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								Last Name
+							</label>
+							<Input
+								type="text"
+								value={lastName}
+								onChange={(e) => setLastName(e.target.value)}
+								className="w-full"
+								required
+							/>
+						</div>
+					</div>
+					<div>
+						<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+							Phone Number
+						</label>
+						<Input
+							type="tel"
+							value={phoneNumber}
+							onChange={(e) => setPhoneNumber(e.target.value)}
+							className="w-full"
+						/>
+					</div>
+					<div className="flex items-center space-x-2">
 						<input
 							type="checkbox"
+							id="isHotelOwner"
 							checked={isHotelOwner}
 							onChange={(e) => setIsHotelOwner(e.target.checked)}
-							className="h-4 w-4"
+							className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
 						/>
-						<span>Are you a hotel owner?</span>
-					</label>
+						<label htmlFor="isHotelOwner" className="text-sm text-gray-700 dark:text-gray-300">
+							I am a hotel owner
+						</label>
+					</div>
 				</div>
 			)}
 
 			<Button
-				label={mode == "signup" ? "Sign Up" : "Login"}
-			/>
+				type="submit"
+				className="w-full"
+			>
+				{mode === "signup" ? "Sign Up" : "Login"}
+			</Button>
 		</form>
-
 	)
 };

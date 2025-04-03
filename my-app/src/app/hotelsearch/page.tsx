@@ -189,23 +189,37 @@ const HotelSearchPage = () => {
             return;
         }
 
-        const hotelRoomInfo = {
-            roomId: room.id,
-            checkIn: checkInRoomDate,
-            checkOut: checkOutRoomDate,
-            hotelName: selectedHotel.hotel.name,
-            roomType: room.type,
-            pricePerNight: room.pricePerNight,
+        // Format dates to ISO string format
+        const checkInISO = new Date(checkInRoomDate).toISOString();
+        const checkOutISO = new Date(checkOutRoomDate).toISOString();
+
+        // Create the booking info object
+        const bookingInfo = {
+            id: room.id,
+            checkIn: checkInISO,
+            checkOut: checkOutISO,
+            price: room.pricePerNight,
             hotel: {
                 name: selectedHotel.hotel.name,
-                address: selectedHotel.hotel.address
+                address: selectedHotel.hotel.address,
+                city: selectedHotel.hotel.city
+            },
+            room: {
+                type: room.type,
+                hotel: {
+                    name: selectedHotel.hotel.name,
+                    address: selectedHotel.hotel.address,
+                    city: selectedHotel.hotel.city
+                }
             }
         };
 
+        // Create URL parameters with the correct parameter name 'bookings'
         const params = new URLSearchParams({
-            info: JSON.stringify(hotelRoomInfo)
+            bookings: JSON.stringify(bookingInfo)
         });
 
+        // Navigate to cart page with the parameters
         router.push(`/cart?${params.toString()}`);
     };
 

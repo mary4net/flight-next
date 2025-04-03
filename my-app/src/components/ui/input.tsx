@@ -1,27 +1,27 @@
 'use client';
 
-interface InputProps {
-	label: string;
-	type?: 'text' | 'password';
-	value: string;
-	onChangeAction: (value: string) => void;
-}
+import * as React from "react"
+import { cn } from "@/lib/utils"
 
-export default function Input({ label, type, value, onChangeAction }: InputProps) {
-	return (
-		<div>
-			<label
-				className="block text-gray-700 dark:text-gray-300 font-medium">
-				{label}
-			</label>
+export interface InputProps
+	extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+	({ className, type, ...props }, ref) => {
+		return (
 			<input
 				type={type}
-				placeholder={label}
-				value={value}
-				onChange={(e) => onChangeAction(e.target.value)}
-				className="mt-1 block w-full p-2 border rounded-lg bg-gray-100 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-400"
+				className={cn(
+					"flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+					className
+				)}
+				ref={ref}
+				{...props}
 			/>
-		</div>
-	);
-}
+		)
+	}
+)
+Input.displayName = "Input"
+
+export { Input }
 
