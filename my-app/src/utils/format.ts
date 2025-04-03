@@ -17,16 +17,18 @@ export const getItineraryLabel = (code: string): string => {
 };
 
 export const formatDate = (dateStr?: string): string => {
-    return dateStr
-      ? new Date(dateStr).toLocaleString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-        })
-      : 'N/A';
+  if (!dateStr) return 'N/A';
+
+  const date = new Date(dateStr);
+  return date.toLocaleString('en-US', {
+    timeZone: 'UTC', 
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+  });
 };
 
 export const extractName = (input: string): string => {

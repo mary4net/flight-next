@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import Button from '@/components/ui/button';
 import Navigation from '@/components/ui/navigation';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';

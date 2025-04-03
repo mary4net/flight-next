@@ -2,19 +2,37 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Button from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
 
 interface Flight {
-  flightId: string;
+  id: string;
+  flightNumber: string;
   departureTime: string;
   arrivalTime: string;
-  origin: string;
-  destination: string;
-  flightCost: number;
-  airline: string;
+  availableSeats: number;
+  currency: string;
+  price: number;
+  status: string;
+  duration: number;
+  origin: {
+    city: string;
+    code: string;
+    country: string;
+    name: string;
+  };
+  destination: {
+    city: string;
+    code: string;
+    country: string;
+    name: string;
+  };
+  airline: {
+    code: string;
+    name: string;
+  };
 }
 
 interface HotelRoom {
@@ -34,50 +52,46 @@ interface Booking {
   itinerary?: string;
   flights: Flight[];
   room?: HotelRoom;
+  hotelCost?: number;
 }
 
 interface Hotel {
-    name: string;
-    address: string;
+  name: string;
+  address: string;
 }
+
 interface Suggestion {
   hotels: Hotel[];
   name: string;
 }
 
-interface Flight {
-    id: string;
-    flightNumber: string;
-    departureTime: string;
-    arrivalTime: string;
-    availableSeats: number;
-    currency: string;
-    price: number;
-    status: string;
-    duration: number;
-    origin: {
+interface BookingInfo {
+  id: number;
+  checkIn: string;
+  checkOut: string;
+  price: number;
+  hotel: {
+    name: string;
+    address: string;
+    city: string;
+  };
+  room: {
+    type: string;
+    hotel: {
+      name: string;
+      address: string;
       city: string;
-      code: string;
-      country: string;
-      name: string;
     };
-    destination: {
-      city: string;
-      code: string;
-      country: string;
-      name: string;
-    };
-    airline: {
-      code: string;
-      name: string;
-    };
+  };
 }
 
 export default function BookingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const infoEncoded = searchParams.get('bookings');
-  let infoParam = infoEncoded ? JSON.parse(decodeURIComponent(infoParam)) : [];
+  const [infoParam, setInfoParam] = useState<BookingInfo | null>(
+    infoEncoded ? JSON.parse(decodeURIComponent(infoEncoded)) : null
+  );
 
   const [booking, setBooking] = useState<Booking>({ flights: [] });
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -100,26 +114,11 @@ export default function BookingPage() {
 
       if (response.ok) {
         setBooking(data);
-        if (Object.keys(data).length === 0 && 
-          (
-            (Array.isArray(infoParam) && infoParam.length > 0) ||
-            (typeof infoParam === 'object' && !Array.isArray(infoParam) && Object.keys(infoParam).length > 0)
-          )
-        ) {
+        if (Object.keys(data).length === 0 && infoParam) {
           handleCreateBooking();
-        } else if (Object.keys(data).length > 0 && 
-          (
-            (Array.isArray(infoParam) && infoParam.length > 0) ||
-            (typeof infoParam === 'object' && !Array.isArray(infoParam) && Object.keys(infoParam).length > 0)
-          )
-        ) {
-          handleUpdateBooking();
-        } else if (Object.keys(data).length > 0 && 
-          (
-            (Array.isArray(infoParam) && infoParam.length === 0) ||
-            (typeof infoParam === 'object' && !Array.isArray(infoParam) && Object.keys(infoParam).length === 0)
-          )
-        ){
+        } else if (Object.keys(data).length > 0 && infoParam) {
+          handleUpdateBooking(data);
+        } else if (Object.keys(data).length > 0 && !infoParam) {
           fetchSuggestions("Toronto", data);
         } else {
           setMessage("No booking found.");
@@ -127,7 +126,8 @@ export default function BookingPage() {
       } else {
         setMessage("No booking found.");
       }
-    } catch (err) {
+    } catch (error) {
+      const err = error as Error;
       setMessage(err.message || 'Error fetching booking.');
     } finally {
       setLoading(false);
@@ -138,70 +138,58 @@ export default function BookingPage() {
     if (!infoParam) return;
 
     try {
-      const info = infoParam;
-
-      const itinerary = Array.isArray(info)
-        ? info.length === 2
-          ? 'FLIGHT_ROUNDTRIP'
-          : 'FLIGHT_ONEWAY'
-        : typeof info === 'object'
-        ? 'HOTEL_RESERVATION'
-        : "";
-
-      
       const response = await fetch('/api/bookings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          itinerary,
-          flights: Array.isArray(info) ? info : [],
-          hotelRoom: typeof info === 'object' ? info : {},
+          itinerary: 'HOTEL_RESERVATION',
+          flights: [],
+          hotelRoom: infoParam,
         }),
       });
 
       const data: Booking = await response.json();
 
       if (response.ok) {
-        infoParam = [];
+        setInfoParam(null);
         setBooking(data);
-        fetchSuggestions("Toronto");
+        fetchSuggestions("Toronto", data);
       } else {
         setMessage("Error creating booking.");
       }
-    } catch (err) {
+    } catch (error) {
+      const err = error as Error;
       setMessage(err.message || 'Error creating booking.');
     }
   };
 
-  const handleUpdateBooking = async () => {
+  const handleUpdateBooking = async (data: Booking) => {
     if (!infoParam || !booking) return;
 
     try {
-      const info = JSON.parse(infoParam);
-
       const response = await fetch('/api/bookings', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          id: booking.id,
-          flights: Array.isArray(info) ? info : [],
-          hotelRoom: typeof info === 'object' ? info : {},
+          id: data.id,
+          addFlight: [],
+          addHotel: infoParam,
         }),
       });
 
-      const data: Booking = await response.json();
+      const res: Booking = await response.json();
       if (response.ok) {
-        setBooking(data);
-        fetchSuggestions("Toronto");
+        setBooking(res);
+        fetchSuggestions("Toronto", res);
       } else {
-        setMessage('Failed to update booking.');
+        setMessage("Could not update booking, please try again.");
       }
-    } catch (err) {
-      setMessage('Error updating booking.');
+    } catch (error) {
+      setMessage("Error updating booking");
     }
   };
 
-  const fetchSuggestions = async (origin?: string, data: Booking) => {
+  const fetchSuggestions = async (origin: string, data: Booking) => {
     if (!data) return;
 
     const date = data.checkIn ? data.checkIn : data.flights[0]?.arrivalTime ? data.flights[0].arrivalTime : '';
@@ -215,11 +203,11 @@ export default function BookingPage() {
       });
 
       if (hasFlights) {
-        params.append('flightDestination', data.flights[0].destination);
+        params.append('flightDestination', data.flights[0].destination.city);
         params.append('date', data.flights[0].arrivalTime);
       } else {
         params.append('hotel', data.room?.hotel.name ?? '');
-        params.append('origin', origin ?? '');
+        params.append('origin', origin);
         params.append('destination', data.room?.hotel.city ?? '');
         params.append('date', data.checkIn ?? '');
       }
@@ -233,14 +221,15 @@ export default function BookingPage() {
         const text = await response.json();
         setMessage(text.error.error);
       } else {
-        const s: Suggestion[] = await response.json();
+        const data = await response.json();
         if (hasFlights) {
-            setFlightSuggestions(s);
+          setFlightSuggestions(data as Flight[]);
         } else {
-            setSuggestions(s);
+          setSuggestions(data as Suggestion[]);
         }
       }
-    } catch (err) {
+    } catch (error) {
+      const err = error as Error;
       setMessage('Error fetching suggestions.');
     }
   };
@@ -271,9 +260,9 @@ export default function BookingPage() {
           <h2 className="text-3xl font-semibold text-black-700 mb-4">Booking Details</h2>
           {Object.keys(booking).length > 1 ? (
             <div className="bg-blue-100 p-4 rounded-lg text-blue-800">
-            <div className="flex flex-col md:flex-row gap-6 w-full">
+              <div className="flex flex-col md:flex-row gap-6 w-full">
                 {booking.room && (
-                    <div className="bg-white p-4 rounded-lg border shadow w-full break-all md:w-1/2">
+                  <div className="bg-white p-4 rounded-lg border shadow w-full break-all md:w-1/2">
                     <div className="flex flex-col gap-4 w-full">
                       {/* Hotel Info */}
                       <div className="w-full text-sm sm:text-base leading-relaxed break-words whitespace-normal">
@@ -281,28 +270,28 @@ export default function BookingPage() {
                         <p>{booking.room.hotel.name}, {booking.room.hotel.address}</p>
                         <p>Room {booking.room.type}, {formatDate(booking.checkIn)} — {formatDate(booking.checkOut)}</p>
                       </div>
-                  
+                    
                       {/* Carousel */}
                       {Array.isArray(booking.room.images) && booking.room.images.length > 0 && (
-                          <ImageCarousel images={booking.room.images} />
+                        <ImageCarousel images={booking.room.images} />
                       )}
                     </div>
                   </div>                  
                 )}
 
                 {booking.flights?.length > 0 && (
-                <div className="bg-white p-4 rounded-lg border shadow space-y-4 md:w-1/2">
+                  <div className="bg-white p-4 rounded-lg border shadow space-y-4 md:w-1/2">
                     <h3 className="text-lg font-semibold">Flights</h3>
 
                     {booking.flights.map(flight => (
-                    <div key={flight.flightId} className="border-b pb-3">
-                        <p><strong>Price:</strong> ${flight.flightCost}</p>
-                        <p>{extractName(flight.airline)}</p>
-                        <p>{extractName(flight.origin)} → {extractName(flight.destination)}</p>
+                      <div key={flight.id} className="border-b pb-3">
+                        <p><strong>Price:</strong> ${flight.price.toFixed(2)}</p>
+                        <p>{flight.airline.name}</p>
+                        <p>{flight.origin.city} → {flight.destination.city}</p>
                         <p>{formatDate(flight.departureTime)} — {formatDate(flight.arrivalTime)}</p>
-                    </div>
+                      </div>
                     ))}
-                </div>
+                  </div>
                 )}
               </div>
             </div>

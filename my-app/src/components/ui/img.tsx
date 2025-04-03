@@ -10,6 +10,8 @@ export default function ImageCarousel({ images }: { images: string[] }) {
     <Image
       src={images[current]}
       alt="Profile"
+      width={128}
+      height={128}
       className="w-32 h-32 rounded-full shadow-lg"
     />
 

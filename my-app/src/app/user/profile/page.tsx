@@ -76,28 +76,37 @@ export default function ProfilePage() {
 			<Navigation />
 			<div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
 				<div className="container mx-auto px-4 py-8">
-					<div className="max-w-screen-sm mx-auto p-6 bg-white rounded-lg shadow-md">
-						{user ? (
-							<ProfileForm
-								mode={mode}
-								user={user}
-								onUpdateAction={handleUpdate}
-							/>
-						) : (
-							<div className="text-center">
-								<p className="text-lg text-gray-700 dark:text-gray-300 mb-4">
-									You are not logged in. Please login to continue.
-								</p>
-								<Link href="/user/login">
-									Click Here to Login.
-								</Link>
-							</div>
-						)}
-						{message && (
-							<div className="mt-4 text-center">
-								<p className="text-lg text-gray-800 dark:text-gray-200">{message}</p>
-							</div>
-						)}
+					<div className="max-w-2xl mx-auto">
+						<div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-xl rounded-2xl p-8">
+							{user ? (
+								<ProfileForm
+									mode={mode}
+									user={user}
+									onUpdateAction={handleUpdate}
+								/>
+							) : (
+								<div className="text-center py-12">
+									<p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
+										You are not logged in. Please login to continue.
+									</p>
+									<Link 
+										href="/user/login"
+										className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
+									>
+										Click Here to Login
+									</Link>
+								</div>
+							)}
+							{message && (
+								<div className={`mt-6 p-4 rounded-lg text-center ${
+									message.includes('successful') 
+										? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
+										: 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+								}`}>
+									{message}
+								</div>
+							)}
+						</div>
 					</div>
 				</div>
 			</div>
