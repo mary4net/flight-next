@@ -6,8 +6,8 @@ import Navigation from "@/components/ui/navigation";
 export default function Home() {
   return (
     <>
-      <Navigation />
-      <main className="flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-br to-white min-h-screen">
+    <Navigation/>
+    <main className="flex flex-col items-center justify-center text-center px-6 py-20 bg-gradient-to-br to-white min-h-screen">
         <h1 className="text-5xl font-extrabold mb-6 text-blue-900" style={{textShadow: "0 0 6px white, 0 0 12px white, 0 0 18px white" } }>Welcome to FlyNext</h1>
         <p className="text-xl text-black mb-10 max-w-xl" style={{ textShadow: "0 0 6px white, 0 0 12px white, 0 0 18px white"  }}>
           Your one-stop destination for booking affordable flights and comfortable hotels — all in one place.
@@ -31,6 +31,7 @@ export default function Home() {
           </p>
         </div>
       </main>
+
     </>
   );
 }

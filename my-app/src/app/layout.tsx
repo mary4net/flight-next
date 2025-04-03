@@ -29,7 +29,9 @@ export default function RootLayout({
         className={`${geistMono.variable} ${geistSans.variable}  antialiased`}
       >
         <ThemeProvider>
-        {children}
+          <main className="pt-20">
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>
