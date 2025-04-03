@@ -1,63 +1,75 @@
-import PDFDocument from 'pdfkit';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 export async function generateInvoicePdf(booking: any, invoice: any): Promise<Buffer> {
-  return new Promise((resolve) => {
-    const doc = new PDFDocument({ margin: 50 });
-    const chunks: Uint8Array[] = [];
+  const pdfDoc = await PDFDocument.create();
+  const page = pdfDoc.addPage([600, 800]);
 
-    doc.on('data', chunk => chunks.push(chunk));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
+  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const { width, height } = page.getSize();
 
-    const currencyList: string[] = invoice.currencyList || []; // fallback to empty if not passed
-    let currencyIndex = 0;
+  let y = height - 50;
+  const lineHeight = 20;
 
-    // Header
-    doc.fontSize(22).text('Booking Invoice', { align: 'center' });
-    doc.moveDown(0.5);
-    doc.fontSize(12).text(`Issued on: ${new Date(invoice.createdAt).toLocaleDateString()}`, { align: 'center' });
-    doc.moveDown();
+  const currencyList: string[] = invoice.currencyList || [];
+  let currencyIndex = 0;
 
-    // Booking Info
-    doc.fontSize(14).text('Booking Information', { underline: true });
-    doc.moveDown(0.5);
-    doc.fontSize(12)
-      .text(`Booking ID: ${booking.id}`)
-      .text(`User: ${invoice.userId}`)
-      .text(`Booking Status: ${booking.status}`)
-      .text(`Invoice Status: ${invoice.status}`)
-      .moveDown();
+  const drawText = (text: string, options?: { color?: any; size?: number }) => {
+    page.drawText(text, {
+      x: 50,
+      y,
+      size: options?.size || 12,
+      font,
+      color: options?.color || rgb(0, 0, 0),
+    });
+    y -= lineHeight;
+  };
 
-    // Cost Breakdown
-    doc.fontSize(14).text('Cost Breakdown', { underline: true });
-    doc.moveDown(0.5);
-    const hotelCurrency = booking.hotelCost > 0 ? currencyList[currencyIndex++] || 'N/A' : null;
-    const flightCurrency = booking.flights?.length > 0 && booking.flightCost > 0 ? currencyList[currencyIndex] || 'N/A' : null;
+  // Header
+  drawText('Booking Invoice', { size: 22 });
+  y -= 10;
+  drawText(`Issued on: ${new Date(invoice.createdAt).toLocaleDateString()}`);
+  y -= 10;
 
-    if (booking.hotelCost > 0) {
-      doc.text(`Hotel Cost: ${hotelCurrency} ${booking.hotelCost.toFixed(2)}`);
-    }
+  // Booking Info
+  drawText('Booking Information', { size: 14 });
+  drawText(`Booking Status: ${booking.status}`);
+  drawText(`Payment Status: ${invoice.status}`);
+  y -= 10;
 
-    if (booking.flights?.length > 0 && invoice.flightCost > 0) {
-      doc.text(`Flight Cost: ${flightCurrency} ${invoice.flightCost.toFixed(2)}`);
-    }
+  // Cost Breakdown
+  drawText('Cost Breakdown', { size: 14 });
 
-    const total = invoice.hotelCost + invoice.flightCost;
-    doc.moveDown().text(`Total: ${currencyList[0] ?? 'N/A'} ${total.toFixed(2)}`);
+  const hotelCurrency = booking.hotelCost > 0 ? currencyList[currencyIndex++] || 'N/A' : null;
+  const flightCurrency =
+    booking.flights?.length > 0 && booking.flightCost > 0
+      ? currencyList[currencyIndex] || 'N/A'
+      : null;
 
-    // Refund
-    if (invoice.refundAmount && invoice.refundAmount > 0) {
-      doc.moveDown();
-      doc.fillColor('red')
-        .text(`Refund Issued: ${currencyList[0] ?? 'N/A'} ${invoice.refundAmount.toFixed(2)}`);
-      doc.fillColor('black');
-    }
+  if (invoice.hotelCost > 0) {
+    drawText(`Hotel Cost: ${hotelCurrency ?? ''} $${invoice.hotelCost.toFixed(2)}`);
+  }
 
-    // Footer
-    doc.moveDown(2);
-    doc.fontSize(10).fillColor('gray')
-      .text('Thank you for booking with FlyNext.', { align: 'center' });
+  if (booking.flights?.length > 0 && invoice.flightCost > 0) {
+    drawText(`Flight Cost: ${flightCurrency ?? ''} $${invoice.flightCost.toFixed(2)}`);
+  }
 
-    doc.end();
-  });
+  const total = invoice.hotelCost + invoice.flightCost;
+  drawText(`Total: ${currencyList[0] ?? ''} $${total.toFixed(2)}`);
+
+  // Refund
+  if (invoice.refundAmount && invoice.refundAmount > 0) {
+    drawText(
+      `Refund Issued: ${currencyList[0] ?? ''} ${invoice.refundAmount.toFixed(2)}`,
+      { color: rgb(1, 0, 0) }
+    );
+  }
+
+  // Footer
+  y -= 20;
+  drawText('Thank you for booking with FlyNext.', { size: 10, color: rgb(0.5, 0.5, 0.5) });
+
+  const pdfBytes = await pdfDoc.save();
+  return Buffer.from(pdfBytes);
 }
+
 

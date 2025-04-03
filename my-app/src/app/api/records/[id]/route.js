@@ -166,7 +166,7 @@ async function cancelBooking(request) {
                         id: booking.id
                     },
                     data: {
-                        itinerary: booking.itinerary === "ROUNDTRIP_AND_HOTEL" ? "FLIGHT_ROUNDTRIP" : "FLIGHT_ONEWAY",
+                        itinerary: booking.itinerary === "ROUNDTRIP_AND_HOTEL" ? "FLIGHT_ROUNDTRIP" : booking.itinerary === "ONEWAY_AND_HOTEL"? "FLIGHT_ONEWAY" : "HOTEL_RESERVATION",
                         hotelCost: 0,
                         checkIn: null,
                         checkOut: null,

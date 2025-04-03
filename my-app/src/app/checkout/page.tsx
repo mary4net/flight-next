@@ -1,14 +1,13 @@
 'use client';
 
 import { useState, useEffect, useRef} from 'react';
-import Button from '@/components/ui/button';
 import Navigation from '@/components/ui/navigation';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
 
 interface Booking {
     hotelCost?: number;
     room?: {
-        hotel: { name: string };
+        hotel: { name: string, address: string};
         type: string;
     };
     checkIn?: string;
@@ -19,7 +18,7 @@ interface Booking {
         airline: string;
         origin: string;
         destination: string;
-        departTime: string;
+        departureTime: string;
         arrivalTime: string;
     }[];
 }
@@ -38,7 +37,7 @@ export default function Checkout() {
 
     useEffect(() => {
         fetchBooking();
-    }, []);
+    }, [message]);
 
     const fetchBooking = async (): Promise<void> => {
         try {
@@ -49,7 +48,7 @@ export default function Checkout() {
             if (response.ok) {
                 setBookings(data);
                 let total = data.hotelCost ?? 0;
-                total += data.flights?.reduce((acc, flight) => acc + flight.flightCost, 0) ?? 0;
+                total += data.flights?.reduce((acc: number, flight: {flightCost: number}) => acc + flight.flightCost, 0) ?? 0;
                 setTotalCost(total);
             } else {
                 setMessage(response.statusText);
@@ -106,14 +105,14 @@ export default function Checkout() {
                 })
             });
             
-            const result = await response.text();
+            const result = await response.json();
             if (response.ok) {
                 setMessage('Payment successful!');
             } else {
-                setMessage(result || 'Payment failed. Please make sure the inputs are all in valid format.');
+                setMessage(result.error || 'Payment failed. Please make sure the inputs are all in valid format.');
             }
         } catch (error) {
-            setMessage(error.message || 'Payment failed. Please try again later.');
+            setMessage('Payment failed. Please try again later.');
         }
     };
 
@@ -154,7 +153,9 @@ export default function Checkout() {
                     className="w-full p-2 border rounded"
                     onChange={handleInputChange}
                 />
-                <p className="text-red-600">{message}</p>
+                <p className={message === "Payment successful!" ? "text-green-600" : "text-red-600"}>
+                    {message}
+                </p>                
                 <button onClick={handleCheckout} className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">
                     Pay ${totalCost.toFixed(2)}
                 </button>
@@ -164,7 +165,7 @@ export default function Checkout() {
         <div className="md:w-1/2 p-6 bg-white text-black shadow-lg rounded-lg mt-6">
             <h2 className="text-2xl font-semibold">{bookings.flights ? bookings.flights.length + (bookings.hotelCost ? 1: 0) : 0} Item</h2>
             <ul className="divide-y divide-gray-300">
-                {bookings.hotelCost && (
+                {bookings.hotelCost && bookings.room && (
                     <li className="flex justify-between py-2">
                         <p><strong>Hotel: ${bookings.hotelCost}</strong></p>
                         <p>{bookings.room.hotel.name}, {bookings.room.hotel.address}</p>
