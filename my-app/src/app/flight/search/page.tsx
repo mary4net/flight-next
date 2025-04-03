@@ -28,7 +28,6 @@ export default function FlightSearchPage() {
 		<>
 			<Navigation />
 			<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-				<h1 className="text-3xl font-bold text-center">Search for Flights</h1>
 				<SearchForm onSearchAction={handleSearch} />
 				<FlightResults searchResults={searchResults} />
 			</div>
