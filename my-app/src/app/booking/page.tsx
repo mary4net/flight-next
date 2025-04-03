@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
+import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
 
 
 interface Booking { 
@@ -163,46 +164,11 @@ export default function Records() {
     }
   };
 
-  const getItineraryLabel = (code: string): string => {
-    switch (code) {
-      case 'HOTEL_RESERVATION':
-        return 'Hotel Reservation';
-      case 'FLIGHT_ONEWAY':
-        return 'One-way Flight';
-      case 'FLIGHT_ROUNDTRIP':
-        return 'Roundtrip Flight';
-      case 'ONEWAY_AND_HOTEL':
-        return 'One-way Flight and Hotel';
-      case 'ROUNDTRIP_AND_HOTEL':
-        return 'Roundtrip Flight and Hotel';
-      default:
-        return 'Unknown Itinerary';
-    }
-  };
-
-  const formatDate = (dateStr?: string): string => {
-    return dateStr
-      ? new Date(dateStr).toLocaleString(undefined, {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-        })
-      : 'N/A';
-  };
 
   const sortedBookings = [...bookings].sort(
     (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
   );
 
-  const extractName = (input: string): string => {
-    const firstCommaIndex: number = input.indexOf(',');
-    if (firstCommaIndex === -1) return input;
-  
-    return input.slice(firstCommaIndex + 1).trim();
-  }
 
   return (
     <>
