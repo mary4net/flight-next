@@ -78,35 +78,45 @@ export async function GET(request) {
     try {
         // Extract query parameters
         const searchParams = new URL(request.url).searchParams;
-        const checkinDate = new Date(searchParams.get("checkinDate"));
-        const checkoutDate = new Date(searchParams.get("checkoutDate"));
+        const checkinDate = searchParams.get("checkinDate");
+        const checkoutDate = searchParams.get("checkoutDate");
         const city = searchParams.get("city");
         const star = searchParams.get("star");
         const hotelName = searchParams.get("name");
         const lowerpriceRange = parseFloat(searchParams.get("lowerpriceRange")) || 0;
         const upperpriceRange = parseFloat(searchParams.get("upperpriceRange")) || Infinity;
 
+        // Build the where clause
+        const whereClause = {
+            hotel: {
+                ...(hotelName && { name: hotelName }),
+                ...(city && { city: city }),
+                ...(star && { starRating: Number(star) })
+            },
+            pricePerNight: { 
+                gte: lowerpriceRange, 
+                lte: upperpriceRange 
+            }
+        };
+
+        // Only add booking conditions if both dates are provided
+        if (checkinDate && checkoutDate) {
+            whereClause.bookings = {
+                none: {
+                    checkIn: { lt: new Date(checkoutDate) },
+                    checkOut: { gt: new Date(checkinDate) }
+                }
+            };
+        }
+
         // Find rooms that are NOT booked during the given dates
         const availableRooms = await prisma.Room.findMany({
-            where: {
-                hotel: {
-                    ...(hotelName && { name: hotelName }),
-                    city: city,
-                    ...(star && { starRating: Number(star) })
-                },
-                pricePerNight: { gte: lowerpriceRange, lte: upperpriceRange },
-                bookings: {
-                    none: {
-                        checkIn: { lt: checkoutDate }, // Overlapping booking condition
-                        checkOut: { gt: checkinDate }
-                    }
-                }
-            },
+            where: whereClause,
             include: {
                 hotel: true
             },
             orderBy: {
-                pricePerNight: 'asc' // Sort results by price
+                pricePerNight: 'asc'
             }
         });
 
@@ -119,4 +129,3 @@ export async function GET(request) {
 
 // This immediately returns an error response (such as 401 Unauthorized or 403 Forbidden) without calling your handler.
 export const POST = withAuth(POST_create);
-

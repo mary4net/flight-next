@@ -47,11 +47,6 @@ async function GET_empty_room_date(request, {params}) {
 
     const isOwner = request.user?.id === hotel.ownerId;
 
-    if (!isOwner && (!dateStart || !dateEnd)) {
-      return NextResponse.json({ message: "Visitors must provide a start and end date" }, 
-        { status: 400 });
-    }
-
     let formattedStartDate = dateStart ? new Date(dateStart) : null;
     let formattedEndDate = dateEnd ? new Date(dateEnd) : null;
 
