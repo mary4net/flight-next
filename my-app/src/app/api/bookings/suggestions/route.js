@@ -24,7 +24,7 @@ async function getSuggestions(request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!itinerary || (!flightDestination)) {
+    if (!itinerary || (!flightDestination && !location)) {
         return NextResponse.json({error: "Invalid request"}, { status: 400 });
     }
 

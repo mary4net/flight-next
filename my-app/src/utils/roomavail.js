@@ -1,3 +1,5 @@
+import { prisma } from "@/utils/db";
+
 // Helper function to check if a room is already booked
 export async function checkRoomBooked(room, startDate, endDate) {
     const yesterday = new Date();

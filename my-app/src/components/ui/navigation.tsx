@@ -35,6 +35,9 @@ export default function Navigation({}: NavigationProps): JSX.Element {
                 <button onClick={toggleDarkMode} className="p-2 rounded-full bg-gray-700 text-white">
                     {darkMode ? <Sun size={20} /> : <Moon size={20} />}
                 </button>
+                <Link href="/notification" className="flex items-center space-x-2 rounded-lg text-white hover:bg-gray-700 font-semibold">
+                    <span>Notifications</span>
+                </Link>
                 <Link href="/user/profile" className="flex items-center space-x-2 bg-gray-800 px-4 py-2 rounded-lg text-white hover:bg-gray-700 font-semibold">
                     <User size={20} />
                     <span>Profile</span>
