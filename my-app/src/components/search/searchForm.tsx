@@ -45,46 +45,60 @@ export default function SearchForm({ onSearchAction }: onSearchProps) {
     };
 
   return (
-    <div className="flex bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-      <div className="container mx-auto px-4 py-16 max-w-screen-lg lg:max-w-screen-xl">
-        <div className="text-center">
-          <CityPicker
-            type='origin'
-            onCitySelect={handleCitySelect}
-          />
-          <CityPicker
-            type='desti'
-            onCitySelect={handleCitySelect}
-          />
-          <Date
-            label="Departure Date"
-            value={departureDate}
-            onChangeAction={setDepartureDate}
-          />
-          {isRound && <Date
-            label="Return Date"
-            value={returnDate}
-            onChangeAction={setReturnDate}
-          />
-          }
-          <Button label="Search Flights" onClick={handleSubmit} />
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="container mx-auto px-8 py-12 max-w-screen-md lg:max-w-screen-lg bg-white dark:bg-gray-800 rounded-2xl shadow-2xl flex flex-col items-center">
 
-          <div className="mt-4">
-            <label className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                checked={isRound}
-                onChange={(e) => setRound(e.target.checked)}
-                className="h-4 w-4"
-              />
-              <span>Get a round trip?</span>
-            </label>
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+            Find Your Flights
+          </h1>
+        </div>
+
+        {/* Inputs Centered */}
+        <div className="w-full flex flex-col items-center gap-6">
+          <div className="w-full flex flex-col sm:flex-row gap-6 justify-center">
+            <CityPicker
+              type="origin"
+              onCitySelect={handleCitySelect}
+            />
+            <CityPicker
+              type="desti"
+              onCitySelect={handleCitySelect}
+            />
           </div>
 
+          <div className="w-full flex flex-col sm:flex-row gap-6 justify-center">
+            <Date label="Departure Date" value={departureDate} onChangeAction={setDepartureDate} />
+            {isRound && (
+              <Date label="Return Date" value={returnDate} onChangeAction={setReturnDate} />
+            )}
+          </div>
+        </div>
+
+        {/* Round Trip Checkbox */}
+        <div className="mt-6 flex items-center gap-3">
+          <input
+            type="checkbox"
+            checked={isRound}
+            onChange={(e) => setRound(e.target.checked)}
+            className="h-6 w-6 text-blue-600 rounded border-gray-300 focus:ring focus:ring-blue-300"
+          />
+          <span className="text-lg text-gray-900 dark:text-gray-100">Get a round trip?</span>
+        </div>
+
+        {/* Larger Buttons */}
+        <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full justify-center">
+          <Button
+            name="Search Flights"
+            onClick={handleSubmit}
+            className="w-full sm:w-2/3 px-8 py-4 text-xl text-gray-900 dark:text-gray-100 bg-gray-300 dark:bg-gray-700 rounded-lg shadow-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition font-semibold"
+          >
+            Search
+          </Button>
         </div>
 
       </div>
-    </div>
+    </div >
   );
 }
 

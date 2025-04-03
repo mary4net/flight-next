@@ -74,11 +74,10 @@ export default function AuthPage() {
                 </Button>
               </div>
               {message && (
-                <div className={`mt-6 p-4 rounded-lg text-center ${
-                  message.includes('successful') 
-                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
+                <div className={`mt-6 p-4 rounded-lg text-center ${message.includes('successful')
+                    ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
                     : 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
-                }`}>
+                  }`}>
                   {message}
                 </div>
               )}
