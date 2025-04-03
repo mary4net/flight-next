@@ -15,7 +15,6 @@ async function getSuggestions(request) {
     const { searchParams } = new URL(request.url);
     const itinerary = searchParams.get("itinerary");
     const flightDestination = searchParams.get("flightDestination");
-    const hotel = searchParams.get("hotel");
     const userChoiceLocation = searchParams.get("origin");
     const location = searchParams.get("destination");
     const userChoiceDate = searchParams.get("date");
@@ -25,7 +24,7 @@ async function getSuggestions(request) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    if (!itinerary || (!flightDestination && !hotel)) {
+    if (!itinerary || (!flightDestination)) {
         return NextResponse.json({error: "Invalid request"}, { status: 400 });
     }
 
@@ -40,7 +39,7 @@ async function getSuggestions(request) {
             return NextResponse.json({hotels, checkIn: userChoiceDate ? new Date(userChoiceDate) : null}, { status: 200 });
 
         case "HOTEL_RESERVATION":
-            if (!hotel || !userChoiceLocation || !location || !userChoiceDate) {
+            if (!userChoiceLocation || !location || !userChoiceDate) {
                 return NextResponse.json({ error: "Missing required parameters for hotel reservation." }, { status: 400 });
             }
 
