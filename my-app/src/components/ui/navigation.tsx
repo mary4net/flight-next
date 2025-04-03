@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Sun, Moon, ShoppingCart, User, Plane, Hotel } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Sun, Moon, ShoppingCart, User, Plane, Hotel, Building } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from '@/components/ui/context';
 
@@ -9,6 +9,24 @@ interface NavigationProps {}
 
 export default function Navigation({}: NavigationProps): JSX.Element {
     const [darkMode, toggleDarkMode] = useTheme();
+    const [isHotelOwner, setIsHotelOwner] = useState(false);
+
+    // Check if the user is a hotel owner
+    useEffect(() => {
+        const checkUserRole = async () => {
+            try {
+                const response = await fetch('/api/users/me');
+                if (response.ok) {
+                    const userData = await response.json();
+                    setIsHotelOwner(userData.role === 'HOTEL_OWNER');
+                }
+            } catch (error) {
+                console.error('Error checking user role:', error);
+            }
+        };
+        
+        checkUserRole();
+    }, []);
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-opacity-90 ${
@@ -68,6 +86,18 @@ export default function Navigation({}: NavigationProps): JSX.Element {
                                 Bookings
                             </Link>
                         </li>
+                        {isHotelOwner && (
+                            <li>
+                                <Link 
+                                    href="/hotel-management" 
+                                    className={`text-sm font-medium transition-colors hover:text-blue-600 ${
+                                        darkMode ? 'text-gray-300 hover:text-blue-400' : 'text-gray-600'
+                                    }`}
+                                >
+                                    Manage Hotels
+                                </Link>
+                            </li>
+                        )}
                     </ul>
 
                     {/* Right Side Actions */}

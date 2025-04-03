@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import Input from '@/components/ui/input';
-import Button from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import ImageCarousel from '@/components/ui/img';
 
 interface ProfileFormProps {
@@ -61,66 +61,160 @@ export default function ProfileForm(
 	};
 
 	return (
-		<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
-			<div className="container mx-auto px-4 py-16 max-w-screen-lg lg:max-w-screen-xl">
-				<div className="text-center">
-					<h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
-						{mode === "edit" ? 'Edit Profile' : `${firstName}'s Profile`}
-					</h1>
-					<p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
-						{mode === "edit" ? 'Modify your details and save changes.' : 'View your profile details.'}
-					</p>
-				</div>
+		<div className="space-y-8">
+			<div className="text-center">
+				<h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+					{mode === "edit" ? 'Edit Profile' : `${firstName}'s Profile`}
+				</h1>
+				<p className="text-gray-600 dark:text-gray-300">
+					{mode === "edit" ? 'Update your profile information' : 'View your profile details'}
+				</p>
+			</div>
 
-				<div className="flex justify-center mb-8">
+			<div className="flex flex-col items-center space-y-4">
+				<div className="relative">
 					<ImageCarousel images={[profilePicture]} />
-				</div>
-
-				{mode === "view" && (
-					<div className="text-center mt-4 space-y-2">
-						<p className="text-lg text-gray-700 dark:text-gray-300">
-							<strong>Email:</strong> {user.email}
-						</p>
-						<p className="text-lg text-gray-700 dark:text-gray-300">
-							<strong>Name:</strong> {user.firstName} {user.lastName}
-						</p>
-						<p className="text-lg text-gray-700 dark:text-gray-300">
-							<strong>Phone:</strong> {user.phoneNumber}
-						</p>
-					</div>
-				)}
-
-				{mode === "edit" && (
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-						<Input label="Email" type="text" value={email} onChange={setEmail} />
-						<Input label="Password" type="password" value={password} onChange={setPassword} />
-						<Input label="First Name" type="text" value={firstName} onChange={setFirstName} />
-						<Input label="Last Name" type="text" value={lastName} onChange={setLastName} />
-						<Input label="Phone Number" type="text" value={phoneNumber} onChange={setPhoneNumber} />
-						<Input label="Profile Picture" type="text" value={profilePicture} onChange={setProfilePicture} />
-					</div>
-				)}
-
-				<div className="mt-8 flex justify-center space-x-4">
-					<Button
-						label={mode === "edit" ? "Save" : "Edit Profile"}
-						onClick={() => {
-							setDoUpdate(mode === 'edit' ? true : false);
-							handleSubmit();
-						}}
-					/>
-
 					{mode === "edit" && (
+						<div className="mt-4">
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								Profile Picture URL
+							</label>
+							<Input
+								type="text"
+								value={profilePicture}
+								onChange={(e) => setProfilePicture(e.target.value)}
+								className="w-full"
+								placeholder="Enter image URL"
+							/>
+						</div>
+					)}
+				</div>
+			</div>
+
+			{mode === "view" ? (
+				<div className="space-y-4">
+					<div className="grid grid-cols-2 gap-4">
+						<div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+							<p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
+							<p className="text-lg font-medium text-gray-900 dark:text-white">{email}</p>
+						</div>
+						<div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+							<p className="text-sm text-gray-500 dark:text-gray-400">Phone</p>
+							<p className="text-lg font-medium text-gray-900 dark:text-white">{phoneNumber || 'Not provided'}</p>
+						</div>
+					</div>
+					<div className="grid grid-cols-2 gap-4">
+						<div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+							<p className="text-sm text-gray-500 dark:text-gray-400">First Name</p>
+							<p className="text-lg font-medium text-gray-900 dark:text-white">{firstName}</p>
+						</div>
+						<div className="p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+							<p className="text-sm text-gray-500 dark:text-gray-400">Last Name</p>
+							<p className="text-lg font-medium text-gray-900 dark:text-white">{lastName}</p>
+						</div>
+					</div>
+				</div>
+			) : (
+				<form onSubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}} className="space-y-6">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+						<div>
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								Email
+							</label>
+							<Input
+								type="email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+								className="w-full"
+								required
+							/>
+						</div>
+						<div>
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								Phone Number
+							</label>
+							<Input
+								type="tel"
+								value={phoneNumber}
+								onChange={(e) => setPhoneNumber(e.target.value)}
+								className="w-full"
+							/>
+						</div>
+						<div>
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								First Name
+							</label>
+							<Input
+								type="text"
+								value={firstName}
+								onChange={(e) => setFirstName(e.target.value)}
+								className="w-full"
+								required
+							/>
+						</div>
+						<div>
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								Last Name
+							</label>
+							<Input
+								type="text"
+								value={lastName}
+								onChange={(e) => setLastName(e.target.value)}
+								className="w-full"
+								required
+							/>
+						</div>
+						<div className="md:col-span-2">
+							<label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+								Password
+							</label>
+							<Input
+								type="password"
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
+								className="w-full"
+								placeholder="Leave blank to keep current password"
+							/>
+						</div>
+					</div>
+					<div className="flex justify-center space-x-4 pt-4">
 						<Button
-							label={'Cancel'}
+							type="submit"
+							className="px-6"
+						>
+							Save Changes
+						</Button>
+						<Button
+							type="button"
 							onClick={() => {
 								setDoUpdate(false);
 								handleSubmit();
 							}}
-						/>
-					)}
+							variant="outline"
+							className="px-6"
+						>
+							Cancel
+						</Button>
+					</div>
+				</form>
+			)}
+
+			{mode === "view" && (
+				<div className="flex justify-center">
+					<Button
+						onClick={() => {
+							setDoUpdate(mode === 'edit');
+							handleSubmit();
+						}}
+						className="px-6"
+					>
+						Edit Profile
+					</Button>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 }
