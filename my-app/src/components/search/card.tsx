@@ -1,4 +1,5 @@
-export default function FlightCard({ flight }) {
+
+export default function FlightCard({ flight }: { flight: any}) {
 	return (
 		<div className="border rounded-lg p-4 shadow-md">
 			<h2 className="text-lg font-semibold">{flight.airline} - {flight.flightNumber}</h2>
