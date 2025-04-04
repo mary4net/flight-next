@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -7,6 +6,9 @@ import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
+import Link from 'next/link';
+import { useSimpleToast } from '@/components/ui/use-simple-toast';
+
 
 
 interface HotelRoom {
@@ -98,6 +100,7 @@ interface BookingInfo {
 
 export default function BookingPage() {
   const router = useRouter();
+  const { toast } = useSimpleToast();
   const searchParams = useSearchParams();
   const infoEncoded = searchParams.get('bookings');
   const [infoParam, setInfoParam] = useState<BookingInfo | null>(
@@ -111,6 +114,32 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    // const checkAuth = async () => {
+    //   try {
+    //     const response = await fetch("/api/users/status", {
+    //       method: "GET",
+    //       credentials: "include",
+    //     });
+    //     if (!response.ok) {
+    //       router.push("/user/login");
+    //       return;
+    //     }
+    //     const data = await response.json();
+    //     if (data.user.role !== "HOTEL_OWNER") {
+    //       toast({
+    //         title: "Error",
+    //         description: "Please login to manage your booking",
+    //         variant: "destructive",
+    //       });
+    //       router.push("/");
+    //       return;
+    //     }
+    //   } catch (error) {
+    //     console.error("Auth check failed:", error);
+    //     router.push("/user/login");
+    //   }
+    // };
+    // checkAuth();
     fetchBooking();
   }, []);
 
@@ -139,7 +168,7 @@ export default function BookingPage() {
         } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
           fetchSuggestions("Shanghai", data);
         } else {
-          setMessage("No booking found.");
+          setMessage(response.error);
         }
       } else {
         setMessage("No booking found.");
@@ -313,10 +342,44 @@ export default function BookingPage() {
       </>
     );
 
+  if (message === "Unauthorized") {
+    return (
+      <>
+        <Navigation />
+        <div className="h-screen flex items-center justify-center">
+          <p className="text-6xl text-center mt-4">Please login to view your booking.</p>
+          <Link
+                href="/user/login"
+                className={`text-sm font-medium transition-colors hover:text-blue-600'
+                }`}
+                >
+                Login
+          </Link>
+        </div>
+      </>
+    );
+  }
+
+  const handleAuth = () => {
+    if (message === "Unauthorized") {
+      return (
+        <div className="h-screen flex items-center justify-center">
+          <p className="text-6xl text-center mt-4">Please login to view your booking.</p>
+          <Link
+                href="/user/login"
+                className={`text-sm font-medium transition-colors hover:text-blue-600'
+                }`}
+                >
+                Login
+          </Link>
+        </div>
+      );
+    }
+  }
+
   return (
     <>
       <Navigation />
-      <p>{message}</p>
       <div className="mt-8 px-4">
         <h1 className="text-6xl font-bold mb-6">Cart</h1>
 
@@ -402,7 +465,7 @@ export default function BookingPage() {
         )}
         </div>
         
-        <p>{message}</p>
+        {/* <p>{message}</p> */}
         {/* Go to Checkout */}
         <div className="mt-8 text-center">
           <button
