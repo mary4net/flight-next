@@ -6,8 +6,11 @@ import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
+<<<<<<< HEAD
 import { useSimpleToast } from '@/components/ui/use-simple-toast';
 import { Suspense } from 'react';
+=======
+>>>>>>> 8dc4de75b3c89fc43274a259fd6a63f8ebec4fdf
 
 
 interface HotelRoom {
@@ -99,7 +102,6 @@ interface BookingInfo {
 
 export default function BookingPage() {
   const router = useRouter();
-  const { toast } = useSimpleToast();
   const searchParams = useSearchParams();
   const infoEncoded = searchParams.get('bookings');
   const [infoParam, setInfoParam] = useState<BookingInfo | null>(
@@ -113,6 +115,64 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/users", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          router.push("/user/login");
+          return;
+        }
+        const data = await response.json();
+        if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
+          router.push("/");
+          return;
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        router.push("/user/login");
+      }
+    };
+    checkAuth();
+    fetchBooking();
+  }, []);
+
+  const fetchBooking = async () => {
+    try {
+      const response = await fetch('/api/bookings', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const data: Booking = await response.json();
+
+      const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
+      const hasHotel = infoParam && typeof infoParam === 'object' &&
+        !Array.isArray(infoParam) &&
+        Object.keys(infoParam).length > 0;
+
+      const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
+
+      if (response.ok) {
+        setBooking(data);
+        if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
+          handleCreateBooking(Boolean(hasHotel), Boolean(hasFlights), numFlight);
+        } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
+          handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
+        } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
+          fetchSuggestions("Toronto", data);
+        } else {
+          setMessage(response.statusText);
+        }
+      }
+    } catch (error) {
+      setMessage('Error fetching booking.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
     const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
       if (!hasHotel && !hasFlight) return;
