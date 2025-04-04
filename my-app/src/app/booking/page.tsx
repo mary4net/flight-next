@@ -4,7 +4,6 @@ import { JSX, useEffect, useState } from 'react';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
-import { useSimpleToast } from "@/components/ui/use-simple-toast";
 import { useRouter } from "next/navigation";
 
 
@@ -38,7 +37,6 @@ export default function Records() {
     const [message, setMessage] = useState<string | null>(null);
     const [popupContent, setPopupContent] = useState<JSX.Element | null>(null);
     const router = useRouter();
-    const { toast } = useSimpleToast();
 
     useEffect(() => {
         const checkAuth = async () => {
@@ -53,11 +51,6 @@ export default function Records() {
                 }
                 const data = await response.json();
                 if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
-                    toast({
-                        title: "Error",
-                        description: "Please login to manage your booking",
-                        variant: "destructive",
-                    });
                     router.push("/");
                     return;
                 }

@@ -5,8 +5,6 @@ import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
-import { useSimpleToast } from '@/components/ui/use-simple-toast';
-
 
 
 interface HotelRoom {
@@ -98,7 +96,6 @@ interface BookingInfo {
 
 export default function BookingPage() {
   const router = useRouter();
-  const { toast } = useSimpleToast();
   const searchParams = useSearchParams();
   const infoEncoded = searchParams.get('bookings');
   const [infoParam, setInfoParam] = useState<BookingInfo | null>(
@@ -124,11 +121,6 @@ export default function BookingPage() {
         }
         const data = await response.json();
         if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
-          toast({
-            title: "Error",
-            description: "Please login to manage your booking",
-            variant: "destructive",
-          });
           router.push("/");
           return;
         }
