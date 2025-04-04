@@ -514,7 +514,7 @@ const HotelSearchPage = () => {
                                     <div className="space-y-6">
                                         <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Available Rooms</h3>
                                         {selectedHotelRooms.length > 0 ? (
-                                            selectedHotelRooms.map((room) => (
+                                            selectedHotelRooms.map(room => (
                                                 <div
                                                     key={room.id}
                                                     className="flex items-start p-6 border border-gray-300 dark:border-gray-600 rounded-xl hover:shadow-lg transition-shadow bg-white dark:bg-gray-900"

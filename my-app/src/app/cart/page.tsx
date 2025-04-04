@@ -114,32 +114,32 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    // const checkAuth = async () => {
-    //   try {
-    //     const response = await fetch("/api/users/status", {
-    //       method: "GET",
-    //       credentials: "include",
-    //     });
-    //     if (!response.ok) {
-    //       router.push("/user/login");
-    //       return;
-    //     }
-    //     const data = await response.json();
-    //     if (data.user.role !== "HOTEL_OWNER") {
-    //       toast({
-    //         title: "Error",
-    //         description: "Please login to manage your booking",
-    //         variant: "destructive",
-    //       });
-    //       router.push("/");
-    //       return;
-    //     }
-    //   } catch (error) {
-    //     console.error("Auth check failed:", error);
-    //     router.push("/user/login");
-    //   }
-    // };
-    // checkAuth();
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/users", {
+          method: "GET",
+          credentials: "include",
+        });
+        if (!response.ok) {
+          router.push("/user/login");
+          return;
+        }
+        const data = await response.json();
+        if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
+          toast({
+            title: "Error",
+            description: "Please login to manage your booking",
+            variant: "destructive",
+          });
+          router.push("/");
+          return;
+        }
+      } catch (error) {
+        console.error("Auth check failed:", error);
+        router.push("/user/login");
+      }
+    };
+    checkAuth();
     fetchBooking();
   }, []);
 
@@ -342,50 +342,16 @@ export default function BookingPage() {
       </>
     );
 
-  if (message === "Unauthorized") {
-    return (
-      <>
-        <Navigation />
-        <div className="h-screen flex items-center justify-center">
-          <p className="text-6xl text-center mt-4">Please login to view your booking.</p>
-          <Link
-                href="/user/login"
-                className={`text-sm font-medium transition-colors hover:text-blue-600'
-                }`}
-                >
-                Login
-          </Link>
-        </div>
-      </>
-    );
-  }
-
-  const handleAuth = () => {
-    if (message === "Unauthorized") {
-      return (
-        <div className="h-screen flex items-center justify-center">
-          <p className="text-6xl text-center mt-4">Please login to view your booking.</p>
-          <Link
-                href="/user/login"
-                className={`text-sm font-medium transition-colors hover:text-blue-600'
-                }`}
-                >
-                Login
-          </Link>
-        </div>
-      );
-    }
-  }
-
   return (
     <>
       <Navigation />
+      <p>{message}</p>
       <div className="mt-8 px-4">
         <h1 className="text-6xl font-bold mb-6">Cart</h1>
 
         {/* Booking Details */}
         <div className="bg-blue-300 p-6 rounded-xl shadow-md mb-6">
-          <h2 className="text-3xl font-semibold text-black-700 mb-4">Booking Details</h2>
+          <h2 className="text-3xl font-semibold text-blue-700 mb-4">Booking Details</h2>
           {Object.keys(booking).length > 1 ? (
             <div className="bg-blue-100 p-4 rounded-lg text-blue-800">
               <div className="flex flex-col md:flex-row gap-6 w-full">
