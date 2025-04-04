@@ -174,15 +174,19 @@ async function cancelBooking(request) {
 
                     }
                 });
-                await prisma.invoice.update({
-                    where: {
-                        bookingId: updatedBooking.id
-                    },
-                    data: {
-                        refundAmount: (refundAmount ?? 0) + (invoice.hotelCost ?? 0),
+                const invoiceToUpdate = await prisma.invoice.findFirst({
+                    where: { bookingId: updatedBooking.id }
+                  });
+
+                if (invoiceToUpdate) {
+                    await prisma.invoice.update({
+                      where: { id: invoiceToUpdate.id },
+                      data: {
+                        refundAmount: (invoiceToUpdate.refundAmount ?? 0) + (invoiceToUpdate.hotelCost ?? 0),
                         status: "REFUNDED"
-                    }
-                });
+                      }
+                    });
+                }
 
                 // notify the user
                 const user = await prisma.user.findUnique({

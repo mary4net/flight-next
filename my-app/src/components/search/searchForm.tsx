@@ -15,13 +15,26 @@ interface onSearchProps {
       round: boolean;
     }
   ) => void;
+  initialValues?: {
+    origin?: string;
+    destination?: string;
+    date?: string; // can be "2025-04-04" or "2025-04-04,2025-04-08" for round trip
+    round?: boolean;
+  };
 }
-export default function SearchForm({ onSearchAction }: onSearchProps) {
-  const [origin, setOrigin] = useState('');
-  const [destination, setDesti] = useState('');
-  const [departureDate, setDepartureDate] = useState('');
-  const [returnDate, setReturnDate] = useState('');
-  const [isRound, setRound] = useState(false);
+
+export default function SearchForm({ onSearchAction, initialValues }: onSearchProps) {
+  const [origin, setOrigin] = useState(initialValues?.origin || '');
+  const [destination, setDesti] = useState(initialValues?.destination || '');
+  const [departureDate, setDepartureDate] = useState(() => {
+    if (initialValues?.date) return initialValues.date.split(',')[0];
+    return '';
+  });
+  const [returnDate, setReturnDate] = useState(() => {
+    if (initialValues?.round && initialValues?.date) return initialValues.date.split(',')[1] || '';
+    return '';
+  });
+  const [isRound, setRound] = useState(initialValues?.round || false);
 
   const handleSubmit = () => {
     let date;
