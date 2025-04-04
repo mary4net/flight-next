@@ -55,7 +55,7 @@ export function withAuth(handler) {
       }
 
       // verify token
-      const user = await verifyToken(token);
+      const user = verifyToken(token);
       if (!user) {
         return NextResponse.json({ message: "Invalid token" }, { status: 403 });
       }
@@ -79,6 +79,7 @@ export function verifyToken(token) {
   try {
     return jwt.verify(token, process.env.JWT_SECRET);
   } catch (error) {
+    void error;
     return null;
   }
 }

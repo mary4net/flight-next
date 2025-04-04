@@ -1,12 +1,10 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
-import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
+import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
-import Link from 'next/link';
 import { useSimpleToast } from '@/components/ui/use-simple-toast';
 
 
@@ -154,8 +152,8 @@ export default function BookingPage() {
 
       const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
       const hasHotel = infoParam && typeof infoParam === 'object' &&
-            !Array.isArray(infoParam) &&
-            Object.keys(infoParam).length > 0;
+        !Array.isArray(infoParam) &&
+        Object.keys(infoParam).length > 0;
 
       const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
 
@@ -170,8 +168,6 @@ export default function BookingPage() {
         } else {
           setMessage(response.statusText);
         }
-      } else {
-        setMessage("No booking found.");
       }
     } catch (error) {
       setMessage('Error fetching booking.');
@@ -190,7 +186,7 @@ export default function BookingPage() {
         body: JSON.stringify({
           itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
           flights: hasFlight ? infoParam : [],
-          hotelRoom: hasHotel ? infoParam: {},
+          hotelRoom: hasHotel ? infoParam : {},
         }),
       });
 
@@ -219,7 +215,7 @@ export default function BookingPage() {
         body: JSON.stringify({
           id: data.id,
           addFlight: hasFlight ? infoParam : [],
-          addHotel: hasHotel ? infoParam: {},
+          addHotel: hasHotel ? infoParam : {},
         }),
       });
 
@@ -365,13 +361,13 @@ export default function BookingPage() {
                         <p>{booking.room.hotel.name}, {booking.room.hotel.address}</p>
                         <p>Room {booking.room.type}, {formatDate(booking.checkIn)} — {formatDate(booking.checkOut)}</p>
                       </div>
-                    
+
                       {/* Carousel */}
                       {Array.isArray(booking.room.images) && booking.room.images.length > 0 && (
                         <ImageCarousel images={booking.room.images} />
                       )}
                     </div>
-                  </div>                  
+                  </div>
                 )}
 
                 {booking.flights?.length > 0 && (
@@ -398,30 +394,30 @@ export default function BookingPage() {
         </div>
 
         <div className="bg-yellow-50 p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggestions</h2>
-        
-        {suggestions?.hotels?.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {suggestions.hotels.map((hotel, index) => (
-              <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg font-semibold">{hotel.name}</h3>
-                  <p>{hotel.address}, {hotel.city}</p>
-                  <p>Check-in: {formatDate(suggestions.checkIn)}</p>
-                  {hotel.images?.length > 0 && <ImageCarousel images={hotel.images} />}
+          <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggestions</h2>
+
+          {suggestions?.hotels?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {suggestions.hotels.map((hotel, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">{hotel.name}</h3>
+                    <p>{hotel.address}, {hotel.city}</p>
+                    <p>Check-in: {formatDate(suggestions.checkIn)}</p>
+                    {hotel.images?.length > 0 && <ImageCarousel images={hotel.images} />}
+                  </div>
+                  <button
+                    onClick={() => handleHotelRedirect(hotel, suggestions.checkIn)}
+                    className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                  >
+                    View Hotel
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleHotelRedirect(hotel, suggestions.checkIn)}
-                  className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                >
-                  View Hotel
-                </button>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-gray-500 text-center">No hotel suggestions available at the moment.</p>
-        )}
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center">No hotel suggestions available at the moment.</p>
+          )}
 
         {flightSuggestions?.results?.length > 0 ? (
           <>
@@ -431,7 +427,7 @@ export default function BookingPage() {
           <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
         )}
         </div>
-        
+
         {/* <p>{message}</p> */}
         {/* Go to Checkout */}
         <div className="mt-8 text-center">

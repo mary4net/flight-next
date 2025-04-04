@@ -4,6 +4,7 @@ import * as React from "react"
 import { SimpleToast } from "./simple-toast"
 
 interface ToastProps {
+  id: string
   title?: string
   description?: string
   variant?: "default" | "destructive"
