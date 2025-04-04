@@ -345,7 +345,6 @@ export default function BookingPage() {
   return (
     <>
       <Navigation />
-      <p>{message}</p>
       <div className="mt-8 px-4">
         <h1 className="text-6xl font-bold mb-6">Cart</h1>
 
