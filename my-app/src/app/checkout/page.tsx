@@ -41,34 +41,34 @@ export default function Checkout() {
     const { toast } = useSimpleToast();
 
     useEffect(() => {
-        // const checkAuth = async () => {
-        //     try {
-        //       const response = await fetch("/api/users/status", {
-        //         method: "GET",
-        //         credentials: "include",
-        //       });
-        //       if (!response.ok) {
-        //         router.push("/user/login");
-        //         return;
-        //       }
-        //       const data = await response.json();
-        //       if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
-        //         toast({
-        //           title: "Error",
-        //           description: "Please login to manage your booking",
-        //           variant: "destructive",
-        //         });
-        //         router.push("/");
-        //         return;
-        //       }
-        //     } catch (error) {
-        //       console.error("Auth check failed:", error);
-        //       router.push("/user/login");
-        //     }
-        // };
-        // checkAuth();
+        const checkAuth = async () => {
+            try {
+              const response = await fetch("/api/users", {
+                method: "GET",
+                credentials: "include",
+              });
+              if (!response.ok) {
+                router.push("/user/login");
+                return;
+              }
+              const data = await response.json();
+              if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
+                toast({
+                  title: "Error",
+                  description: "Please login to manage your booking",
+                  variant: "destructive",
+                });
+                router.push("/");
+                return;
+              }
+            } catch (error) {
+              console.error("Auth check failed:", error);
+              router.push("/user/login");
+            }
+        };
+        checkAuth();
         fetchBooking();
-    }, [router, toast]);
+    }, []);
 
     const fetchBooking = async (): Promise<void> => {
         try {
@@ -139,6 +139,7 @@ export default function Checkout() {
             const result = await response.json();
             if (response.ok) {
                 setMessage('Payment successful!');
+                router.push('/booking');
             } else {
                 setMessage(result.error || 'Payment failed. Please make sure the inputs are all in valid format.');
             }

@@ -18,6 +18,7 @@ export default function FlightSearchPage() {
 			destination: string;
 			date: string;
 			round: boolean;
+			arrive?: string;
 		}
 	) => {
 		// Fetch flights from API
@@ -42,13 +43,21 @@ export default function FlightSearchPage() {
 		const destination = searchParams.get('destination');
 		const departTime = searchParams.get('departTime');
 		const roundParam = searchParams.get('round');
+		let arrive = '';
+		let date = '';
 		if (roundParam === 'true') {
-			// set arrival time
+			arrive = searchParams.get('arrivalTime') || '';
+			if (!origin || !destination || !departTime || !arrive) return;
+		  
+			const departDate = departTime.split('T')[0];  // Extract "YYYY-MM-DD"
+			const arriveDate = arrive.split('T')[0];      // Extract "YYYY-MM-DD"
+			date = `${departDate},${arriveDate}`;
+		  } else {
+			if (!origin || !destination || !departTime) return;
+		  
+			const departDate = departTime.split('T')[0];
+			date = departDate;
 		}
-	  
-		if (!origin || !destination || !departTime) return;
-	  
-		const date = departTime.split('T')[0]; // Get YYYY-MM-DD
 		const round = roundParam === 'true';
 	  
 		handleSearch({ origin, destination, date, round });
