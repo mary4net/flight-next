@@ -1,25 +1,19 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+export default {
   images: {
     domains: [
       'external-content.duckduckgo.com',
       'static.vecteezy.com',
       'images.unsplash.com',
       'img.freepik.com',
-      'cdn.pixabay.com'
+      'cdn.pixabay.com',
+      'images.pexels.com',
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'external-content.duckduckgo.com',
+        pathname: '/iu/**',
+      },
     ],
   },
 };
-
-export default nextConfig;
-module.exports = {
-	images: {
-		remotePatterns: [
-			{
-				protocol: 'https',
-				hostname: 'external-content.duckduckgo.com',
-				pathname: '/iu/**',  // Adjust based on the specific image URL pattern
-			},
-		],
-	},
-}

@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: flynext-db
+    restart: always
+    environment:
+      POSTGRES_USER: flynext
+      POSTGRES_PASSWORD: flynextpass
+      POSTGRES_DB: flynextdb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flynext"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://flynext:flynextpass@db:5432/flynextdb
+    command: ["sh", "-c", "npx prisma migrate deploy && npx prisma db seed && npm run dev"]
+
+volumes:
+  pgdata:
