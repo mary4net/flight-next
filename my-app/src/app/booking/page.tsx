@@ -4,6 +4,8 @@ import { JSX, useEffect, useState } from 'react';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
+import { useSimpleToast } from "@/components/ui/use-simple-toast";
+import { useRouter } from "next/navigation";
 
 
 interface Booking { 
@@ -35,10 +37,38 @@ export default function Records() {
   const [expanded, setExpanded] = useState<number | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [popupContent, setPopupContent] = useState<JSX.Element | null>(null);
+  const router = useRouter();
+  const { toast } = useSimpleToast();
 
   useEffect(() => {
+    // const checkAuth = async () => {
+    //     try {
+    //       const response = await fetch("/api/users/status", {
+    //         method: "GET",
+    //         credentials: "include",
+    //       });
+    //       if (!response.ok) {
+    //         router.push("/user/login");
+    //         return;
+    //       }
+    //       const data = await response.json();
+    //       if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
+    //         toast({
+    //           title: "Error",
+    //           description: "Please login to manage your booking",
+    //           variant: "destructive",
+    //         });
+    //         router.push("/");
+    //         return;
+    //       }
+    //     } catch (error) {
+    //       console.error("Auth check failed:", error);
+    //       router.push("/user/login");
+    //     }
+    // };
+    // checkAuth();
     fetchBooking();
-  }, [bookings]);
+  }, [bookings, router, toast]);
 
   const fetchBooking = async (): Promise<void> => {
     try {
@@ -150,7 +180,7 @@ export default function Records() {
   return (
     <>
     <Navigation />
-    <p>{message}</p>
+    {/* <p>{message}</p> */}
     {popupContent && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
         <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full mx-4 text-center">
@@ -167,7 +197,10 @@ export default function Records() {
     <div className="bg-gray-300 text-black shadow-2xl rounded-lg p-6 min-h-screen max-w-4xl mx-auto mt-6">
         <h1 className="text-center text-black text-2xl font-bold mb-6 font-helvetica">My Bookings</h1>
 
-        {sortedBookings.map((booking, index) => (
+        {sortedBookings.length === 0 ? (
+            <p className="text-gray-500 text-center py-6">No bookings found.</p>
+        ) : (
+        sortedBookings.map((booking, index) => (
         <div
             key={booking.id}
             className={`border rounded-lg mb-4 p-4 shadow ${
@@ -276,11 +309,12 @@ export default function Records() {
                 </div>
             </div>
             )}
+            
         </div>
-        ))}
+        )) 
+        )}
 
     </div>
-
     </>
   );
 }
