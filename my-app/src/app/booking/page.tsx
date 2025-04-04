@@ -38,7 +38,7 @@ export default function Records() {
 
   useEffect(() => {
     fetchBooking();
-  }, []);
+  }, [bookings]);
 
   const fetchBooking = async (): Promise<void> => {
     try {
@@ -63,10 +63,7 @@ export default function Records() {
   const verifyFlight = async (id: number) => {
     const res = await fetch(`/api/records/${id}/verify`, { method: 'GET' });
     const result = await res.json();
-    // const result = {
-    //     "bookStatus": "CONFIRMED",
-    //     "flightsStatus": ["CONFIRMED"]
-    // }
+
     const popup = (
         <div className="text-left">
           <h2 className="text-lg font-semibold mb-2">Booking Status: <span className="text-blue-600">{result.bookStatus}</span></h2>

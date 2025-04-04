@@ -37,7 +37,7 @@ export default function Checkout() {
 
     useEffect(() => {
         fetchBooking();
-    }, [message]);
+    }, []);
 
     const fetchBooking = async (): Promise<void> => {
         try {
@@ -172,9 +172,9 @@ export default function Checkout() {
                         <p>Room {bookings.room.type}, {formatDate(bookings.checkIn)} — {formatDate(bookings.checkOut)}</p>
                     </li>
                 )}
-                {bookings.flights && bookings.flights.map(flight => (
-                    <li key={flight.id} className="flex justify-between py-2">
-                        <p><strong>Price:</strong> ${flight.flightCost.toFixed(2)}</p>
+                {bookings.flights && bookings.flights.map((flight, index) => (
+                    <li key={`${flight.airline}-${flight.departureTime}-${flight.id}`} className="flex justify-between py-2">
+                        <p><strong>Price: ${flight.flightCost.toFixed(2)}</strong></p>
                         <p>{extractName(flight.airline)}</p>
                         <p>{extractName(flight.origin)} → {extractName(flight.destination)}</p>
                         <p>{formatDate(flight.departureTime)} — {formatDate(flight.arrivalTime)}</p>

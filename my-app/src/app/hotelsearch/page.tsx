@@ -5,7 +5,7 @@ import dynamic from "next/dynamic"; // Import Next.js dynamic module
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import Navigation from '@/components/ui/navigation';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 // Dynamically import Leaflet components with no SSR
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
@@ -15,6 +15,7 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), { 
 
 const HotelSearchPage = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [priceFilterVisible, setPriceFilterVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchRoomType, setSearchRoomType] = useState('');
@@ -30,6 +31,25 @@ const HotelSearchPage = () => {
     const [city, setCity] = useState<string | "">("");
     const [uniqueHotels, setUniqueHotels] = useState<any[]>([]);
     const [selectedHotelRooms, setSelectedHotelRooms] = useState<any[]>([]);
+
+    useEffect(() => {
+        const name = searchParams.get('name');
+        const city = searchParams.get('city');
+        const checkIn = searchParams.get('checkIn');
+        const rating = searchParams.get('starRating');
+    
+        if (name) setSearchTerm(name);
+        if (city) setCity(city);
+        if (checkIn) {
+            const date = new Date(checkIn);
+            if (!isNaN(date.getTime())) {
+              // Format to YYYY-MM-DD for date input
+              const formatted = date.toISOString().split('T')[0];
+              setCheckInDate(formatted);
+            }
+          }
+        if (rating && !isNaN(Number(rating))) setStarRating(Number(rating));
+    }, [searchParams]);
 
     const fetchHotelRooms = async (hotelId: number, checkIn: string, checkOut: string) => {
         const params = new URLSearchParams();
