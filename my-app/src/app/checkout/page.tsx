@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import Navigation from '@/components/ui/navigation';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
-import { useSimpleToast } from "@/components/ui/use-simple-toast";
 import { useRouter } from "next/navigation";
 
 
@@ -38,30 +37,23 @@ export default function Checkout() {
     const lastExpiryRef = useRef<string>('');
     const [message, setMessage] = useState<string | null>(null);
     const router = useRouter();
-    const { toast } = useSimpleToast();
 
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await fetch("/api/users", {
-                    method: "GET",
-                    credentials: "include",
-                });
-                if (!response.ok) {
-                    router.push("/user/login");
-                    return;
-                }
-                const data = await response.json();
-                if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
-                    toast({
-                        id: "id",
-                        title: "Error",
-                        description: "Please login to manage your booking",
-                        variant: "destructive",
-                    });
-                    router.push("/");
-                    return;
-                }
+              const response = await fetch("/api/users", {
+                method: "GET",
+                credentials: "include",
+              });
+              if (!response.ok) {
+                router.push("/user/login");
+                return;
+              }
+              const data = await response.json();
+              if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
+                router.push("/");
+                return;
+              }
             } catch (error) {
                 console.error("Auth check failed:", error);
                 router.push("/user/login");
