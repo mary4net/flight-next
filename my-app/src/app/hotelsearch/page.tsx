@@ -6,6 +6,7 @@ import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import Navigation from '@/components/ui/navigation';
 import { useRouter, useSearchParams } from 'next/navigation';
+import ImageCarousel from '@/components/ui/img';
 
 // Dynamically import Leaflet components with no SSR
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
@@ -37,17 +38,17 @@ const HotelSearchPage = () => {
         const city = searchParams.get('city');
         const checkIn = searchParams.get('checkIn');
         const rating = searchParams.get('starRating');
-    
+
         if (name) setSearchTerm(name);
         if (city) setCity(city);
         if (checkIn) {
             const date = new Date(checkIn);
             if (!isNaN(date.getTime())) {
-              // Format to YYYY-MM-DD for date input
-              const formatted = date.toISOString().split('T')[0];
-              setCheckInDate(formatted);
+                // Format to YYYY-MM-DD for date input
+                const formatted = date.toISOString().split('T')[0];
+                setCheckInDate(formatted);
             }
-          }
+        }
         if (rating && !isNaN(Number(rating))) setStarRating(Number(rating));
     }, [searchParams]);
 
@@ -385,10 +386,8 @@ const HotelSearchPage = () => {
                                             onClick={() => openSelectedHotel(eachhotel)}
                                         >
                                             <div className="relative h-48">
-                                                <img
-                                                    src={eachhotel.hotel.logo || '/default-hotel.jpg'}
-                                                    alt={eachhotel.hotel.name}
-                                                    className="w-full h-full object-cover"
+                                                <ImageCarousel
+                                                    images={[eachhotel.hotel.logo || '/default-hotel.jpg']}
                                                 />
                                                 <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 px-3 py-1 rounded-full shadow-md">
                                                     <span className="text-yellow-500">{"★".repeat(eachhotel.hotel.starRating)}</span>
