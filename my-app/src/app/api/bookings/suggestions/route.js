@@ -36,7 +36,7 @@ async function getSuggestions(request) {
                 where: { city: flightDestination },
                 orderBy: [{ starRating: "desc" }],
             });
-            return NextResponse.json({hotels, checkIn: userChoiceDate ? new Date(userChoiceDate) : null}, { status: 200 });
+            return NextResponse.json({hotels, checkIn: userChoiceDate ? new Date(userChoiceDate) : new Date()}, { status: 200 });
 
         case "HOTEL_RESERVATION":
             if (!userChoiceLocation || !location || !userChoiceDate) {
