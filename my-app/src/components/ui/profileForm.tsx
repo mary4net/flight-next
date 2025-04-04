@@ -114,6 +114,19 @@ export default function ProfileForm(
 							<p className="text-lg font-medium text-gray-900 dark:text-white">{lastName}</p>
 						</div>
 					</div>
+					<div className="flex justify-center">
+						<Button
+							onClick={() => {
+								handleSubmit();
+							}}
+							className="px-6"
+						>
+							Edit Profile
+						</Button>
+					</div>
+					<div className="flex justify-center">
+						<LogoutButton />
+					</div>
 				</div>
 			) : (
 				<form onSubmit={(e) => {
@@ -184,6 +197,10 @@ export default function ProfileForm(
 					<div className="flex justify-center space-x-4 pt-4">
 						<Button
 							type="submit"
+							onClick={() => {
+								setDoUpdate(true);
+								handleSubmit();
+							}}
 							className="px-6"
 						>
 							Save Changes
@@ -203,24 +220,6 @@ export default function ProfileForm(
 				</form>
 			)}
 
-			{mode === "view" && (
-				<>
-					<div className="flex justify-center">
-						<Button
-							onClick={() => {
-								setDoUpdate(mode === 'edit');
-								handleSubmit();
-							}}
-							className="px-6"
-						>
-							Edit Profile
-						</Button>
-					</div>
-					<div className="flex justify-center">
-						<LogoutButton />
-					</div>
-				</>
-			)}
 		</div>
 	);
 }

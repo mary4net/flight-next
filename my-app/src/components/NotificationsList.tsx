@@ -5,6 +5,7 @@ interface Notification {
   id: number;
   message: string;
   isRead: boolean;
+  createdAt: Date;
 }
 
 const NotificationsList = () => {
@@ -20,7 +21,7 @@ const NotificationsList = () => {
   }, []);
 
   const markAsRead = async (id: number) => {
-    await fetch(`/api/notification/${id}`, {
+    await fetch(`/api/notifications/${id}`, {
       method: "PUT",
     });
 
@@ -32,29 +33,31 @@ const NotificationsList = () => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold">Notifications</h2>
+    <div className="space-y-4 max-w-md sm:max-w-2xl lg:max-w-4xl mx-auto">
       {notifications.length === 0 ? (
-        <p>No notifications available.</p>
+        <p className="text-gray-500">No notifications available.</p>
       ) : (
         <ul>
           {notifications.map((notification) => (
             <li
               key={notification.id}
-              className={`p-4 rounded-md mb-2 ${notification.isRead ? "bg-gray-200" : "bg-blue-100"
-                }`}
+              className={`relative p-4 rounded-md shadow-md mb-4 ${notification.isRead ? "bg-gray-200" : "bg-blue-100"}`}
             >
-              <div className="flex justify-between">
-                <span>{notification.message}</span>
-                {!notification.isRead && (
-                  <button
-                    onClick={() => markAsRead(notification.id)}
-                    className="bg-blue-500 text-white p-2 rounded-md"
-                  >
-                    Mark as read
-                  </button>
-                )}
+              <div className="flex justify-between items-center">
+                <span className="text-sm">{notification.message}</span>
+                <span className="absolute bottom-2 right-2 text-xs text-gray-400">
+                  {new Date(notification.createdAt).toLocaleString()}
+                </span>
               </div>
+
+              {!notification.isRead && (
+                <button
+                  onClick={() => markAsRead(notification.id)}
+                  className="mt-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-md hover:bg-blue-600 transition-colors"
+                >
+                  Mark as read
+                </button>
+              )}
             </li>
           ))}
         </ul>
