@@ -26,7 +26,7 @@ interface Flight {
   arrivalTime: string;
   availableSeats: number;
   currency: string;
-  price: number;
+  flightCost: number;
   status: string;
   duration: number;
   origin: {
@@ -36,6 +36,7 @@ interface Flight {
     name: string;
   };
   destination: {
+    split(arg0: string): unknown;
     city: string;
     code: string;
     country: string;
@@ -127,10 +128,12 @@ export default function BookingPage() {
             !Array.isArray(infoParam) &&
             Object.keys(infoParam).length > 0;
 
+      const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
+
       if (response.ok) {
         setBooking(data);
         if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
-          handleCreateBooking(Boolean(hasHotel), Boolean(hasFlights));
+          handleCreateBooking(Boolean(hasHotel), Boolean(hasFlights), numFlight);
         } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
           handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
         } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
@@ -148,7 +151,7 @@ export default function BookingPage() {
     }
   };
 
-  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean) => {
+  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
     if (!hasHotel && !hasFlight) return;
 
     try {
@@ -156,7 +159,7 @@ export default function BookingPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          itinerary: 'HOTEL_RESERVATION',
+          itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
           flights: hasFlight ? infoParam : [],
           hotelRoom: hasHotel ? infoParam: {},
         }),
@@ -169,7 +172,7 @@ export default function BookingPage() {
         setBooking(data);
         fetchSuggestions("Shanghai", data);
       } else {
-        setMessage("Error creating booking.");
+        setMessage(response.statusText || 'Error creating booking.');
       }
     } catch (error) {
       const err = error as Error;
@@ -207,7 +210,7 @@ export default function BookingPage() {
   const fetchSuggestions = async (origin: string, data: Booking) => {
     if (!data) return;
 
-    const date = data.checkIn ? data.checkIn : data.flights[0]?.arrivalTime ? data.flights[0].arrivalTime : '';
+    const date = data.checkIn ? data.checkIn : '';
     try {
       const itinerary = data.itinerary ?? '';
       const hasFlights = data.flights?.length > 0;
@@ -218,7 +221,12 @@ export default function BookingPage() {
       });
 
       if (hasFlights) {
-        params.append('flightDestination', data.flights[0].destination.city);
+        let city = '';
+        const parts = data.flights[0].destination?.split(',').map((s: string) => s.trim());
+        if (parts.length >= 3) {
+          city = parts[2];
+        }
+        params.append('flightDestination', city);
         params.append('date', data.flights[0].arrivalTime);
       } else {
         params.append('hotel', data.room?.hotel.name ?? '');
@@ -252,6 +260,48 @@ export default function BookingPage() {
   const handleCheckout = () => {
     router.push('/checkout');
   };
+
+  const handleFlightRedirect = (flights: Flight[]) => {
+    const round = flights.length === 2;
+
+    const params = new URLSearchParams();
+
+    const origin = flights[0].origin.city;
+    const departTime = flights[0].departureTime;
+
+    if (round) {
+      const destination = flights[1].destination.city;
+      const arrivalTime = flights[1].arrivalTime;
+
+      params.append("origin", origin);
+      params.append("destination", destination);
+      params.append("departTime", departTime);
+      params.append("arrivalTime", arrivalTime);
+    } else {
+      const destination = flights[0].destination.city;
+      const arrivalTime = flights[0].arrivalTime;
+
+      params.append("origin", origin);
+      params.append("destination", destination);
+      params.append("departTime", departTime);
+      params.append("arrivalTime", arrivalTime);
+    }
+
+    params.append("round", String(round));
+
+    router.push(`/flight?${params.toString()}`);
+  }
+
+  const handleHotelRedirect = (hotel: Hotel, checkIn: string) => {
+    const params = new URLSearchParams({
+      name: hotel.name,
+      city: hotel.city,
+      starRating: hotel.starRating.toString(),
+      checkIn: checkIn,
+    });
+
+    router.push(`/hotelsearch?${params.toString()}`);
+  }
 
   if (loading)
     return (
@@ -298,11 +348,11 @@ export default function BookingPage() {
                   <div className="bg-white p-4 rounded-lg border shadow space-y-4 md:w-1/2">
                     <h3 className="text-lg font-semibold">Flights</h3>
 
-                    {booking.flights.map(flight => (
-                      <div key={flight.id} className="border-b pb-3">
-                        <p><strong>Price:</strong> ${flight.price.toFixed(2)}</p>
+                    {booking.flights.map((flight, index) => (
+                      <div key={`${flight.flightNumber}-${flight.departureTime}`} className="border-b pb-3">
+                        <p><strong>Price:</strong> ${flight.flightCost.toFixed(2)}</p>
                         <p>{flight.airline.name}</p>
-                        <p>{flight.origin.city} → {flight.destination.city}</p>
+                        <p>{flight.origin} → {flight.destination}</p>
                         <p>{formatDate(flight.departureTime)} — {formatDate(flight.arrivalTime)}</p>
                       </div>
                     ))}
@@ -320,10 +370,32 @@ export default function BookingPage() {
         <div className="bg-yellow-50 p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggestions</h2>
         
+        {suggestions?.hotels?.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {suggestions.hotels.map((hotel, index) => (
+              <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg font-semibold">{hotel.name}</h3>
+                  <p>{hotel.address}, {hotel.city}</p>
+                  <p>Check-in: {formatDate(suggestions.checkIn)}</p>
+                  {hotel.images?.length > 0 && <ImageCarousel images={hotel.images} />}
+                </div>
+                <button
+                  onClick={() => handleHotelRedirect(hotel, suggestions.checkIn)}
+                  className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                >
+                  View Hotel
+                </button>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center">No hotel suggestions available at the moment.</p>
+        )}
 
         {flightSuggestions?.results?.length > 0 ? (
           <>
-            <FlightResults searchResults={flightSuggestions} />
+            <FlightResults searchResults={flightSuggestions} onAddToCart={handleFlightRedirect} />
           </>
         ) : (
           <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
