@@ -4,6 +4,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 RUN npm install -g dotenv-cli
+RUN npm install date-fns react-day-picker @radix-ui/react-label
 RUN npm install lucide-react
 RUN npm install pdf-lib
 RUN npm install ts-node

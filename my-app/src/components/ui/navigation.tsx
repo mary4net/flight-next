@@ -1,19 +1,19 @@
 'use client';
 
 
+import * as React from "react"
 import { useState, useEffect } from 'react';
 import {
     Sun, Moon, ShoppingCart,
-    User, Plane, Hotel, Building, Bell
+    User, Plane, Bell
 } from 'lucide-react';
 import Link from 'next/link';
 import { useUser } from "@/hook/useUser";
 import { useTheme } from '@/components/ui/context';
 import LogoutButton from '@/components/ui/LogoutButton';
 
-interface NavigationProps { }
 
-export default function Navigation({ }: NavigationProps): JSX.Element {
+export default function Navigation() {
     const { user } = useUser();
     const [darkMode, toggleDarkMode] = useTheme();
     const [isHotelOwner, setIsHotelOwner] = useState(false);
