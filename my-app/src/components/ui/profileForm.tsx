@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import ImageCarousel from '@/components/ui/img';
+import LogoutButton from '@/components/ui/LogoutButton';
 
 interface ProfileFormProps {
 	mode: 'edit' | 'view'
@@ -203,17 +204,22 @@ export default function ProfileForm(
 			)}
 
 			{mode === "view" && (
-				<div className="flex justify-center">
-					<Button
-						onClick={() => {
-							setDoUpdate(mode === 'edit');
-							handleSubmit();
-						}}
-						className="px-6"
-					>
-						Edit Profile
-					</Button>
-				</div>
+				<>
+					<div className="flex justify-center">
+						<Button
+							onClick={() => {
+								setDoUpdate(mode === 'edit');
+								handleSubmit();
+							}}
+							className="px-6"
+						>
+							Edit Profile
+						</Button>
+					</div>
+					<div className="flex justify-center">
+						<LogoutButton />
+					</div>
+				</>
 			)}
 		</div>
 	);
