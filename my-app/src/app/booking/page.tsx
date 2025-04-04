@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { JSX, useEffect, useState } from 'react';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
@@ -61,7 +62,7 @@ export default function Records() {
         };
         checkAuth();
         fetchBooking();
-    }, [bookings]);
+    }, [bookings, router, toast]);
 
     const fetchBooking = async (): Promise<void> => {
         try {
