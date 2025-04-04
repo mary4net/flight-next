@@ -2,7 +2,7 @@
 import * as React from "react"
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import Button from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import ImageCarousel from '@/components/ui/img';
 import LogoutButton from '@/components/ui/LogoutButton';
 

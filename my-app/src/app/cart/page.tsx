@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Navigation from '@/components/ui/navigation';
@@ -6,7 +7,7 @@ import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
 import { useSimpleToast } from '@/components/ui/use-simple-toast';
-
+import { Suspense } from 'react';
 
 
 interface HotelRoom {
@@ -344,7 +345,7 @@ export default function BookingPage() {
     );
 
   return (
-    <>
+    <Suspense fallback={<div>Loading...</div>}>
       <Navigation />
       <div className="mt-8 px-4">
         <h1 className="text-6xl font-bold mb-6">Cart</h1>
@@ -442,6 +443,6 @@ export default function BookingPage() {
           </button>
         </div>
       </div>
-    </>
+    </Suspense>
   );
 }
