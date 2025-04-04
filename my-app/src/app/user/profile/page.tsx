@@ -2,32 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import Link from "next/link";
+import { useUser } from "@/hook/useUser";
 import ProfileForm from '@/components/ui/profileForm';
 import Navigation from "@/components/ui/navigation";
 
 export default function ProfilePage() {
 	const [mode, setMode] = useState<'edit' | 'view'>('view');
-	const [user, setUser] = useState<
-		{
-			email: string;
-			password: string;
-			firstName: string;
-			lastName: string;
-			phoneNumber: string;
-			profilePicture?: string
-		} | null>(null);
+	const { user, setUser } = useUser();
 	const [message, setMessage] = useState<string | null>(null);
-
-	useEffect(() => {
-		// get profile info of curr user
-		fetch('/api/users', { cache: "no-store", method: 'GET' })
-			.then((res) => res.json())
-			.then((data) => {
-				console.log("Fetched user data:", data);
-				setUser(data.user)
-			})
-			.catch((error) => console.error('Error fetching profile:', error));
-	}, []);
 
 
 	const handleUpdate = async (
@@ -89,7 +71,7 @@ export default function ProfilePage() {
 									<p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
 										You are not logged in. Please login to continue.
 									</p>
-									<Link 
+									<Link
 										href="/user/login"
 										className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
 									>
@@ -98,11 +80,10 @@ export default function ProfilePage() {
 								</div>
 							)}
 							{message && (
-								<div className={`mt-6 p-4 rounded-lg text-center ${
-									message.includes('successful') 
-										? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200' 
-										: 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
-								}`}>
+								<div className={`mt-6 p-4 rounded-lg text-center ${message.includes('successful')
+									? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200'
+									: 'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200'
+									}`}>
 									{message}
 								</div>
 							)}

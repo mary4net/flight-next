@@ -1,32 +1,29 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
-import { Sun, Moon, ShoppingCart, User, Plane, Hotel, Building } from 'lucide-react';
+import {
+    Sun, Moon, ShoppingCart,
+    User, Plane, Hotel, Building, Bell
+} from 'lucide-react';
 import Link from 'next/link';
+import { useUser } from "@/hook/useUser";
 import { useTheme } from '@/components/ui/context';
+import LogoutButton from '@/components/ui/LogoutButton';
 
 interface NavigationProps { }
 
 export default function Navigation({ }: NavigationProps): JSX.Element {
+    const { user } = useUser();
     const [darkMode, toggleDarkMode] = useTheme();
     const [isHotelOwner, setIsHotelOwner] = useState(false);
 
     // Check if the user is a hotel owner
     useEffect(() => {
-        const checkUserRole = async () => {
-            try {
-                const response = await fetch('/api/users/me');
-                if (response.ok) {
-                    const userData = await response.json();
-                    setIsHotelOwner(userData.role === 'HOTEL_OWNER');
-                }
-            } catch (error) {
-                console.error('Error checking user role:', error);
-            }
-        };
-
-        checkUserRole();
-    }, []);
+        if (user) {
+            setIsHotelOwner(user.role === 'HOTEL_OWNER');
+        }
+    }, [user]);
 
     return (
         <nav className={`fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-opacity-90 ${darkMode ? 'bg-gray-900/90' : 'bg-white/90'
@@ -117,15 +114,25 @@ export default function Navigation({ }: NavigationProps): JSX.Element {
                         </button>
 
                         <Link
-                            href="/user/profile"
-                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${darkMode
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'bg-blue-600 text-white hover:bg-blue-700'
-                                }`}
-                        >
-                            <User size={20} />
-                            <span className="text-sm font-medium">Profile</span>
+                            href="/notification">
+                            <button className="bg-blue-500 text-white px-3 py-2 rounded-md hover:bg-blue-700">
+                                <Bell size={20} />
+                            </button>
                         </Link>
+
+                        <Link href={user ? "/user/profile" : "/user/login"}>
+                            <button
+                                className={`flex items-center justify-center space-x-2 px-3 py-2 rounded-lg transition-colors ${darkMode ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-600 text-white hover:bg-blue-700'
+                                    }`}
+                            >
+                                <User size={20} />
+                                <span className="text-sm font-medium hidden sm:inline">Profile</span>
+                            </button>
+                        </Link>
+                        {user ?
+                            (<LogoutButton isRed={true} />)
+                            : (<LogoutButton isRed={false} />)
+                        }
                     </div>
 
                     {/* Mobile Menu Button */}
