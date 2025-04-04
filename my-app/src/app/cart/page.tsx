@@ -6,11 +6,7 @@ import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
-<<<<<<< HEAD
-import { useSimpleToast } from '@/components/ui/use-simple-toast';
 import { Suspense } from 'react';
-=======
->>>>>>> 8dc4de75b3c89fc43274a259fd6a63f8ebec4fdf
 
 
 interface HotelRoom {
