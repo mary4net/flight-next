@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Flight } from "@/components/search/flightResults"
 import SearchForm from "@/components/search/searchForm";
 import FlightResults from "@/components/search/flightResults";
@@ -9,6 +9,7 @@ import Navigation from "@/components/ui/navigation";
 
 export default function FlightSearchPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const [searchResults, setSearchResults] = useState({ results: [] });
 
 	const handleSearch = (searchParams:
@@ -35,6 +36,23 @@ export default function FlightSearchPage() {
 		// Navigate to cart page with the parameters
 		router.push(`/cart?${params.toString()}`);
 	};
+
+	useEffect(() => {
+		const origin = searchParams.get('origin');
+		const destination = searchParams.get('destination');
+		const departTime = searchParams.get('departTime');
+		const roundParam = searchParams.get('round');
+		if (roundParam === 'true') {
+			// set arrival time
+		}
+	  
+		if (!origin || !destination || !departTime) return;
+	  
+		const date = departTime.split('T')[0]; // Get YYYY-MM-DD
+		const round = roundParam === 'true';
+	  
+		handleSearch({ origin, destination, date, round });
+	}, [searchParams]);
 
 
 

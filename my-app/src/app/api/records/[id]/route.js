@@ -206,28 +206,32 @@ async function cancelBooking(request) {
                         flights: true
                     },
                     data: {
-                        itinerary: booking.itinerary === "HOTEL_RESERVATION",
-                        flightCost: 0
+                        itinerary: booking.itinerary.includes("AND") ? "HOTEL_RESERVATION": booking.itinerary,
                     }
                 });
+   
+                const invoiceToUpdate = await prisma.invoice.findFirst({
+                    where: { bookingId: updatedBooking.id }
+                  });
 
-                await prisma.invoice.update({
-                    where: {
-                        bookingId: updatedBooking.id
-                    },
-                    data: {
-                        refundAmount: (refundAmount ?? 0) + (invoice.flightCost ?? 0),
+                if (invoiceToUpdate) {
+                    await prisma.invoice.update({
+                      where: { id: invoiceToUpdate.id },
+                      data: {
+                        refundAmount: (invoiceToUpdate.refundAmount ?? 0) + (invoiceToUpdate.flightCost ?? 0),
                         status: "REFUNDED"
-                    }
-                });
-
-                updatedBooking.flights.forEach(async (flight) => {
-                    await prisma.flight.delete({
-                        where: {
-                            id: flight.id
-                        }
+                      }
                     });
-                });
+                }
+
+                for (const flight of updatedBooking.flights) {
+                    await prisma.flight.delete({
+                      where: {
+                        flightId: flight.flightId
+                      }
+                    });
+                }    
+             
 
                 let response = await fetch('https://advanced-flights-system.replit.app/api/bookings/cancel', {
                     method: 'POST',
