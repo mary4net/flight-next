@@ -6,6 +6,8 @@ import { Flight } from "@/components/search/flightResults"
 import SearchForm from "@/components/search/searchForm";
 import FlightResults from "@/components/search/flightResults";
 import Navigation from "@/components/ui/navigation";
+import { Suspense } from 'react';
+
 
 export default function FlightSearchPage() {
 	const router = useRouter();
@@ -48,25 +50,25 @@ export default function FlightSearchPage() {
 		if (roundParam === 'true') {
 			arrive = searchParams.get('arrivalTime') || '';
 			if (!origin || !destination || !departTime || !arrive) return;
-		  
+
 			const departDate = departTime.split('T')[0];  // Extract "YYYY-MM-DD"
 			const arriveDate = arrive.split('T')[0];      // Extract "YYYY-MM-DD"
 			date = `${departDate},${arriveDate}`;
-		  } else {
+		} else {
 			if (!origin || !destination || !departTime) return;
-		  
+
 			const departDate = departTime.split('T')[0];
 			date = departDate;
 		}
 		const round = roundParam === 'true';
-	  
+
 		handleSearch({ origin, destination, date, round });
 	}, [searchParams]);
 
 
 
 	return (
-		<>
+		<Suspense fallback={<div>Loading...</div>}>
 			<Navigation />
 			<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
 				<SearchForm onSearchAction={handleSearch} />
@@ -74,7 +76,7 @@ export default function FlightSearchPage() {
 					onAddToCart={handleAddToCart}
 				/>
 			</div>
-		</>
+		</Suspense>
 	)
 }
 

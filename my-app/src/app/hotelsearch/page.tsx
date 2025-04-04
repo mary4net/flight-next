@@ -6,7 +6,8 @@ import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import Navigation from '@/components/ui/navigation';
 import { useRouter, useSearchParams } from 'next/navigation';
-import ImageCarousel from '@/components/ui/img';
+import Image from "next/image";
+import { Suspense } from 'react';
 
 // Dynamically import Leaflet components with no SSR
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
@@ -245,7 +246,7 @@ const HotelSearchPage = () => {
     };
 
     return (
-        <>
+        <Suspense fallback={<div>Loading...</div>}>
             <Navigation />
             <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
                 <div className="container mx-auto px-4 py-8">
@@ -386,8 +387,10 @@ const HotelSearchPage = () => {
                                             onClick={() => openSelectedHotel(eachhotel)}
                                         >
                                             <div className="relative h-48">
-                                                <ImageCarousel
-                                                    images={[eachhotel.hotel.logo || '/default-hotel.jpg']}
+                                                <Image
+                                                    src={eachhotel.hotel.logo || '/default-hotel.jpg'}
+                                                    alt={eachhotel.hotel.name}
+                                                    className="w-full h-full object-cover"
                                                 />
                                                 <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 px-3 py-1 rounded-full shadow-md">
                                                     <span className="text-yellow-500">{"★".repeat(eachhotel.hotel.starRating)}</span>
@@ -427,7 +430,7 @@ const HotelSearchPage = () => {
 
                                 {/* Hotel Header */}
                                 <div className="relative h-72 bg-gray-200 dark:bg-gray-800">
-                                    <img
+                                    <Image
                                         src={selectedHotel.hotel.logo || '/default-hotel.jpg'}
                                         alt={selectedHotel.hotel.name}
                                         className="w-full h-full object-cover"
@@ -567,7 +570,7 @@ const HotelSearchPage = () => {
                     )}
                 </div>
             </div>
-        </>
+        </Suspense>
     );
 };
 
