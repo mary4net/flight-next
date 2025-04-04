@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import AuthForm from '@/components/ui/AuthForm';
-import Button from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import Navigation from "@/components/ui/navigation";
 
 export default function AuthPage() {
