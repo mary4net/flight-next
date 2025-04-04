@@ -36,18 +36,18 @@ interface Flight {
     code: string;
     country: string;
     name: string;
-  };
+  } | string;
   destination: {
     split(arg0: string): unknown;
     city: string;
     code: string;
     country: string;
     name: string;
-  };
+  } | string;
   airline: {
     code: string;
     name: string;
-  };
+  } | string;
 }
 
 interface Booking {
@@ -166,9 +166,9 @@ export default function BookingPage() {
         } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
           handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
         } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
-          fetchSuggestions("Shanghai", data);
+          fetchSuggestions("Toronto", data);
         } else {
-          setMessage(response.error);
+          setMessage(response.statusText);
         }
       } else {
         setMessage("No booking found.");
@@ -199,7 +199,7 @@ export default function BookingPage() {
       if (response.ok) {
         setInfoParam(null);
         setBooking(data);
-        fetchSuggestions("Shanghai", data);
+        fetchSuggestions("Toronto", data);
       } else {
         setMessage(response.statusText || 'Error creating booking.');
       }
@@ -227,7 +227,7 @@ export default function BookingPage() {
       if (response.ok) {
         setInfoParam(null);
         setBooking(res);
-        fetchSuggestions("Shanghai", res);
+        fetchSuggestions("Toronto", res);
       } else {
         setMessage("Could not update booking, please try again.");
       }
@@ -251,9 +251,11 @@ export default function BookingPage() {
 
       if (hasFlights) {
         let city = '';
-        const parts = data.flights[0].destination?.split(',').map((s: string) => s.trim());
-        if (parts.length >= 3) {
-          city = parts[2];
+        if (typeof data.flights[0].destination === "string") {
+          const parts = data.flights[0].destination.split(',').map((s: string) => s.trim());
+          if (parts.length >= 3) {
+            city = parts[2];
+          }
         }
         params.append('flightDestination', city);
         params.append('date', data.flights[0].arrivalTime);
@@ -295,11 +297,11 @@ export default function BookingPage() {
 
     const params = new URLSearchParams();
 
-    const origin = flights[0].origin.city;
+    const origin = typeof flights[0].origin === "object" ? flights[0].origin.city : "";
     const departTime = flights[0].departureTime;
 
     if (round) {
-      const destination = flights[1].destination.city;
+      const destination = typeof flights[1].destination === "object" ? flights[1].destination.city : "";
       const arrivalTime = flights[1].arrivalTime;
 
       params.append("origin", origin);
@@ -307,7 +309,7 @@ export default function BookingPage() {
       params.append("departTime", departTime);
       params.append("arrivalTime", arrivalTime);
     } else {
-      const destination = flights[0].destination.city;
+      const destination = typeof flights[0].destination === "object" ? flights[0].destination.city : "";
       const arrivalTime = flights[0].arrivalTime;
 
       params.append("origin", origin);
@@ -379,8 +381,8 @@ export default function BookingPage() {
                     {booking.flights.map((flight, index) => (
                       <div key={`${flight.flightNumber}-${flight.departureTime}`} className="border-b pb-3">
                         <p><strong>Price:</strong> ${flight.flightCost.toFixed(2)}</p>
-                        <p>{flight.airline.name}</p>
-                        <p>{flight.origin} → {flight.destination}</p>
+                        <p>{typeof flight.airline === "object" ? flight.airline.name : flight.airline}</p>
+                        <p>{typeof flight.origin === "string" ? flight.origin : ""} → {typeof flight.destination === "string" ? flight.destination : ""}</p>
                         <p>{formatDate(flight.departureTime)} — {formatDate(flight.arrivalTime)}</p>
                       </div>
                     ))}
@@ -423,7 +425,7 @@ export default function BookingPage() {
 
         {flightSuggestions?.results?.length > 0 ? (
           <>
-            <FlightResults searchResults={flightSuggestions} onAddToCart={handleFlightRedirect} />
+            <FlightResults searchResults={flightSuggestions} onAddToCart={handleFlightRedirect as (flights: any[]) => void} />
           </>
         ) : (
           <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
