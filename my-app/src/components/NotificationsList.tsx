@@ -12,7 +12,7 @@ const NotificationsList = () => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      const response = await fetch("/api/notification");
+      const response = await fetch("/api/notifications");
       const data = await response.json();
       setNotifications(data);
     };
@@ -41,9 +41,8 @@ const NotificationsList = () => {
           {notifications.map((notification) => (
             <li
               key={notification.id}
-              className={`p-4 rounded-md mb-2 ${
-                notification.isRead ? "bg-gray-200" : "bg-blue-100"
-              }`}
+              className={`p-4 rounded-md mb-2 ${notification.isRead ? "bg-gray-200" : "bg-blue-100"
+                }`}
             >
               <div className="flex justify-between">
                 <span>{notification.message}</span>

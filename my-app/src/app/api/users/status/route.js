@@ -13,6 +13,7 @@
 import { NextResponse } from "next/server";
 import {
   setCookie,
+  deleteCookie,
   comparePassword,
   generateToken,
   withAuth,
