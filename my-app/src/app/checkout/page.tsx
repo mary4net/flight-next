@@ -61,7 +61,7 @@ export default function Checkout() {
         };
         checkAuth();
         fetchBooking();
-    }, [router, toast]);
+    }, []);
 
     const fetchBooking = async (): Promise<void> => {
         try {
