@@ -112,6 +112,98 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+
+    const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
+      if (!hasHotel && !hasFlight) return;
+
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
+            flights: hasFlight ? infoParam : [],
+            hotelRoom: hasHotel ? infoParam : {},
+          }),
+        });
+
+        const data: Booking = await response.json();
+
+        if (response.ok) {
+          setInfoParam(null);
+          setBooking(data);
+          fetchSuggestions("Toronto", data);
+        } else {
+          setMessage(response.statusText || 'Error creating booking.');
+        }
+      } catch (error) {
+        const err = error as Error;
+        setMessage(err.message || 'Error creating booking.');
+      }
+    };
+
+    const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
+      if ((!hasHotel && !hasFlight) || !data) return;
+
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: data.id,
+            addFlight: hasFlight ? infoParam : [],
+            addHotel: hasHotel ? infoParam : {},
+          }),
+        });
+
+        const res: Booking = await response.json();
+        if (response.ok) {
+          setInfoParam(null);
+          setBooking(res);
+          fetchSuggestions("Toronto", res);
+        } else {
+          setMessage("Could not update booking, please try again.");
+        }
+      } catch (error) {
+        setMessage("Error updating booking");
+      }
+    };
+
+    const fetchBooking = async () => {
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        const data: Booking = await response.json();
+
+        const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
+        const hasHotel = infoParam && typeof infoParam === 'object' &&
+          !Array.isArray(infoParam) &&
+          Object.keys(infoParam).length > 0;
+
+        const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
+
+        if (response.ok) {
+          setBooking(data);
+          if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
+            handleCreateBooking(Boolean(hasHotel), Boolean(hasFlights), numFlight);
+          } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
+            handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
+          } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
+            fetchSuggestions("Toronto", data);
+          } else {
+            setMessage(response.statusText);
+          }
+        }
+      } catch (error) {
+        setMessage('Error fetching booking.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/users", {
@@ -125,6 +217,7 @@ export default function BookingPage() {
         const data = await response.json();
         if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
           toast({
+            id: "id",
             title: "Error",
             description: "Please login to manage your booking",
             variant: "destructive",
@@ -139,98 +232,8 @@ export default function BookingPage() {
     };
     checkAuth();
     fetchBooking();
-  }, []);
+  }, [infoParam, toast, router]);
 
-  const fetchBooking = async () => {
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      const data: Booking = await response.json();
-
-      const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
-      const hasHotel = infoParam && typeof infoParam === 'object' &&
-        !Array.isArray(infoParam) &&
-        Object.keys(infoParam).length > 0;
-
-      const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
-
-      if (response.ok) {
-        setBooking(data);
-        if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
-          handleCreateBooking(Boolean(hasHotel), Boolean(hasFlights), numFlight);
-        } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
-          handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
-        } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
-          fetchSuggestions("Toronto", data);
-        } else {
-          setMessage(response.statusText);
-        }
-      }
-    } catch (error) {
-      setMessage('Error fetching booking.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
-    if (!hasHotel && !hasFlight) return;
-
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
-          flights: hasFlight ? infoParam : [],
-          hotelRoom: hasHotel ? infoParam : {},
-        }),
-      });
-
-      const data: Booking = await response.json();
-
-      if (response.ok) {
-        setInfoParam(null);
-        setBooking(data);
-        fetchSuggestions("Toronto", data);
-      } else {
-        setMessage(response.statusText || 'Error creating booking.');
-      }
-    } catch (error) {
-      const err = error as Error;
-      setMessage(err.message || 'Error creating booking.');
-    }
-  };
-
-  const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
-    if ((!hasHotel && !hasFlight) || !data) return;
-
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: data.id,
-          addFlight: hasFlight ? infoParam : [],
-          addHotel: hasHotel ? infoParam : {},
-        }),
-      });
-
-      const res: Booking = await response.json();
-      if (response.ok) {
-        setInfoParam(null);
-        setBooking(res);
-        fetchSuggestions("Toronto", res);
-      } else {
-        setMessage("Could not update booking, please try again.");
-      }
-    } catch (error) {
-      setMessage("Error updating booking");
-    }
-  };
 
   const fetchSuggestions = async (origin: string, data: Booking) => {
     if (!data) return;
@@ -419,13 +422,13 @@ export default function BookingPage() {
             <p className="text-gray-500 text-center">No hotel suggestions available at the moment.</p>
           )}
 
-        {flightSuggestions?.results?.length > 0 ? (
-          <>
-            <FlightResults searchResults={flightSuggestions} onAddToCart={handleFlightRedirect as (flights: any[]) => void} />
-          </>
-        ) : (
-          <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
-        )}
+          {flightSuggestions?.results?.length > 0 ? (
+            <>
+              <FlightResults searchResults={flightSuggestions} onAddToCart={handleFlightRedirect as (flights: any[]) => void} />
+            </>
+          ) : (
+            <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
+          )}
         </div>
 
         {/* <p>{message}</p> */}

@@ -1,5 +1,6 @@
 'use client';
 
+import * as React from 'react';
 import { JSX, useEffect, useState } from 'react';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
@@ -54,6 +55,7 @@ export default function Records() {
                 const data = await response.json();
                 if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
                     toast({
+                        id: "id",
                         title: "Error",
                         description: "Please login to manage your booking",
                         variant: "destructive",
@@ -68,7 +70,7 @@ export default function Records() {
         };
         checkAuth();
         fetchBooking();
-    }, [bookings]);
+    }, [bookings, router, toast]);
 
     const fetchBooking = async (): Promise<void> => {
         try {
