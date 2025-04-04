@@ -3,7 +3,7 @@
 'use client';
 import { useState } from 'react';
 import CityPicker from '@/components/search/cityPicker';
-import Button from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import Date from '@/components/search/date';
 
 interface onSearchProps {
