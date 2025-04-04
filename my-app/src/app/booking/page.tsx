@@ -255,12 +255,14 @@ export default function Records() {
                 </div>
 
                 <div className="flex gap-4 mt-2">
+                {Array.isArray(booking.flights) && booking.flights.length > 0 && (
                 <button
                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                     onClick={() => verifyFlight(booking.id)}
                 >
                     Verify Flight
                 </button>
+                )}
                 <button
                     className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
                     onClick={() => cancelBooking(booking.id, 'all')}

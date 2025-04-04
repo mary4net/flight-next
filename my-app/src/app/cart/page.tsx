@@ -6,6 +6,18 @@ import { Button } from '@/components/ui/button';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate, extractName, getItineraryLabel } from '@/utils/format';
+import FlightResults from '@/components/search/flightResults';
+
+
+interface HotelRoom {
+  type: string;
+  hotel: {
+    name: string;
+    address: string;
+    city: string;
+  };
+  images?: string[];
+}
 
 interface Flight {
   id: string;
@@ -35,16 +47,6 @@ interface Flight {
   };
 }
 
-interface HotelRoom {
-  type: string;
-  hotel: {
-    name: string;
-    address: string;
-    city: string;
-  };
-  images?: string[];
-}
-
 interface Booking {
   id?: number;
   checkIn?: string;
@@ -56,13 +58,21 @@ interface Booking {
 }
 
 interface Hotel {
+  id: number;
   name: string;
+  logo?: string;
   address: string;
+  city: string;
+  starRating: number;
+  images: string[];
+  ownerId: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface Suggestion {
   hotels: Hotel[];
-  name: string;
+  checkIn: string;
 }
 
 interface BookingInfo {
@@ -94,8 +104,8 @@ export default function BookingPage() {
   );
 
   const [booking, setBooking] = useState<Booking>({ flights: [] });
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const [flightSuggestions, setFlightSuggestions] = useState<Flight[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion>({ hotels: [], checkIn: '' });
+  const [flightSuggestions, setFlightSuggestions] = useState({ results: [] });
   const [loading, setLoading] = useState<boolean>(true);
   const [message, setMessage] = useState<string | null>(null);
 
@@ -112,14 +122,19 @@ export default function BookingPage() {
 
       const data: Booking = await response.json();
 
+      const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
+      const hasHotel = infoParam && typeof infoParam === 'object' &&
+            !Array.isArray(infoParam) &&
+            Object.keys(infoParam).length > 0;
+
       if (response.ok) {
         setBooking(data);
-        if (Object.keys(data).length === 0 && infoParam) {
-          handleCreateBooking();
-        } else if (Object.keys(data).length > 0 && infoParam) {
-          handleUpdateBooking(data);
-        } else if (Object.keys(data).length > 0 && !infoParam) {
-          fetchSuggestions("Toronto", data);
+        if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
+          handleCreateBooking(Boolean(hasHotel), Boolean(hasFlights));
+        } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
+          handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
+        } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
+          fetchSuggestions("Shanghai", data);
         } else {
           setMessage("No booking found.");
         }
@@ -127,15 +142,14 @@ export default function BookingPage() {
         setMessage("No booking found.");
       }
     } catch (error) {
-      const err = error as Error;
-      setMessage(err.message || 'Error fetching booking.');
+      setMessage('Error fetching booking.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreateBooking = async () => {
-    if (!infoParam) return;
+  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean) => {
+    if (!hasHotel && !hasFlight) return;
 
     try {
       const response = await fetch('/api/bookings', {
@@ -143,8 +157,8 @@ export default function BookingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           itinerary: 'HOTEL_RESERVATION',
-          flights: [],
-          hotelRoom: infoParam,
+          flights: hasFlight ? infoParam : [],
+          hotelRoom: hasHotel ? infoParam: {},
         }),
       });
 
@@ -153,7 +167,7 @@ export default function BookingPage() {
       if (response.ok) {
         setInfoParam(null);
         setBooking(data);
-        fetchSuggestions("Toronto", data);
+        fetchSuggestions("Shanghai", data);
       } else {
         setMessage("Error creating booking.");
       }
@@ -163,8 +177,8 @@ export default function BookingPage() {
     }
   };
 
-  const handleUpdateBooking = async (data: Booking) => {
-    if (!infoParam || !booking) return;
+  const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
+    if ((!hasHotel && !hasFlight) || !data) return;
 
     try {
       const response = await fetch('/api/bookings', {
@@ -172,15 +186,16 @@ export default function BookingPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: data.id,
-          addFlight: [],
-          addHotel: infoParam,
+          addFlight: hasFlight ? infoParam : [],
+          addHotel: hasHotel ? infoParam: {},
         }),
       });
 
       const res: Booking = await response.json();
       if (response.ok) {
+        setInfoParam(null);
         setBooking(res);
-        fetchSuggestions("Toronto", res);
+        fetchSuggestions("Shanghai", res);
       } else {
         setMessage("Could not update booking, please try again.");
       }
@@ -223,9 +238,9 @@ export default function BookingPage() {
       } else {
         const data = await response.json();
         if (hasFlights) {
-          setFlightSuggestions(data as Flight[]);
+          setSuggestions(data);
         } else {
-          setSuggestions(data as Suggestion[]);
+          setFlightSuggestions(data.message);
         }
       }
     } catch (error) {
@@ -302,47 +317,16 @@ export default function BookingPage() {
           )}
         </div>
 
-        {/* Suggestions */}
-        {/* <div className="bg-yellow-50 p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-3xl font-semibold text-yellow-700 mb-4">Suggestions</h2>
-          {suggestions.length > 0 ? (
-            <ul className="space-y-4">
-              {suggestions.map((item) => (
-                <li key={item.id} className="p-4 bg-yellow-100 rounded-lg shadow-sm hover:bg-yellow-200 transition">
-                  <p className="text-lg font-medium text-yellow-800">{item.name}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-lg text-gray-500 text-center mt-4">No suggestions available at the moment.</p>
-          )}
-        </div> */}
-
         <div className="bg-yellow-50 p-6 rounded-lg shadow-md mb-6">
         <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggestions</h2>
+        
 
-        {flightSuggestions.length > 0 ? (
-            <ul className="space-y-4">
-            {flightSuggestions.map(flight => (
-                <li key={flight.id} className="p-4 bg-white rounded-lg shadow border border-yellow-300">
-                <div className="text-lg font-medium mb-1">
-                    {flight.airline.name} ({flight.flightNumber})
-                </div>
-                <div className="text-sm text-gray-700">
-                    <strong>From:</strong> {flight.origin.city} ({flight.origin.code}) – {flight.origin.name}<br />
-                    <strong>To:</strong> {flight.destination.city} ({flight.destination.code}) – {flight.destination.name}<br />
-                    <strong>Departure:</strong> {new Date(flight.departureTime).toLocaleString()}<br />
-                    <strong>Arrival:</strong> {new Date(flight.arrivalTime).toLocaleString()}<br />
-                    <strong>Duration:</strong> {Math.floor(flight.duration / 60)}h {flight.duration % 60}m<br />
-                    <strong>Price:</strong> {flight.currency} ${flight.price.toFixed(2)}<br />
-                    <strong>Status:</strong> {flight.status}<br />
-                    <strong>Available Seats:</strong> {flight.availableSeats}
-                </div>
-                </li>
-            ))}
-            </ul>
+        {flightSuggestions?.results?.length > 0 ? (
+          <>
+            <FlightResults searchResults={flightSuggestions} />
+          </>
         ) : (
-            <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
+          <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
         )}
         </div>
         

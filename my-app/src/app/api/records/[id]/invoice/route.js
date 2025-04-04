@@ -11,7 +11,7 @@ import { generateInvoicePdf } from '@/utils/pdf';
 async function getInvoice(request) {
     const url = new URL(request.url);
     let id = url.pathname.split("/")[3];
-    const user = request.user;
+    let user = request.user;
 
     if (!user) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -22,7 +22,7 @@ async function getInvoice(request) {
     }
 
     id = parseInt(id);
-    const booking = await prisma.booking.findUnique({ where: { id: parseInt(id) }, include: { flights: true } });
+    const booking = await prisma.booking.findUnique({ where: { id: parseInt(id) }, include: { flights: true, room: { include: { hotel: true}}, user: true} });
   
     if (!booking) {
       return NextResponse.json({ "error": `Booking with ID ${id} not found.` }, { status: 404 });
@@ -38,7 +38,7 @@ async function getInvoice(request) {
 
     const invoiceInfo = await prisma.invoice.findUnique({ where: { bookingId: booking.id } });
 
-    const pdfBuffer = await generateInvoicePdf(booking, invoiceInfo);
+    const pdfBuffer = await generateInvoicePdf(booking, invoiceInfo, user);
 
     return new NextResponse(pdfBuffer, {
       headers: {

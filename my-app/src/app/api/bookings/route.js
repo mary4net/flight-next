@@ -39,7 +39,7 @@ async function createBooking(request) {
 
     // For the case of booking already made by the user but still pending
     if (existingBooking) {
-        return NextResponse.json({ message: `Booking already exists with id ${existingBooking.id}, please complete your booking before starting new one.` }, { status: 409 });
+        return NextResponse.json({ message: `Booking already exists with id ${existingBooking.id}, please complete your booking before starting new one.` }, { status: 200 });
     }
 
     // Validate required inputs
