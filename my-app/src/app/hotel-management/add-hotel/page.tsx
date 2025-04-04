@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useUser } from "@/hook/useUser";
 import { useRouter } from "next/navigation";
 import Navigation from "@/components/ui/navigation";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,7 @@ import { SimpleSelect, SimpleSelectItem } from "@/components/ui/simple-select";
 import { useSimpleToast } from "@/components/ui/use-simple-toast";
 
 export default function AddHotelPage() {
+  const { user } = useUser();
   const router = useRouter();
   const { toast, Toaster } = useSimpleToast();
   const [formData, setFormData] = useState({
@@ -26,35 +28,45 @@ export default function AddHotelPage() {
   const [loading, setLoading] = useState(false);
   const [citiesLoading, setCitiesLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const checkAuth = async () => {
-      try {
-        const response = await fetch("/api/users/status", {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!response.ok) {
-          router.push("/user/login");
-          return;
-        }
-        const data = await response.json();
-        if (data.user.role !== "HOTEL_OWNER") {
-          toast({
-            title: "Error",
-            description: "Only hotel owners can add hotels",
-            variant: "destructive",
-          });
-          router.push("/");
-          return;
-        }
-      } catch (error) {
-        console.error("Auth check failed:", error);
-        router.push("/user/login");
-      }
-    };
-    checkAuth();
-  }, [router, toast]);
+  // useEffect(() => {
+  //   // Check if user is authenticated
+  //   const checkAuth = async () => {
+  //     try {
+  //       const response = await fetch("/api/users/status", {
+  //         method: "GET",
+  //         credentials: "include",
+  //       });
+  //       if (!response.ok) {
+  //         router.push("/user/login");
+  //         return;
+  //       }
+  //       const data = await response.json();
+  //       if (data.user.role !== "HOTEL_OWNER") {
+  //         toast({
+  //           title: "Error",
+  //           description: "Only hotel owners can add hotels",
+  //           variant: "destructive",
+  //         });
+  //         router.push("/");
+  //         return;
+  //       }
+  //     } catch (error) {
+  //       console.error("Auth check failed:", error);
+  //       router.push("/user/login");
+  //     }
+  //   };
+  //   checkAuth();
+  // }, [router, toast]);
+  //
+  // useEffect(() => {
+  //   if (user && user.role !== "HOTEL_OWNER") {
+  //     toast({
+  //       title: "Error",
+  //       description: "Only hotel owners can add hotels",
+  //       variant: "destructive",
+  //     });
+  //   }
+  // }, [router, toast, user]);
 
   useEffect(() => {
     const fetchCities = async () => {

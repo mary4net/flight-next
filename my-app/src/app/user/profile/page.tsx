@@ -60,24 +60,12 @@ export default function ProfilePage() {
 				<div className="container mx-auto px-4 py-8">
 					<div className="max-w-2xl mx-auto">
 						<div className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm shadow-xl rounded-2xl p-8">
-							{user ? (
+							{user && (
 								<ProfileForm
 									mode={mode}
 									user={user}
 									onUpdateAction={handleUpdate}
 								/>
-							) : (
-								<div className="text-center py-12">
-									<p className="text-xl text-gray-700 dark:text-gray-300 mb-6">
-										You are not logged in. Please login to continue.
-									</p>
-									<Link
-										href="/user/login"
-										className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-									>
-										Click Here to Login
-									</Link>
-								</div>
 							)}
 							{message && (
 								<div className={`mt-6 p-4 rounded-lg text-center ${message.includes('successful')
