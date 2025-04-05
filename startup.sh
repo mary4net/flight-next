@@ -40,13 +40,13 @@ echo "Installing project dependencies..."
 rm -rf package-lock.json
 npm install
 npm install -g dotenv-cli
-# npm install bcrypt
-# npm install jsonwebtoken
-# npm install cookie
-# npm install prisma
-# npm install next
-# npm install react
-# npm install react-dom
+npm install bcrypt
+npm install jsonwebtoken
+npm install cookie
+npm install prisma
+npm install next
+npm install react
+npm install react-dom
 
 # Run Prisma migrations (development mode for local setup)
 echo "Running Prisma migrations..."
