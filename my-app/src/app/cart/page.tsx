@@ -137,62 +137,6 @@ export default function BookingPage() {
     fetchBooking();
   }, [router]);
 
-  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
-    if (!hasHotel && !hasFlight) return;
-
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
-          flights: hasFlight ? infoParam : [],
-          hotelRoom: hasHotel ? infoParam : {},
-        }),
-      });
-
-      const data: Booking = await response.json();
-
-      if (response.ok) {
-        setInfoParam(null);
-        setBooking(data);
-        fetchSuggestions("Toronto", data);
-      } else {
-        setMessage(response.statusText || 'Error creating booking.');
-      }
-    } catch (error) {
-      const err = error as Error;
-      setMessage(err.message || 'Error creating booking.');
-    }
-  };
-
-  const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
-    if ((!hasHotel && !hasFlight) || !data) return;
-
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: data.id,
-          addFlight: hasFlight ? infoParam : [],
-          addHotel: hasHotel ? infoParam : {},
-        }),
-      });
-
-      const res: Booking = await response.json();
-      if (response.ok) {
-        setInfoParam(null);
-        setBooking(res);
-        fetchSuggestions("Toronto", res);
-      } else {
-        setMessage("Could not update booking, please try again.");
-      }
-    } catch (error) {
-      setMessage("Error updating booking");
-    }
-  };
-
   const fetchBooking = async () => {
     try {
       const response = await fetch('/api/bookings', {
@@ -226,61 +170,61 @@ export default function BookingPage() {
     }
   };
 
-  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
-    if (!hasHotel && !hasFlight) return;
+    const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
+      if (!hasHotel && !hasFlight) return;
 
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
-          flights: hasFlight ? infoParam : [],
-          hotelRoom: hasHotel ? infoParam : {},
-        }),
-      });
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            itinerary: hasHotel ? 'HOTEL_RESERVATION' : numFlight === 1 ? 'FLIGHT_ONEWAY' : 'FLIGHT_ROUNDTRIP',
+            flights: hasFlight ? infoParam : [],
+            hotelRoom: hasHotel ? infoParam : {},
+          }),
+        });
 
-      const data: Booking = await response.json();
+        const data: Booking = await response.json();
 
-      if (response.ok) {
-        setInfoParam(null);
-        setBooking(data);
-        fetchSuggestions("Toronto", data);
-      } else {
-        setMessage(response.statusText || 'Error creating booking.');
+        if (response.ok) {
+          setInfoParam(null);
+          setBooking(data);
+          fetchSuggestions("Toronto", data);
+        } else {
+          setMessage(response.statusText || 'Error creating booking.');
+        }
+      } catch (error) {
+        const err = error as Error;
+        setMessage(err.message || 'Error creating booking.');
       }
-    } catch (error) {
-      const err = error as Error;
-      setMessage(err.message || 'Error creating booking.');
-    }
-  };
+    };
 
-  const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
-    if ((!hasHotel && !hasFlight) || !data) return;
+    const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
+      if ((!hasHotel && !hasFlight) || !data) return;
 
-    try {
-      const response = await fetch('/api/bookings', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          id: data.id,
-          addFlight: hasFlight ? infoParam : [],
-          addHotel: hasHotel ? infoParam : {},
-        }),
-      });
+      try {
+        const response = await fetch('/api/bookings', {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: data.id,
+            addFlight: hasFlight ? infoParam : [],
+            addHotel: hasHotel ? infoParam : {},
+          }),
+        });
 
-      const res: Booking = await response.json();
-      if (response.ok) {
-        setInfoParam(null);
-        setBooking(res);
-        fetchSuggestions("Toronto", res);
-      } else {
-        setMessage("Could not update booking, please try again.");
+        const res: Booking = await response.json();
+        if (response.ok) {
+          setInfoParam(null);
+          setBooking(res);
+          fetchSuggestions("Toronto", res);
+        } else {
+          setMessage("Could not update booking, please try again.");
+        }
+      } catch (error) {
+        setMessage("Error updating booking");
       }
-    } catch (error) {
-      setMessage("Error updating booking");
-    }
-  };
+    };
 
 
   const fetchSuggestions = async (origin: string, data: Booking) => {
@@ -443,6 +387,53 @@ export default function BookingPage() {
             </p>
           )}
         </div>
-      </>
-      );
+
+        <div className="bg-yellow-50 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-semibold text-yellow-800 mb-4">Suggestions</h2>
+
+          {suggestions?.hotels?.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {suggestions.hotels.map((hotel, index) => (
+                <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold">{hotel.name}</h3>
+                    <p>{hotel.address}, {hotel.city}</p>
+                    <p>Check-in: {formatDate(suggestions.checkIn)}</p>
+                    {hotel.images?.length > 0 && <ImageCarousel images={hotel.images} />}
+                  </div>
+                  <button
+                    onClick={() => handleHotelRedirect(hotel, suggestions.checkIn)}
+                    className="mt-4 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                  >
+                    View Hotel
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-center">No hotel suggestions available at the moment.</p>
+          )}
+
+          {flightSuggestions?.results?.length > 0 ? (
+            <>
+              <FlightResults searchResults={flightSuggestions} onAddToCart={handleFlightRedirect as (flights: any[]) => void} />
+            </>
+          ) : (
+            <p className="text-gray-500 text-center">No flight suggestions available at the moment.</p>
+          )}
+        </div>
+
+        {/* <p>{message}</p> */}
+        {/* Go to Checkout */}
+        <div className="mt-8 text-center">
+          <button
+            className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
+            onClick={handleCheckout}
+          >
+            Go to Checkout
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }
