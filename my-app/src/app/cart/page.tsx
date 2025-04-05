@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import Navigation from '@/components/ui/navigation';
 import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
@@ -98,11 +98,7 @@ interface BookingInfo {
 
 export default function BookingPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const infoEncoded = searchParams.get('bookings');
-  const [infoParam, setInfoParam] = useState<BookingInfo | null>(
-    infoEncoded ? JSON.parse(decodeURIComponent(infoEncoded)) : null
-  );
+  const [infoParam, setInfoParam] = useState<BookingInfo | null>(null);
 
   const [booking, setBooking] = useState<Booking>({ flights: [] });
   const [suggestions, setSuggestions] = useState<Suggestion>({ hotels: [], checkIn: '' });
@@ -111,6 +107,12 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const infoEncoded = params.get('bookings');
+      setInfoParam(infoEncoded ? JSON.parse(decodeURIComponent(infoEncoded)) : null);
+    }
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/users", {
@@ -133,7 +135,7 @@ export default function BookingPage() {
     };
     checkAuth();
     fetchBooking();
-  }, []);
+  }, [router]);
 
   const fetchBooking = async () => {
     try {
@@ -143,14 +145,12 @@ export default function BookingPage() {
       });
 
       const data: Booking = await response.json();
-
       const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
       const hasHotel = infoParam && typeof infoParam === 'object' &&
         !Array.isArray(infoParam) &&
         Object.keys(infoParam).length > 0;
 
       const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
-
       if (response.ok) {
         setBooking(data);
         if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
@@ -336,7 +336,7 @@ export default function BookingPage() {
     );
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <>
       <Navigation />
       <div className="mt-8 px-4">
         <h1 className="text-6xl font-bold mb-6">Cart</h1>
@@ -434,6 +434,6 @@ export default function BookingPage() {
           </button>
         </div>
       </div>
-    </Suspense>
+    </>
   );
 }
