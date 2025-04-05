@@ -2,8 +2,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
+RUN npm install prisma --schema=./prisma/schema.prisma
 RUN npm install
-RUN npm install prisma
 RUN npm install -g dotenv-cli
 RUN npm install date-fns react-day-picker @radix-ui/react-label
 RUN npm install lucide-react
