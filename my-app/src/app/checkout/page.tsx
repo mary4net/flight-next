@@ -41,19 +41,19 @@ export default function Checkout() {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-              const response = await fetch("/api/users", {
-                method: "GET",
-                credentials: "include",
-              });
-              if (!response.ok) {
-                router.push("/user/login");
-                return;
-              }
-              const data = await response.json();
-              if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
-                router.push("/");
-                return;
-              }
+                const response = await fetch("/api/users", {
+                    method: "GET",
+                    credentials: "include",
+                });
+                if (!response.ok) {
+                    router.push("/user/login");
+                    return;
+                }
+                const data = await response.json();
+                if (data.user.role !== "HOTEL_OWNER" && data.user.role !== "REGULAR_USER") {
+                    router.push("/");
+                    return;
+                }
             } catch (error) {
                 console.error("Auth check failed:", error);
                 router.push("/user/login");
@@ -61,7 +61,7 @@ export default function Checkout() {
         };
         checkAuth();
         fetchBooking();
-    }, [router, toast]);
+    }, [router]);
 
     const fetchBooking = async (): Promise<void> => {
         try {

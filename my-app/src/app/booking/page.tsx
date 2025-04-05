@@ -62,7 +62,7 @@ export default function Records() {
         };
         checkAuth();
         fetchBooking();
-    }, [bookings, router, toast]);
+    }, [bookings, router]);
 
     const fetchBooking = async (): Promise<void> => {
         try {

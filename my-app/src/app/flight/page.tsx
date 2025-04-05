@@ -67,7 +67,7 @@ export default function FlightSearchPage() {
 
 
 
-	return (
+	<>
 		<Suspense fallback={<div>Loading...</div>}>
 			<Navigation />
 			<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
@@ -77,6 +77,6 @@ export default function FlightSearchPage() {
 				/>
 			</div>
 		</Suspense>
-	)
+	</>
 }
 
