@@ -1,11 +1,11 @@
-"use client"; // Ensure this is at the top for client-side rendering
+'use client' // Ensure this is at the top for client-side rendering
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic"; // Import Next.js dynamic module
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 import { Dialog, DialogContent, DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
 import Navigation from '@/components/ui/navigation';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { Suspense } from 'react';
 
@@ -17,7 +17,7 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), { 
 
 const HotelSearchPage = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
+    const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
     const [priceFilterVisible, setPriceFilterVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchRoomType, setSearchRoomType] = useState('');
@@ -35,6 +35,12 @@ const HotelSearchPage = () => {
     const [selectedHotelRooms, setSelectedHotelRooms] = useState<any[]>([]);
 
     useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const params = new URLSearchParams(window.location.search);
+            setSearchParams(params);
+        }
+
+        if (!searchParams) return;
         const name = searchParams.get('name');
         const city = searchParams.get('city');
         const checkIn = searchParams.get('checkIn');
@@ -51,7 +57,7 @@ const HotelSearchPage = () => {
             }
         }
         if (rating && !isNaN(Number(rating))) setStarRating(Number(rating));
-    }, [searchParams]);
+    }, []);
 
     const fetchHotelRooms = async (hotelId: number, checkIn: string, checkOut: string) => {
         const params = new URLSearchParams();
@@ -246,7 +252,7 @@ const HotelSearchPage = () => {
     };
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
+        <>
             <Navigation />
             <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
                 <div className="container mx-auto px-4 py-8">
@@ -388,6 +394,8 @@ const HotelSearchPage = () => {
                                         >
                                             <div className="relative h-48">
                                                 <Image
+                                                    width={500}
+                                                    height={300}
                                                     src={eachhotel.hotel.logo || '/default-hotel.jpg'}
                                                     alt={eachhotel.hotel.name}
                                                     className="w-full h-full object-cover"
@@ -431,6 +439,8 @@ const HotelSearchPage = () => {
                                 {/* Hotel Header */}
                                 <div className="relative h-72 bg-gray-200 dark:bg-gray-800">
                                     <Image
+                                        width={500}
+                                        height={300}
                                         src={selectedHotel.hotel.logo || '/default-hotel.jpg'}
                                         alt={selectedHotel.hotel.name}
                                         className="w-full h-full object-cover"
@@ -516,7 +526,7 @@ const HotelSearchPage = () => {
                                     <div className="space-y-6">
                                         <h3 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-white">Available Rooms</h3>
                                         {selectedHotelRooms.length > 0 ? (
-                                            selectedHotelRooms.map(room => (
+                                            selectedHotelRooms.map((room, index) => (
                                                 <div
                                                     key={room.id}
                                                     className="flex items-start p-6 border border-gray-300 dark:border-gray-600 rounded-xl hover:shadow-lg transition-shadow bg-white dark:bg-gray-900"
@@ -570,7 +580,7 @@ const HotelSearchPage = () => {
                     )}
                 </div>
             </div>
-        </Suspense>
+        </>
     );
 };
 
