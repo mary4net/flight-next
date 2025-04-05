@@ -7,6 +7,7 @@ import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
 import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 
 interface HotelRoom {
@@ -98,7 +99,11 @@ interface BookingInfo {
 
 export default function BookingPage() {
   const router = useRouter();
-  const [infoParam, setInfoParam] = useState<BookingInfo | null>(null);
+  const searchParams = useSearchParams();
+  const infoEncoded = searchParams.get('bookings');
+  const [infoParam, setInfoParam] = useState<BookingInfo | null>(
+    infoEncoded ? JSON.parse(decodeURIComponent(infoEncoded)) : null
+  );
 
   const [booking, setBooking] = useState<Booking>({ flights: [] });
   const [suggestions, setSuggestions] = useState<Suggestion>({ hotels: [], checkIn: '' });
@@ -107,12 +112,6 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
-
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const infoEncoded = params.get('bookings');
-      setInfoParam(infoEncoded ? JSON.parse(decodeURIComponent(infoEncoded)) : null);
-    }
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/users", {
@@ -135,7 +134,7 @@ export default function BookingPage() {
     };
     checkAuth();
     fetchBooking();
-  }, [router]);
+  }, [router, booking]);
 
   const fetchBooking = async () => {
     try {
@@ -160,7 +159,7 @@ export default function BookingPage() {
         } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
           fetchSuggestions("Toronto", data);
         } else {
-          setMessage(response.statusText);
+          // setMessage();
         }
       }
     } catch (error) {
