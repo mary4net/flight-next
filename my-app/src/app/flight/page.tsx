@@ -40,7 +40,7 @@ export default function FlightSearchPage() {
 		// Navigate to cart page with the parameters
 		router.push(`/cart?${params.toString()}`);
 	};
-	
+
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
 			const params = new URLSearchParams(window.location.search);

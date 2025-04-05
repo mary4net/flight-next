@@ -3,6 +3,10 @@ services:
     image: postgres:13
     container_name: flynext-db
     restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aHFCISDiMNNDdbWBFRFsGSCFHYzQUthF
+      POSTGRES_DB: railway
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
