@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+
 const prisma = new PrismaClient();
 
 async function main() {
@@ -42,7 +43,7 @@ async function main() {
     }),
   ]);
 
-  const ownerIds = hotelOwners.map((owner) => owner.id);
+  const ownerIds = hotelOwners.map((owner: { id: any; }) => owner.id);
   const cities = ["Toronto", "Vancouver", "New York", "Saskatoon", "Tokyo", "Oslo", "Narita", "Shanghai", "Beijing", "Seoul", "London", "Paris", "Madrid", "Rome", "Amsterdam", "Brussels", "Zurich", "Vienna", "Copenhagen", "Colombo", "Edmonton", "Moscow", "Sydney", "Dallas", "Guangzhou"];
   for (let i = 0; i < 60; i++) {
     await prisma.hotel.create({
@@ -57,6 +58,29 @@ async function main() {
     });
   }
 }
+
+const roomTypes = ["Deluxe", "Suite", "Standard", "Family"];
+const amenities = ["WiFi", "Air Conditioning", "TV", "Mini Bar"];
+for (let i = 0; i < 100; i++) {
+  await prisma.room.create({
+    data: {
+      type: roomTypes[Math.floor(Math.random() * roomTypes.length)], 
+      amenities: JSON.stringify(amenities),  
+      pricePerNight: Math.floor(Math.random() * 200) + 50,
+      images: [
+        'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        'https://images.pexels.com/photos/594077/pexels-photo-594077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+        'https://images.pexels.com/photos/261395/pexels-photo-261395.jpeg?auto=compress&cs=tinysrgb&w=1200'
+      ],
+      hotelId: Math.floor(Math.random() * 60) + 1, 
+      hotel: {
+        connect: {
+          id: Math.floor(Math.random() * 60) + 1 
+        }
+      }
+    }
+  });
+} 
 
 main()
   .then(() => {

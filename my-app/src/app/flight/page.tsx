@@ -7,13 +7,13 @@ import SearchForm from "@/components/search/searchForm";
 import FlightResults from "@/components/search/flightResults";
 import Navigation from "@/components/ui/navigation";
 import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 
 export default function FlightSearchPage() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 	const [searchResults, setSearchResults] = useState({ results: [] });
-	const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
-
 
 	const handleSearch = (searchParams:
 		{
@@ -40,16 +40,9 @@ export default function FlightSearchPage() {
 		// Navigate to cart page with the parameters
 		router.push(`/cart?${params.toString()}`);
 	};
-	
-	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const params = new URLSearchParams(window.location.search);
-			setSearchParams(params);
-		}
-	}, []);
+
 
 	useEffect(() => {
-		if (!searchParams) return;
 
 		const origin = searchParams.get('origin');
 		const destination = searchParams.get('destination');
