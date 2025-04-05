@@ -2,6 +2,8 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 COPY package*.json ./
+
+COPY . .
 RUN npm install prisma --schema=./prisma/schema.prisma
 RUN npm install
 RUN npm install -g dotenv-cli
@@ -13,9 +15,6 @@ RUN npm install pdfkit
 RUN npm install -D tailwindcss @tailwindcss/postcss
 RUN npm install tailwind-merge tw-animate-css class-variance-authority clsx
 RUN npm install -D @types/react @types/react-dom @types/node
-
-
-COPY . .
 
 # Set Prisma generate for prod use
 RUN npx prisma generate
