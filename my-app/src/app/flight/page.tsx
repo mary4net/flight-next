@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { Flight } from "@/components/search/flightResults"
 import SearchForm from "@/components/search/searchForm";
 import FlightResults from "@/components/search/flightResults";
@@ -11,8 +11,9 @@ import { Suspense } from 'react';
 
 export default function FlightSearchPage() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
 	const [searchResults, setSearchResults] = useState({ results: [] });
+	const [searchParams, setSearchParams] = useState<URLSearchParams | null>(null);
+
 
 	const handleSearch = (searchParams:
 		{
@@ -41,6 +42,15 @@ export default function FlightSearchPage() {
 	};
 
 	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			const params = new URLSearchParams(window.location.search);
+			setSearchParams(params);
+		}
+	}, []);
+
+	useEffect(() => {
+		if (!searchParams) return;
+
 		const origin = searchParams.get('origin');
 		const destination = searchParams.get('destination');
 		const departTime = searchParams.get('departTime');
@@ -63,12 +73,12 @@ export default function FlightSearchPage() {
 		const round = roundParam === 'true';
 
 		handleSearch({ origin, destination, date, round });
-	}, [searchParams]);
+	}, []);
 
 
 
-	<>
-		<Suspense fallback={<div>Loading...</div>}>
+	return (
+		<>
 			<Navigation />
 			<div className="min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-gray-800">
 				<SearchForm onSearchAction={handleSearch} />
@@ -76,7 +86,7 @@ export default function FlightSearchPage() {
 					onAddToCart={handleAddToCart}
 				/>
 			</div>
-		</Suspense>
-	</>
+		</>
+	)
 }
 
