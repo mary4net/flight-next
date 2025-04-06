@@ -17,6 +17,8 @@ export default function ImageCarousel({ images }: { images: string[] }) {
   return (
     <div className="relative w-80 h-50 flex-shrink-0 rounded-lg overflow-hidden shadow-lg border-4 border-gray-500 hover:ring-2 hover:ring-blue-400 transition duration-300 ease-in-out">
       <Image
+        width={500}
+        height={300}
         src={images[current]}
         alt={`Room image ${current + 1}`}
         className="w-full h-full object-cover"

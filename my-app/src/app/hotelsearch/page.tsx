@@ -8,7 +8,6 @@ import Navigation from '@/components/ui/navigation';
 import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 // Dynamically import Leaflet components with no SSR
 const MapContainer = dynamic(() => import("react-leaflet").then((mod) => mod.MapContainer), { ssr: false });
@@ -18,7 +17,6 @@ const Popup = dynamic(() => import("react-leaflet").then((mod) => mod.Popup), { 
 
 const HotelSearchPage = () => {
     const router = useRouter();
-    const searchParams = useSearchParams();
     const [priceFilterVisible, setPriceFilterVisible] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
     const [searchRoomType, setSearchRoomType] = useState('');
@@ -36,6 +34,7 @@ const HotelSearchPage = () => {
     const [selectedHotelRooms, setSelectedHotelRooms] = useState<any[]>([]);
 
     useEffect(() => {
+        const searchParams = new URLSearchParams(window.location.search);
         const name = searchParams.get('name');
         const city = searchParams.get('city');
         const checkIn = searchParams.get('checkIn');
@@ -509,6 +508,12 @@ const HotelSearchPage = () => {
                                                 />
                                             </div>
                                         </div>
+                                        <button
+                                            onClick={handleSearchAvailability}
+                                            className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
+                                        >
+                                            Search Availability
+                                        </button>
                                     </div>
 
                                     {/* Available Rooms */}

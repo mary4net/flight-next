@@ -7,6 +7,7 @@ export default {
       'img.freepik.com',
       'cdn.pixabay.com',
       'images.pexels.com',
+      "example.com",
     ],
     remotePatterns: [
       {

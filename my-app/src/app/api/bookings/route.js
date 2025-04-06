@@ -319,7 +319,7 @@ async function updateBooking(request) {
         addFlight is a list of flights to add
         addHotel is the hotel to add with json string (id, checkIn, checkOut) or {}
     */
-  const { id, addFlight = [], addHotel = {} } = await request.json();
+  const { id, price = 0, addFlight = [], addHotel = {}, room = {} } = await request.json();
   const user = request.user;
 
   if (!user) {

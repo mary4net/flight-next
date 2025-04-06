@@ -31,8 +31,9 @@ export default function HotelManagementPage() {
         const data = await response.json();
         setHotels(data);
       } catch (err) {
-        setError(err.message);
+        setError(null);
         toast({
+          id: "fetchHotel error",
           title: "Error",
           description: "Failed to load your hotels. Please try again later.",
           variant: "destructive",
@@ -49,11 +50,11 @@ export default function HotelManagementPage() {
     router.push("/hotel-management/add-hotel");
   };
 
-  const handleManageRooms = (hotelId) => {
+  const handleManageRooms = (hotelId: any) => {
     router.push(`/hotel-management/hotels/${hotelId}/rooms`);
   };
 
-  const handleViewAvailability = (hotelId) => {
+  const handleViewAvailability = (hotelId: any) => {
     router.push(`/hotel-management/hotels/${hotelId}/availability`);
   };
 
@@ -90,12 +91,12 @@ export default function HotelManagementPage() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {hotels.map((hotel) => (
-                  <Card key={hotel.id} className="overflow-hidden">
+                {hotels.map((hotel, index) => (
+                  <Card key={`${index}`} className="overflow-hidden">
                     <div className="h-48 relative">
                       <img
-                        src={hotel.logo || "/default-hotel.jpg"}
-                        alt={hotel.name}
+                        src={hotel?.logo || "/default-hotel.jpg"}
+                        alt={hotel?.name}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute top-2 right-2 bg-white dark:bg-gray-800 px-2 py-1 rounded-full text-yellow-500">

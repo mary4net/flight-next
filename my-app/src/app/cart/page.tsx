@@ -7,7 +7,6 @@ import ImageCarousel from '@/components/ui/carousel';
 import { formatDate } from '@/utils/format';
 import FlightResults from '@/components/search/flightResults';
 import { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 
 interface HotelRoom {
@@ -99,11 +98,7 @@ interface BookingInfo {
 
 export default function BookingPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const infoEncoded = searchParams.get('bookings');
-  const [infoParam, setInfoParam] = useState<BookingInfo | null>(
-    infoEncoded ? JSON.parse(decodeURIComponent(infoEncoded)) : null
-  );
+  const [infoParam, setInfoParam] = useState<BookingInfo | Flight[] | null>(null);
 
   const [booking, setBooking] = useState<Booking>({ flights: [] });
   const [suggestions, setSuggestions] = useState<Suggestion>({ hotels: [], checkIn: '' });
@@ -112,6 +107,38 @@ export default function BookingPage() {
   const [message, setMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const infoEncoded = params.get('bookings');
+      if (infoEncoded) {
+        try {
+          const decodedData = JSON.parse(decodeURIComponent(infoEncoded));
+
+          // Check if the data is an array (flights) or an object (hotel)
+          const isArray = Array.isArray(decodedData);
+          const isObject = typeof decodedData === 'object' && !isArray;
+
+          if (isArray) {
+            // Set infoParam to the array of flights
+            setInfoParam(decodedData);
+          } else if (isObject) {
+            // Handle hotel booking
+            const formattedHotelBooking: BookingInfo = {
+              id: decodedData.id,
+              checkIn: decodedData.checkIn,
+              checkOut: decodedData.checkOut,
+              price: decodedData.price,
+              hotel: decodedData.hotel,
+              room: decodedData.room,
+            };
+
+            setInfoParam(formattedHotelBooking);
+          }
+        } catch (error) {
+          setMessage("Error parsing booking information.");
+        }
+      }
+    }
     const checkAuth = async () => {
       try {
         const response = await fetch("/api/users", {
@@ -133,8 +160,13 @@ export default function BookingPage() {
       }
     };
     checkAuth();
+    // fetchBooking();
+  }, [router]);
+
+  useEffect(() => {
     fetchBooking();
-  }, [router, booking]);
+    setLoading(false);
+  }, [infoParam]);  
 
   const fetchBooking = async () => {
     try {
@@ -144,12 +176,13 @@ export default function BookingPage() {
       });
 
       const data: Booking = await response.json();
-      const hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
-      const hasHotel = infoParam && typeof infoParam === 'object' &&
+      let hasFlights = Array.isArray(infoParam) && infoParam.length > 0;
+      let hasHotel = infoParam && typeof infoParam === 'object' &&
         !Array.isArray(infoParam) &&
         Object.keys(infoParam).length > 0;
 
-      const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
+        const numFlight = Array.isArray(infoParam) ? infoParam.length : 0;
+
       if (response.ok) {
         setBooking(data);
         if (Object.keys(data).length === 0 && (hasHotel || hasFlights)) {
@@ -157,19 +190,28 @@ export default function BookingPage() {
         } else if (Object.keys(data).length > 0 && (hasHotel || hasFlights)) {
           handleUpdateBooking(data, Boolean(hasHotel), Boolean(hasFlights));
         } else if (Object.keys(data).length > 0 && !(hasHotel || hasFlights)) {
-          fetchSuggestions("Toronto", data);
+          fetchSuggestions("Shanghai", data);
         } else {
-          // setMessage();
+          setMessage("Could not find booking");
         }
       }
     } catch (error) {
-      setMessage('Error fetching booking.');
-    } finally {
-      setLoading(false);
-    }
+      // setMessage('Error fetching booking.');
+    } 
   };
 
-    const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
+  if (loading)
+  return (
+    <>
+      <Navigation />
+      <div className="h-screen flex items-center justify-center">
+        <p className="text-6xl text-center mt-4">Loading...</p>
+      </div>
+    </>
+  );
+
+
+  const handleCreateBooking = async (hasHotel: boolean, hasFlight: boolean, numFlight: number) => {
       if (!hasHotel && !hasFlight) return;
 
       try {
@@ -188,7 +230,7 @@ export default function BookingPage() {
         if (response.ok) {
           setInfoParam(null);
           setBooking(data);
-          fetchSuggestions("Toronto", data);
+          fetchSuggestions("Shanghai", data);
         } else {
           setMessage(response.statusText || 'Error creating booking.');
         }
@@ -198,7 +240,7 @@ export default function BookingPage() {
       }
     };
 
-    const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
+  const handleUpdateBooking = async (data: Booking, hasHotel: boolean, hasFlight: boolean) => {
       if ((!hasHotel && !hasFlight) || !data) return;
 
       try {
@@ -216,9 +258,13 @@ export default function BookingPage() {
         if (response.ok) {
           setInfoParam(null);
           setBooking(res);
-          fetchSuggestions("Toronto", res);
+          fetchSuggestions("Shanghai", res);
         } else {
-          setMessage("Could not update booking, please try again.");
+          setMessage(JSON.stringify({
+            id: data.id,
+            addFlight: hasFlight ? infoParam : [],
+            addHotel: hasHotel ? infoParam : {},
+          }));
         }
       } catch (error) {
         setMessage("Error updating booking");
@@ -238,7 +284,7 @@ export default function BookingPage() {
         itinerary,
         ...(date && { date }),
       });
-
+ 
       if (hasFlights) {
         let city = '';
         if (typeof data.flights[0].destination === "string") {
@@ -273,7 +319,6 @@ export default function BookingPage() {
         }
       }
     } catch (error) {
-      const err = error as Error;
       setMessage('Error fetching suggestions.');
     }
   };
@@ -323,16 +368,6 @@ export default function BookingPage() {
 
     router.push(`/hotelsearch?${params.toString()}`);
   }
-
-  if (loading)
-    return (
-      <>
-        <Navigation />
-        <div className="h-screen flex items-center justify-center">
-          <p className="text-6xl text-center mt-4">Loading...</p>
-        </div>
-      </>
-    );
 
   return (
     <>

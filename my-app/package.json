@@ -8,8 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check": "tsc --noEmit && eslint . --ext .js, .ts, .jsx, .tsx",
-  "postinstall": "prisma generate"
+    "check": "tsc --noEmit && eslint . --ext .js, .ts, .jsx, .tsx"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
@@ -19,7 +18,7 @@
     "@radix-ui/react-tabs": "^1.1.3",
     "@radix-ui/react-toast": "^1.2.6",
     "axios": "^1.8.4",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cookie": "^1.0.2",
@@ -45,7 +44,7 @@
     "@eslint/js": "^9.24.0",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.17",
-    "@types/node": "20.17.23",
+    "@types/node": "^20.17.23",
     "@types/pdfkit": "^0.13.9",
     "@types/react": "19.0.10",
     "@types/react-dom": "^19",
@@ -53,8 +52,15 @@
     "eslint-config-next": "15.2.0",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.0.0",
-    "prisma": "^6.4.1",
+    "prisma": "^6.5.0",
     "tailwindcss": "^4.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.0"
+  },
+  "prisma": {
+    "schema": "./prisma/schema.prisma",
+    "generate": "prisma generate",
+    "seed": "node --loader ts-node/esm prisma/seed.ts"
   }
 }

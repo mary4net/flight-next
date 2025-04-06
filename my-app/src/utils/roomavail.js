@@ -7,7 +7,7 @@ export async function checkRoomBooked(room, startDate, endDate) {
 
     const bookedCount = await prisma.booking.count({
         where: {
-            roomId: room.id,
+            roomId: Number(room.id),
             OR: [
                 {
                     status: "CONFIRMED",

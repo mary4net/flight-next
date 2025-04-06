@@ -4,6 +4,11 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Clear existing data
+  await prisma.invoice.deleteMany();
+  await prisma.notification.deleteMany();
+  await prisma.booking.deleteMany();
+  await prisma.room.deleteMany();
+  await prisma.flight.deleteMany();      // Optional, only if you seed flights
   await prisma.hotel.deleteMany();
   await prisma.user.deleteMany();
 
@@ -43,52 +48,58 @@ async function main() {
     }),
   ]);
 
-  const ownerIds = hotelOwners.map((owner: { id: any; }) => owner.id);
+  const ownerIds = hotelOwners.map((owner) => owner.id);
   const cities = ["Toronto", "Vancouver", "New York", "Saskatoon", "Tokyo", "Oslo", "Narita", "Shanghai", "Beijing", "Seoul", "London", "Paris", "Madrid", "Rome", "Amsterdam", "Brussels", "Zurich", "Vienna", "Copenhagen", "Colombo", "Edmonton", "Moscow", "Sydney", "Dallas", "Guangzhou"];
+
+  // Create hotels and collect their IDs
+  const hotelIds: number[] = [];
+
   for (let i = 0; i < 60; i++) {
-    await prisma.hotel.create({
+    const hotel = await prisma.hotel.create({
       data: {
         name: `Hotel ${i + 1}`,
         city: cities[Math.floor(Math.random() * cities.length)],
         starRating: Math.floor(Math.random() * 5) + 1,
         address: `${i + 1} Main Street`,
         ownerId: ownerIds[Math.floor(Math.random() * ownerIds.length)],
-        images: ['https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', 'https://images.pexels.com/photos/271619/pexels-photo-271619.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2', 'https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2']
+        images: [
+          'https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+          'https://images.pexels.com/photos/271619/pexels-photo-271619.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+          'https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+        ]
+      }
+    });
+    hotelIds.push(hotel.id);
+  }
+
+  // Create rooms using valid hotel IDs
+  const roomTypes = ["Deluxe", "Suite", "Standard", "Family"];
+  const amenities = ["WiFi", "Air Conditioning", "TV", "Mini Bar"];
+
+  for (let i = 0; i < 100; i++) {
+    await prisma.room.create({
+      data: {
+        type: roomTypes[Math.floor(Math.random() * roomTypes.length)],
+        amenities: JSON.stringify(amenities),
+        pricePerNight: Math.floor(Math.random() * 200) + 50,
+        images: [
+          'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+          'https://images.pexels.com/photos/594077/pexels-photo-594077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
+          'https://images.pexels.com/photos/261395/pexels-photo-261395.jpeg?auto=compress&cs=tinysrgb&w=1200'
+        ],
+        hotelId: hotelIds[Math.floor(Math.random() * hotelIds.length)]
       }
     });
   }
 }
 
-const roomTypes = ["Deluxe", "Suite", "Standard", "Family"];
-const amenities = ["WiFi", "Air Conditioning", "TV", "Mini Bar"];
-for (let i = 0; i < 100; i++) {
-  await prisma.room.create({
-    data: {
-      type: roomTypes[Math.floor(Math.random() * roomTypes.length)], 
-      amenities: JSON.stringify(amenities),  
-      pricePerNight: Math.floor(Math.random() * 200) + 50,
-      images: [
-        'https://images.pexels.com/photos/258154/pexels-photo-258154.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/594077/pexels-photo-594077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
-        'https://images.pexels.com/photos/261395/pexels-photo-261395.jpeg?auto=compress&cs=tinysrgb&w=1200'
-      ],
-      hotelId: Math.floor(Math.random() * 60) + 1, 
-      hotel: {
-        connect: {
-          id: Math.floor(Math.random() * 60) + 1 
-        }
-      }
-    }
-  });
-} 
-
 main()
   .then(() => {
-    console.log('Database seeded.');
+    console.log('✅ Database seeded successfully.');
     return prisma.$disconnect();
   })
   .catch(async (e) => {
-    console.error(e);
+    console.error('❌ Seeding failed:', e);
     await prisma.$disconnect();
     process.exit(1);
   });
