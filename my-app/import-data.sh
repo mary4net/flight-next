@@ -1,2 +1,2 @@
 #!/bin/bash
-docker-compose exec flynext npx prisma db seed
+docker-compose exec app npx prisma db seed

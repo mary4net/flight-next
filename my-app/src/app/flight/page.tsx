@@ -7,13 +7,12 @@ import SearchForm from "@/components/search/searchForm";
 import FlightResults from "@/components/search/flightResults";
 import Navigation from "@/components/ui/navigation";
 import { Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 
 
 export default function FlightSearchPage() {
 	const router = useRouter();
-	const searchParams = useSearchParams();
 	const [searchResults, setSearchResults] = useState({ results: [] });
+	const [loading, setLoading] = useState(true);
 
 	const handleSearch = (searchParams:
 		{
@@ -35,40 +34,58 @@ export default function FlightSearchPage() {
 		const params = new URLSearchParams({
 			bookings: JSON.stringify(flights)
 		});
-		console.log(flights)
 
 		// Navigate to cart page with the parameters
 		router.push(`/cart?${params.toString()}`);
 	};
 
-
 	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
 
-		const origin = searchParams.get('origin');
-		const destination = searchParams.get('destination');
-		const departTime = searchParams.get('departTime');
-		const roundParam = searchParams.get('round');
+		const origin = params.get('origin');
+		const destination = params.get('destination');
+		const departTime = params.get('departTime');
+		const roundParam = params.get('round');
 		let arrive = '';
 		let date = '';
-		if (roundParam === 'true') {
-			arrive = searchParams.get('arrivalTime') || '';
-			if (!origin || !destination || !departTime || !arrive) return;
 
+		// Only proceed if we have the necessary parameters in the URL
+		if (origin && destination && departTime && roundParam !== null) {
+		if (roundParam === 'true') {
+			arrive = params.get('arrivalTime') || '';
+			if (arrive) {
 			const departDate = departTime.split('T')[0];  // Extract "YYYY-MM-DD"
 			const arriveDate = arrive.split('T')[0];      // Extract "YYYY-MM-DD"
 			date = `${departDate},${arriveDate}`;
+			}
 		} else {
-			if (!origin || !destination || !departTime) return;
-
 			const departDate = departTime.split('T')[0];
 			date = departDate;
 		}
+
 		const round = roundParam === 'true';
 
+		// Call the handleSearch function only once the parameters are available
 		handleSearch({ origin, destination, date, round });
+		} else {
+		// If parameters are missing or incomplete, skip the flight search logic
+		console.log("Missing or incomplete parameters, skipping flight search.");
+		}
+
+		// Set loading to false immediately if parameters are missing
+		setLoading(false);
 	}, []);
 
 
+	if (loading)
+	return (
+		<>
+		<Navigation />
+		<div className="h-screen flex items-center justify-center">
+			<p className="text-6xl text-center mt-4">Loading...</p>
+		</div>
+		</>
+	);
 
 	return (
 		<>
