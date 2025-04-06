@@ -508,6 +508,12 @@ const HotelSearchPage = () => {
                                                 />
                                             </div>
                                         </div>
+                                        <button
+                                            onClick={handleSearchAvailability}
+                                            className="mt-6 w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold"
+                                        >
+                                            Search Availability
+                                        </button>
                                     </div>
 
                                     {/* Available Rooms */}

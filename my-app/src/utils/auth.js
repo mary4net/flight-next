@@ -20,11 +20,12 @@ export function generateToken(user) {
     },
   );
 }
+const isLocalhost = process.env.HOST?.includes("localhost") || process.env.NODE_ENV !== "production";
 
 export function setCookie(response, token) {
   response.cookies.set("accessToken", token, {
     httpOnly: true, // The cookie only accessible by the web server, provides security
-    secure: process.env.NODE_ENV === "production",
+    secure: !isLocalhost,
     maxAge: 60 * 60 * 24 * 7, // 1 week
     path: "/",
   });
